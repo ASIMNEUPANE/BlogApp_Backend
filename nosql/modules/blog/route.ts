@@ -26,7 +26,6 @@ router.post("/",upload.single("images") ,async (req: Request, res: Response, nex
         const result = await controller.create(req.body);
         res.status(200).json({ data: result, msg: 'Success' });
     } catch (error) {
-        // console.log(error,'e')
         if(error instanceof ZodError){
             res.status(400).json({ error:"invalid data",details:error.errors})
         }else{
