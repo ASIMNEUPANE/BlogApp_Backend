@@ -1,5 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
+import cors from 'cors';
 
 const PORT= parseInt(process.env.PORT || "3333");
 import  IndexRouter  from './routes/index';
@@ -10,6 +11,9 @@ mongoose.connect(DB_URL).then(() => {
 })
 
 const app = express();
+app.use(express.json())
+app.use(cors());
+
 
 app.use("/",IndexRouter);
 
@@ -22,3 +26,9 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 app.listen(PORT,()=>{
     console.log(`app is running on port ${PORT}`);
 })
+
+
+
+
+
+

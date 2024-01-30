@@ -14,14 +14,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const controller_1 = __importDefault(require("./controller"));
+const zod_1 = require("zod");
 const router = express_1.default.Router();
-router.post('/', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const blogSchemaValidator = zod_1.z.object({
+    title: zod_1.z.string().min(1).max(100),
+    content: zod_1.z.string().min(1),
+    author: zod_1.z.string().min(1),
+    totalWord: zod_1.z.number().min(1),
+});
+router.post("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const { title, content, totalWord } = blogSchemaValidator.parse(req.body);
         const result = yield controller_1.default.create(req.body);
         res.status(200).json({ data: result, msg: 'Success' });
     }
-    catch (e) {
-        next(e);
+    catch (error) {
+        if (error instanceof zod_1.ZodError) {
+            res.status(400).json({ error: "invalid data", details: error.errors });
+        }
+        else {
+            next(error);
+        }
     }
+}));
+router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+    }
+    catch (_a) { }
 }));
 exports.default = router;

@@ -22,4 +22,10 @@ const get = () => __awaiter(void 0, void 0, void 0, function* () {
 const getById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     return model_1.default.findOne({ _id: id });
 });
-exports.default = { create, getById };
+const updateById = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    return yield model_1.default.findOneAndUpdate({ _id: id }, payload, { new: true });
+});
+const deleteById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    return yield model_1.default.deleteOne({ _id: id });
+});
+exports.default = { create, get, getById, updateById, deleteById };
