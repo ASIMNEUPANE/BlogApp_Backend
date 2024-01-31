@@ -25,21 +25,85 @@ router.post(
     try {
       req.body.totalWord = Number(req.body.totalWord);
 
-      const { title, content, description, category,totalWord, status, author } =
-        blogSchemaValidator.parse(req.body);
-        
-        imageSchema.parse(req.file?.filename);
+      const {
+        title,
+        content,
+        description,
+        category,
+        totalWord,
+        status,
+        author,
+      } = blogSchemaValidator.parse(req.body);
+
+      imageSchema.parse(req.file?.filename);
 
       req.body.images = req.file ? "blog/" + req.file.filename : "";
       const result = await controller.create(req.body);
-      res.status(200).json({ data: result, msg: "Success" });
-
+      res.status(200).json({ data: result, msg: "success" });
     } catch (error) {
       if (error instanceof ZodError) {
         res.status(400).json({ error: "invalid data", details: error.errors });
       } else {
         next(error);
       }
+    }
+  }
+);
+
+router.get("/", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await controller.get();
+    res.status(200).json({ data: result, msg: "success" });
+  } catch (e) {
+    next(e);
+  }
+});
+router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await controller.getById(req.params.id);
+    res.json({ data: result, msg: "success" });
+  } catch (e) {
+    next(e);
+  }
+});
+router.put(
+  "/:id",
+  upload.single("images"),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      console.log(req.body, "body");
+      console.log(req.file, "file");
+      req.body.totalWord = Number(req.body.totalWord);
+      const {
+        title,
+        content,
+        description,
+        category,
+        totalWord,
+        status,
+        author,
+      } = blogSchemaValidator.parse(req.body);
+
+      imageSchema.parse(req.file?.filename);
+      req.body.updated_at = new Date();
+      req.body.images = req.file ? "blog/" + req.file?.filename : "";
+
+      const result = await controller.updateById(req.params.id, req.body);
+      res.status(200).json({ data: result, msg: "success" });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+router.delete(
+  "/:id",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await controller.deleteById(req.params.id);
+      res.json({ data: result, msg: "success" });
+    } catch (e) {
+      next(e);
     }
   }
 );
