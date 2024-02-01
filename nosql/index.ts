@@ -30,11 +30,6 @@ app.use(express.json());
 app.use(cors());
 app.use(express.static("public"));
 
-// app.use((req: Request, res: Response, next: NextFunction):void => {
-//   validateBlogDataMiddleware(req.body || req.file?.filename);
-//   next();
-// });
-
 app.use("/", IndexRouter);
 app.use(ErrorHandler);
 
