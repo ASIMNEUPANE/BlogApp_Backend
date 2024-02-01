@@ -1,7 +1,6 @@
 import express, { NextFunction, Request, Response, Router } from "express";
 import multer from "multer";
 import controller from "./blog.controller";
-import { ZodError } from "zod";
 import validateBlogDataMiddleware from "./zod.validator";
 
 const router: Router = express.Router();
@@ -26,7 +25,8 @@ router.post(
     try {
       req.body.images = req.file ? "blog/" + req.file.filename : "";
       const result = await controller.create(req.body);
-      res.status(200).json({ data: result, msg: "success" });
+        res.status(200).json({ data: result, msg: "success" });
+      
     } catch (err) {
       next(err);
     }
@@ -41,6 +41,7 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
     next(err);
   }
 });
+
 router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await controller.getById(req.params.id);

@@ -8,17 +8,31 @@ const ErrorHandler = (
 ) => {
   console.log("Middleware Error Handling");
   const errStatus = err.statusCode || 500;
-  console.log(err,'zod')
-  let errMsg =''
-  console.log(err.message,'e')
 
-  if(err.errors){
-    errMsg=err.errors[0].message
+  let errType;
+  if (err.errors?.length) errType = "ZOD";
+  else errType = "MONGO";
+
+  console.log({ errType });
+
+  let errMsg;
+  if (errType === "ZOD") errMsg = err.errors[0].message;
+  else {
+    console.log("====xxxx", err, err.toJSON());
+    errMsg = err.toJSON().message;
   }
-  else{
-    errMsg=err.error
-  }
-  // const errMsg = err.errors ? err.errors[0].message : err.message;
+  // console.log("====", err.toJSON().message, "===");
+
+  // console.log(err,'zod')
+  // let errMsg =''
+  // console.log(err.message,'e')
+
+  // if(err.errors){
+  //   errMsg=err.errors[0].message
+  // }
+  // else{
+  //   errMsg=err.error
+  // }
   console.log(errMsg, "errmssg");
 
   res.status(errStatus).json({
