@@ -1,8 +1,8 @@
 import express, { NextFunction, Request, Response, Router } from "express";
 import multer from "multer";
-import controller from "./controller";
+import controller from "./blog.controller";
 import { ZodError } from "zod";
-import { blogSchemaValidator, imageSchema } from "../../middlewares/dataValidator";
+import validateBlogDataMiddleware from "./zod.validator";
 
 const router: Router = express.Router();
 
@@ -21,31 +21,14 @@ const upload = multer({ storage: storage });
 router.post(
   "/",
   upload.single("images"),
+  validateBlogDataMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      req.body.totalWord = Number(req.body.totalWord);
-
-      const {
-        title,
-        content,
-        description,
-        category,
-        totalWord,
-        status,
-        author,
-      } = blogSchemaValidator.parse(req.body);
-
-      imageSchema.parse(req.file?.filename);
-
       req.body.images = req.file ? "blog/" + req.file.filename : "";
       const result = await controller.create(req.body);
       res.status(200).json({ data: result, msg: "success" });
     } catch (err) {
-      if (err instanceof ZodError) {
-        res.status(400).json({ error: "invalid data", details: err.errors });
-      } else {
-        next(err);
-      }
+      next(err);
     }
   }
 );
@@ -54,7 +37,7 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await controller.get();
     res.status(200).json({ data: result, msg: "success" });
- } catch (err) {
+  } catch (err) {
     next(err);
   }
 });
@@ -69,22 +52,9 @@ router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
 router.put(
   "/:id",
   upload.single("images"),
+  validateBlogDataMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log(req.body, "body");
-      console.log(req.file, "file");
-      req.body.totalWord = Number(req.body.totalWord);
-      const {
-        title,
-        content,
-        description,
-        category,
-        totalWord,
-        status,
-        author,
-      } = blogSchemaValidator.parse(req.body);
-
-      imageSchema.parse(req.file?.filename);
       req.body.updated_at = new Date();
       req.body.images = req.file ? "blog/" + req.file?.filename : "";
 

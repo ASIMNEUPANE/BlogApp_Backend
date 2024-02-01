@@ -1,4 +1,4 @@
-import model from "./model";
+import model from "./blog.model";
 import { Iblog,DeleteResult } from "./blog.type";
 
 const create = async (payload: Iblog): Promise<Iblog> => {
