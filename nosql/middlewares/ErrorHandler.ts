@@ -18,7 +18,6 @@ const ErrorHandler = (
   let errMsg;
   if (errType === "ZOD") errMsg = err.errors[0].message;
   else {
-    console.log("====xxxx", err, err.toJSON());
     errMsg = err.toJSON().message;
   }
  
