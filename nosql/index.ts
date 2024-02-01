@@ -29,7 +29,17 @@ app.use(express.json());
 app.use(cors());
 app.use(express.static("public"));
 
-app.use(compression());
+app.use(
+  compression({
+    level: 5,
+    filter: (req: Request, res: Response) => {
+      if (req.headers["x-no-compression"]) {
+        return false;
+      }
+      return compression.filter(req, res);
+    },
+  })
+);
 app.use("/", IndexRouter);
 
 app.get("/", (req: Request, res: Response) => {
