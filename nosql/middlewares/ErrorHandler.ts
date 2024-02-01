@@ -21,18 +21,8 @@ const ErrorHandler = (
     console.log("====xxxx", err, err.toJSON());
     errMsg = err.toJSON().message;
   }
-  // console.log("====", err.toJSON().message, "===");
-
-  // console.log(err,'zod')
-  // let errMsg =''
-  // console.log(err.message,'e')
-
-  // if(err.errors){
-  //   errMsg=err.errors[0].message
-  // }
-  // else{
-  //   errMsg=err.error
-  // }
+ 
+  
   console.log(errMsg, "errmssg");
 
   res.status(errStatus).json({
@@ -42,8 +32,7 @@ const ErrorHandler = (
     stack: process.env.NODE_ENV === "development" ? err.stack : {},
   });
 
-  // Don't call next() here to avoid unexpected behavior
-  // next();
+  
 };
 
 export default ErrorHandler;
