@@ -42,7 +42,7 @@ router.post(
       res.status(200).json({ data: result, msg: "success" });
     } catch (err) {
       if (err instanceof ZodError) {
-        res.status(400).json({ error: "invalid data", details: error.errors });
+        res.status(400).json({ error: "invalid data", details: err.errors });
       } else {
         next(err);
       }
@@ -54,7 +54,7 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await controller.get();
     res.status(200).json({ data: result, msg: "success" });
-  } catch (err) {
+ } catch (err) {
     next(err);
   }
 });

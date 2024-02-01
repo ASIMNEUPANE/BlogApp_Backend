@@ -1,6 +1,7 @@
 import { Document } from "mongoose";
 
 export interface Iblog extends Document{
+   id?:string,
    title :string,
    content:string,
    description :string,
@@ -14,4 +15,8 @@ export interface Iblog extends Document{
 
 }
 
+export interface DeleteResult {
+	acknowledged: boolean;
+	deletedCount?: number;
+}
 

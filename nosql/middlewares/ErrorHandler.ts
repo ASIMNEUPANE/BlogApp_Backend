@@ -1,5 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
 
+// todo show custom mssg instead of system mssg
 
 const ErrorHandler = (err:any, req:Request, res:Response, next:NextFunction) => {
     console.log("Middleware Error Hadnling");

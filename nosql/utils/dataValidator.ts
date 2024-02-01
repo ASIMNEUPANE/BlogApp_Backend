@@ -11,7 +11,7 @@ const blogSchemaValidator = z.object({
 });
 const imageSchema = z.string().refine(
   (value: any) => {
-    const allowedExtensions = [".jpg", ".jpeg", ".png", ".gif"];
+    const allowedExtensions = [".jpg", ".jpeg", ".png", ".gif",".mp4"];
     const lowercasedValue = value.toLowerCase();
 
     return allowedExtensions.some((ext) => lowercasedValue.endsWith(ext));
@@ -20,5 +20,6 @@ const imageSchema = z.string().refine(
     message: "Invalid image file path. Supported formats: jpg, jpeg, png, gif",
   }
 );
+
 
 export { blogSchemaValidator, imageSchema };
