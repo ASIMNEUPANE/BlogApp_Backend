@@ -1,6 +1,12 @@
 import express, { Request, Response, NextFunction } from 'express';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
 import mongoose from 'mongoose';
 import cors from 'cors';
+
+import ErrorHandler from './middlewares/ErrorHandler';
 
 const PORT= parseInt(process.env.PORT || "3333");
 import  IndexRouter  from './routes/index';
@@ -13,15 +19,13 @@ mongoose.connect(DB_URL).then(() => {
 const app = express();
 app.use(express.json())
 app.use(cors());
-app.use(express.static("public"));
+app.use(express.static("public"))
+
 
 
 app.use("/",IndexRouter);
 
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-    const errMsg = err ? err.toString() : "Something went wrong";
-    res.status(500).json({ data: "", msg: errMsg });
-  });
+  app.use(ErrorHandler)
 
 
 
