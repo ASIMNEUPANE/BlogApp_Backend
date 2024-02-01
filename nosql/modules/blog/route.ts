@@ -2,7 +2,7 @@ import express, { NextFunction, Request, Response, Router } from "express";
 import multer from "multer";
 import controller from "./controller";
 import { ZodError } from "zod";
-import { blogSchemaValidator, imageSchema } from "../../utils/dataValidator";
+import { blogSchemaValidator, imageSchema } from "../../middlewares/dataValidator";
 
 const router: Router = express.Router();
 
