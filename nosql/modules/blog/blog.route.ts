@@ -17,7 +17,17 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.use(validateBlogDataMiddleware)
+router.use((req, res, next) => {
+  if (req.method === 'GET' || req.method === 'DELETE') {
+    
+    // Skip validation for 'GET' and 'DELETE'
+    return next();
+  }
+  // Continue validation for other methods
+
+  validateBlogDataMiddleware(req, res, next);
+  
+});
 router.use( upload.single("images"))
 
 router.post(
@@ -30,9 +40,10 @@ router.post(
       
     } catch (err) {
       next(err);
-    }
+    } 
   }
 );
+
 
 router.get("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -43,6 +54,7 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
+
 router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await controller.getById(req.params.id);
@@ -51,6 +63,7 @@ router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
     next(err);
   }
 });
+
 router.put(
   "/:id",
   async (req: Request, res: Response, next: NextFunction) => {
@@ -77,5 +90,4 @@ router.delete(
     }
   }
 );
-
 export default router;

@@ -6,9 +6,9 @@ const blogSchemaValidator = z.object({
   content: z.string().min(1),
   author: z.string().min(1),
   description: z.string().min(1),
-  category: z.string().min(1),
+  category:z.enum(['Technology', 'Travel', 'Food', 'Lifestyle']),
   totalWord: z.number().min(1),
-  status: z.string(),
+  status: z.enum(['published' , 'draft']),
   images: z
     .string()
     .refine(
@@ -22,8 +22,8 @@ const blogSchemaValidator = z.object({
         message:
           "Invalid image file path. Supported formats: jpg, jpeg, png, gif",
       }
-    )
-    .optional(),
+    ).optional()
+    ,
 });
 
 const validateBlogDataMiddleware = (

@@ -40,7 +40,9 @@ app.use(
   })
 );
 app.use("/", IndexRouter);
-app.use(ErrorHandler);
+
+app.use(ErrorHandler)
+
 
 app.listen(PORT, () => {
   console.log(`app is running on port ${PORT}`);

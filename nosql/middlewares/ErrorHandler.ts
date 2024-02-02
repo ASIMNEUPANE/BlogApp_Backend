@@ -7,6 +7,7 @@ const ErrorHandler = (
   next: NextFunction
 ) => {
   console.log("Middleware Error Handling");
+
   const errStatus = err.statusCode || 500;
 
   let errType = err.errors?.length ? "ZOD" : "MONGO";
