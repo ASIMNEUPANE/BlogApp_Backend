@@ -4,7 +4,7 @@ import apiRouter from './routes.api';
 const router: Router = express.Router();
 
 router.get('/routes', (req: Request, res: Response) => {
-    res.send('Hello world me and you');
+    res.send('API checking');
 });
 
 router.use('/api/v1', apiRouter);

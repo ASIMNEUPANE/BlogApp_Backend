@@ -1,4 +1,4 @@
-import { z, ZodError } from "zod";
+import { z } from "zod";
 import { Request, Response, NextFunction } from "express";
 
 const blogSchemaValidator = z.object({
