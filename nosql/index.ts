@@ -31,7 +31,6 @@ app.use(express.static("public"));
 
 app.use(
   compression({
-    level: 5,
     filter: (req: Request, res: Response) => {
       if (req.headers["x-no-compression"]) {
         return false;
@@ -41,10 +40,6 @@ app.use(
   })
 );
 app.use("/", IndexRouter);
-
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello World!".repeat(100000));
-});
 app.use(ErrorHandler);
 
 app.listen(PORT, () => {

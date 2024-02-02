@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response, Router } from "express";
 import multer from "multer";
 import controller from "./blog.controller";
-import validateBlogDataMiddleware from "./zod.validator";
+import validateBlogDataMiddleware from "./blog.validator";
 
 const router: Router = express.Router();
 
@@ -17,13 +17,14 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+router.use(validateBlogDataMiddleware)
+router.use( upload.single("images"))
+
 router.post(
   "/",
-  upload.single("images"),
-  validateBlogDataMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      req.body.images = req.file ? "blog/" + req.file.filename : "";
+      req.body.images = req.file ? `blog/${req.file.filename}` : "";
       const result = await controller.create(req.body);
         res.status(200).json({ data: result, msg: "success" });
       
@@ -52,12 +53,10 @@ router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
 });
 router.put(
   "/:id",
-  upload.single("images"),
-  validateBlogDataMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       req.body.updated_at = new Date();
-      req.body.images = req.file ? "blog/" + req.file?.filename : "";
+      req.body.images = req.file ? `blog/${req.file.filename}` : "";
 
       const result = await controller.updateById(req.params.id, req.body);
       res.status(200).json({ data: result, msg: "success" });

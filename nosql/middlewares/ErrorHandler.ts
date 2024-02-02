@@ -9,20 +9,9 @@ const ErrorHandler = (
   console.log("Middleware Error Handling");
   const errStatus = err.statusCode || 500;
 
-  let errType;
-  if (err.errors?.length) errType = "ZOD";
-  else errType = "MONGO";
+  let errType = err.errors?.length ? "ZOD" : "MONGO";
 
-  console.log({ errType });
-
-  let errMsg;
-  if (errType === "ZOD") errMsg = err.errors[0].message;
-  else {
-    errMsg = err.toJSON().message;
-  }
- 
-  
-  console.log(errMsg, "errmssg");
+  let errMsg = errType === "ZOD" ? err.errors[0].message : err.toJSON().message
 
   res.status(errStatus).json({
     success: false,
