@@ -7,7 +7,6 @@ import cors from "cors";
 import IndexRouter from "./routes/index";
 
 import ErrorHandler from "./middlewares/ErrorHandler";
-import {z} from "zod"
 
 const PORT = parseInt(process.env.PORT || "3333");
 
