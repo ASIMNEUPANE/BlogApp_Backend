@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { Request, Response, NextFunction } from "express";
 
-const blogSchemaValidator = z.object({
+export const blogSchemaValidator = z.object({
   title: z.string().min(1),
   content: z.string().min(1),
   author: z.string().min(1),

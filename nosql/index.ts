@@ -7,6 +7,7 @@ import cors from "cors";
 import IndexRouter from "./routes/index";
 
 import ErrorHandler from "./middlewares/ErrorHandler";
+import {z} from "zod"
 
 const PORT = parseInt(process.env.PORT || "3333");
 
@@ -42,7 +43,6 @@ app.use(
 app.use("/", IndexRouter);
 
 app.use(ErrorHandler)
-
 
 app.listen(PORT, () => {
   console.log(`app is running on port ${PORT}`);
