@@ -12,6 +12,7 @@ export interface Iblog extends Document{
    images?:string,
    created_at:Date,
    updated_at:Date,
+   timestamps:boolean
 
 }
 

@@ -18,32 +18,25 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.use((req, res, next) => {
-  if (req.method === 'GET' || req.method === 'DELETE') {
-    
+  if (req.method === "GET" || req.method === "DELETE") {
     // Skip validation for 'GET' and 'DELETE'
     return next();
   }
   // Continue validation for other methods
 
   validateBlogDataMiddleware(req, res, next);
-  
 });
-router.use( upload.single("images"))
+router.use(upload.single("images"));
 
-router.post(
-  "/",
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      req.body.images = req.file ? `blog/${req.file.filename}` : "";
-      const result = await controller.create(req.body);
-        res.status(200).json({ data: result, msg: "success" });
-      
-    } catch (err) {
-      next(err);
-    } 
+router.post("/", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    req.body.images = req.file ? `blog/${req.file.filename}` : "";
+    const result = await controller.create(req.body);
+    res.status(200).json({ data: result, msg: "success" });
+  } catch (err) {
+    next(err);
   }
-);
-
+});
 
 router.get("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -54,7 +47,6 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-
 router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await controller.getById(req.params.id);
@@ -64,20 +56,16 @@ router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-router.put(
-  "/:id",
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      req.body.updated_at = new Date();
-      req.body.images = req.file ? `blog/${req.file.filename}` : "";
+router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    req.body.images = req.file ? `blog/${req.file.filename}` : "";
 
-      const result = await controller.updateById(req.params.id, req.body);
-      res.status(200).json({ data: result, msg: "success" });
-    } catch (err) {
-      next(err);
-    }
+    const result = await controller.updateById(req.params.id, req.body);
+    res.status(200).json({ data: result, msg: "success" });
+  } catch (err) {
+    next(err);
   }
-);
+});
 
 router.delete(
   "/:id",
