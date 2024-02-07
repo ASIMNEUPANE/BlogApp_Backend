@@ -26,6 +26,25 @@ export const blogSchemaValidator = z.object({
     ,
 });
 
+const limitValidator = z.object({
+  size: z.number().min(1).optional(),
+  limit: z.number().min(1).optional(),
+  search:z.string().min(1).optional()
+})
+
+const validateLimit = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const dataToValidate = req.body ;
+    limitValidator.parse(dataToValidate);
+    next();
+  } catch (err) {
+    next(err);
+  }
+};
 const validateBlogDataMiddleware = (
   req: Request,
   res: Response,
@@ -40,4 +59,4 @@ const validateBlogDataMiddleware = (
   }
 };
 
-export default validateBlogDataMiddleware;
+export  {validateBlogDataMiddleware,validateLimit};

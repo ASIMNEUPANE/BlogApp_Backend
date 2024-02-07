@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response, Router } from "express";
 import multer from "multer";
 import controller from "./blog.controller";
-import validateBlogDataMiddleware from "./blog.validator";
+import {validateBlogDataMiddleware,validateLimit} from "./blog.validator";
 
 const router: Router = express.Router();
 
@@ -38,9 +38,10 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-router.get("/", async (req: Request, res: Response, next: NextFunction) => {
+router.get("/", validateLimit,async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await controller.get();
+    const {limit,page,search} = req.body
+    const result = await controller.get(limit,page,search);
     res.status(200).json({ data: result, msg: "success" });
   } catch (err) {
     next(err);

@@ -1,23 +1,30 @@
 import { Document } from "mongoose";
 
-export interface Iblog extends Document{
-   id?:string,
-   title :string,
-   content:string,
-   description :string,
-   category:string,
-   status:string,
-   author:string,
-   totalWord:number,
-   images?:string,
-   created_at:Date,
-   updated_at:Date,
-   timestamps:boolean
-
+export interface Iblog extends Document {
+  id?: string;
+  title: string;
+  content: string;
+  description: string;
+  category: string;
+  status: string;
+  author: string;
+  totalWord: number;
+  images?: string;
+  created_at: Date;
+  updated_at: Date;
+  timestamps: boolean;
+  limit?: number,
+  page?: number,
+  search?: string | boolean
+}
+export interface Paginate extends Document {
+ total:number;
+ data:object;
+ limit:number;
+ page:number
 }
 
 export interface DeleteResult {
-	acknowledged: boolean;
-	deletedCount?: number;
+  acknowledged: boolean;
+  deletedCount?: number;
 }
-
