@@ -17,14 +17,6 @@ const get = async (
   const query = { status: status || "published" };
 
   try {
-    // let total = await model.countDocuments(query)
-    // const data = await model
-    //   .find(query)
-    //   .skip((pageNum - 1) * size)
-    //   .limit(size)
-    //   .lean() // Paginate the data
-
-    // return { data, total, limit: size, page: pageNum };
     const result = await model.aggregate([
       {
         $facet: {
