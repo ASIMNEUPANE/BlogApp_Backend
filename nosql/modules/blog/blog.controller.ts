@@ -1,5 +1,5 @@
 import model from "./blog.model";
-import { Iblog, DeleteResult,Paginate  } from "./blog.type";
+import { Iblog, DeleteResult, Paginate } from "./blog.type";
 
 const create = async (payload: Iblog): Promise<Iblog> => {
   return await model.create(payload);
@@ -17,18 +17,61 @@ const get = async (
   const query = { status: status || "published" };
 
   try {
-    let total = await model.countDocuments(query)
-    const data = await model
-      .find(query)
-      .skip((pageNum - 1) * size)
-      .limit(size)
-      .lean().explain(); // Paginate the data
+    // let total = await model.countDocuments(query)
+    // const data = await model
+    //   .find(query)
+    //   .skip((pageNum - 1) * size)
+    //   .limit(size)
+    //   .lean() // Paginate the data
 
+    // return { data, total, limit: size, page: pageNum };
+    const result = await model.aggregate([
+      {
+        $facet: {
+          // Stage 1: Calculate the total count
+          total: [
+            {
+              $match: query,
+            },
+            {
+              $count: "total",
+            },
+          ],
+          // Stage 2: Fetch paginated data
+          data: [
+            {
+              $match: query,
+            },
+            {
+              $skip: (pageNum - 1) * size,
+            },
+            {
+              $limit: size,
+            },
+            {
+              $project: {
+                _id: 0, // Exclude the _id field from the result
+              },
+            },
+          ],
+        },
+      },
+      {
+        $project: {
+          total: { $arrayElemAt: ["$total.total", 0] }, // Extract total count from the 'total' array
+          data: 1, // Include the 'data' array
+          limit: size,
+          page: pageNum,
+        },
+      },
+    ]);
+    const newResult = result[0];
+    const { data, total } = newResult;
 
-    return { data, total, limit: size, page: pageNum };
+    return { data, total, limit, page };
   } catch (error) {
     console.error("Error occurred:", error);
-    throw new Error;
+    throw new Error();
   }
 };
 
