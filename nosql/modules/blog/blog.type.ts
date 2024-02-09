@@ -13,15 +13,15 @@ export interface Iblog extends Document {
   created_at: Date;
   updated_at: Date;
   timestamps: boolean;
-  limit?: number,
-  page?: number,
-  search?: string | boolean
+  limit?: number;
+  page?: number;
+  search?: string | boolean;
 }
 export interface Paginate extends Document {
- total:number;
- data:object;
- limit:number;
- page:number
+  total: number;
+  data: unknown[]; // Array of unknown elements
+  limit: number;
+  page: number;
 }
 
 export interface DeleteResult {
