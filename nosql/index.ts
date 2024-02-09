@@ -1,14 +1,18 @@
-import express, { Request, Response, NextFunction } from "express";
 import * as dotenv from "dotenv";
 dotenv.config();
+import express, { Request, Response, NextFunction } from "express";
 import limiter from "./middlewares/rateLimit";
 import compression from "compression";
 import mongoose from "mongoose";
+
+import logger from "morgan";
+import swaggerDoc from "./documentation"
+import swaggerUi from "swagger-ui-express";
+
 import cors from "cors";
 import IndexRouter from "./routes/index";
 
 import ErrorHandler from "./middlewares/ErrorHandler";
-
 const PORT = parseInt(process.env.PORT || "3333");
 
 if (!process.env.DB_URL) {
@@ -27,7 +31,16 @@ mongoose
 const app = express();
 app.use(express.json());
 app.use(cors());
+app.use(logger("dev"));
 app.use(express.static("public"));
+
+app.use(express.urlencoded({ extended: false }));
+
+app.use(
+  "/documentation",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDoc, { explorer: true })
+);
 
 app.use(
   compression({

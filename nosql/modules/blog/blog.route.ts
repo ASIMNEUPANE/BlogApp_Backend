@@ -28,6 +28,7 @@ router.use((req, res, next) => {
 });
 router.use(upload.single("images"));
 
+
 router.post("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
     req.body.images = req.file ? `blog/${req.file.filename}` : "";
