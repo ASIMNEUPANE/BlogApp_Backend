@@ -4,10 +4,10 @@ import express, { Request, Response, NextFunction } from "express";
 import limiter from "./middlewares/rateLimit";
 import compression from "compression";
 import mongoose from "mongoose";
+import YAML from "yamljs";
 
 import logger from "morgan";
-import swaggerDoc from "./documentation"
-import swaggerUi from "swagger-ui-express";
+import swaggerUI from "swagger-ui-express";
 
 import cors from "cors";
 import IndexRouter from "./routes/index";
@@ -28,19 +28,15 @@ mongoose
     console.error("Database connection error:", error);
   });
 
+const swaggerJsDocs = YAML.load("./utils/api.yaml");
 const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(logger("dev"));
 app.use(express.static("public"));
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerJsDocs));
 
 app.use(express.urlencoded({ extended: false }));
-
-app.use(
-  "/documentation",
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerDoc, { explorer: true })
-);
 
 app.use(
   compression({
