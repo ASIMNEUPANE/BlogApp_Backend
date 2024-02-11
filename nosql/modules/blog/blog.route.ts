@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response, Router } from "express";
 import multer from "multer";
 import controller from "./blog.controller";
-import {validateBlogDataMiddleware,validateLimit} from "./blog.validator";
+import {validateBlogDataMiddleware,validateLimit,updateValidateBlogDataMiddleware} from "./blog.validator";
 
 const router: Router = express.Router();
 
@@ -18,7 +18,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.use((req, res, next) => {
-  if (req.method === "GET" || req.method === "DELETE") {
+  if (req.method === "GET" || req.method === "DELETE" || req.method === "PUT") {
     // Skip validation for 'GET' and 'DELETE'
     return next();
   }
@@ -58,7 +58,7 @@ router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
+router.put("/:id", updateValidateBlogDataMiddleware,async (req: Request, res: Response, next: NextFunction) => {
   try {
     req.body.images = req.file ? `blog/${req.file.filename}` : "";
 
