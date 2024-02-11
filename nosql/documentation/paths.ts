@@ -34,7 +34,7 @@ export default {
               }
             },
             500: {
-              description: "Invalid Todo"
+              description: "Invalid blogs"
             }
           }
         },
@@ -81,7 +81,7 @@ export default {
             {
               name: "id",
               in: "path",
-              description: "ID of todo to return",
+              description: "ID of blog to return",
               required: true,
               type: "string"
             }
@@ -105,7 +105,7 @@ export default {
               description: "Invalid Operation"
             },
             404: {
-              description: "Todo not found"
+              description: "blog not found"
             }
           }
         },
@@ -114,32 +114,26 @@ export default {
   
         put: {
           tags: ["blogs"],
-          summary: "Update todo status by ID",
-          description: "Returns a single todo with updated status",
+          summary: "Update blog status by ID",
+          description: "Returns a single blog with updated status",
           operationId: "update",
           produces: ["application/json"],
           parameters: [
             {
               name: "id",
               in: "path",
-              description: "ID of todo that needs to be updated",
+              description: "ID of blog to return",
               required: true,
               type: "string"
             },
             {
-              in: "application/json",
-              name: "status",
-              description: "Required payload for updating new todo",
+              in: "body",
+              name: "body",
+              description: "Required payload for creating new blog",
               required: true,
-              type: "string",
-              enum: ["published", "draft"]
-            },
-            {
-              in: "application/json",
-              name: "content",
-              description: "Required payload for updating new todo",
-              required: true,
-              type: "string",
+              schema: {
+                $ref: "#/definitions/blogs"
+              }
             }
           ],
           // security: [
