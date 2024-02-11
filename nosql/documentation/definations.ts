@@ -1,7 +1,7 @@
 export default {
   definitions: {
     // Schedules Model
-    Blogs: {
+    blogs: {
       type: "object",
       properties: {
         title: { type: 'string' },

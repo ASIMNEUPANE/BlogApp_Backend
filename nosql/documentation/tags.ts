@@ -1,7 +1,7 @@
 export default  {
     tags: [
       {
-        name: 'Blogs',
+        name: 'blogs',
         description: 'Blogs API Operations',
       },
       // {

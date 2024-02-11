@@ -4,7 +4,7 @@ import express, { Request, Response, NextFunction } from "express";
 import limiter from "./middlewares/rateLimit";
 import compression from "compression";
 import mongoose from "mongoose";
-import YAML from "yamljs";
+// import YAML from "yamljs";
 
 import logger from "morgan";
 import swaggerUI from "swagger-ui-express";
@@ -13,6 +13,7 @@ import cors from "cors";
 import IndexRouter from "./routes/index";
 
 import ErrorHandler from "./middlewares/ErrorHandler";
+import swaggerJsDocs from './documentation';
 const PORT = parseInt(process.env.PORT || "3333");
 
 if (!process.env.DB_URL) {
@@ -28,13 +29,14 @@ mongoose
     console.error("Database connection error:", error);
   });
 
-const swaggerJsDocs = YAML.load("./utils/api.yaml");
+// const swaggerJsDocs = YAML.load("./utils/api.yaml");
+
 const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(logger("dev"));
 app.use(express.static("public"));
-app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerJsDocs));
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerJsDocs, { explorer: true }));
 
 app.use(express.urlencoded({ extended: false }));
 

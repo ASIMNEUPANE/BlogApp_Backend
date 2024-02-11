@@ -17,20 +17,20 @@ export default {
               description: "Required payload for creating new blog",
               required: true,
               schema: {
-                $ref: "#/definitions/Blogs"
+                $ref: "#/definitions/blogs"
               }
             }
           ],
-          security: [
-            {
-              access_token: []
-            }
-          ],
+          // security: [
+          //   {
+          //     access_token: []
+          //   }
+          // ],
           responses: {
             200: {
               description: "Successful operation",
               schema: {
-                $ref: "#/definitions/Blogs"
+                $ref: "#/definitions/blogs"
               }
             },
             500: {
@@ -42,23 +42,23 @@ export default {
         // Get
   
         get: {
-          tags: ["Blogs"],
+          tags: ["blogs"],
           summary: "Get all the blogs",
           description: "Returns all the blogs",
           operationId: "list",
           consumes: ["application/json"],
           produces: ["application/json"],
           parameters: [],
-          security: [
-            {
-              access_token: []
-            }
-          ],
+          // security: [
+          //   {
+          //     access_token: []
+          //   }
+          // ],
           responses: {
             200: {
               description: "Successful operation",
               schema: {
-                $ref: "#/definitions/Blogs"
+                $ref: "#/definitions/blogs"
               }
             },
             500: {
@@ -72,7 +72,7 @@ export default {
   
       "/blogs/{id}": {
         get: {
-          tags: ["todo"],
+          tags: ["blogs"],
           summary: "Find blogs by ID",
           description: "Returns a single blog",
           operationId: "getById",
@@ -86,16 +86,16 @@ export default {
               type: "string"
             }
           ],
-          security: [
-            {
-              access_token: []
-            }
-          ],
+          // security: [
+          //   {
+          //     access_token: []
+          //   }
+          // ],
           responses: {
             200: {
               description: "Successful operation",
               schema: {
-                $ref: "#/definitions/Blogs"
+                $ref: "#/definitions/blogs"
               }
             },
             400: {
@@ -113,7 +113,7 @@ export default {
         // Update
   
         put: {
-          tags: ["todo"],
+          tags: ["blogs"],
           summary: "Update todo status by ID",
           description: "Returns a single todo with updated status",
           operationId: "update",
@@ -135,16 +135,16 @@ export default {
               enum: ["pending", "completed"]
             }
           ],
-          security: [
-            {
-              access_token: []
-            }
-          ],
+          // security: [
+          //   {
+          //     access_token: []
+          //   }
+          // ],
           responses: {
             200: {
               description: "Successful operation",
               schema: {
-                $ref: "#/definitions/Blogs"
+                $ref: "#/definitions/blogs"
               }
             },
             400: {
@@ -162,7 +162,7 @@ export default {
         // Delete
   
         delete: {
-          tags: ["todo"],
+          tags: ["blogs"],
           summary: "Delete todo status by ID",
           description: "Deletes a single todo",
           operationId: "delete",
@@ -176,16 +176,16 @@ export default {
               type: "string"
             }
           ],
-          security: [
-            {
-              access_token: []
-            }
-          ],
+          // security: [
+          //   {
+          //     access_token: []
+          //   }
+          // ],
           responses: {
             200: {
               description: "Successful operation",
               schema: {
-                $ref: "#/definitions/Blogs"
+                $ref: "#/definitions/blogs"
               }
             },
             400: {
