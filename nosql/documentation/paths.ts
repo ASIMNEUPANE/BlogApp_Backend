@@ -127,12 +127,19 @@ export default {
               type: "string"
             },
             {
-              in: "formData",
+              in: "application/json",
               name: "status",
               description: "Required payload for updating new todo",
               required: true,
               type: "string",
-              enum: ["pending", "completed"]
+              enum: ["published", "draft"]
+            },
+            {
+              in: "application/json",
+              name: "content",
+              description: "Required payload for updating new todo",
+              required: true,
+              type: "string",
             }
           ],
           // security: [
