@@ -17,7 +17,7 @@ export interface Iblog extends Document {
   page?: number;
   search?: string | boolean;
 }
-export interface Paginate extends Document {
+export interface Paginate {
   total: number;
   data: unknown[]; // Array of unknown elements
   limit: number;

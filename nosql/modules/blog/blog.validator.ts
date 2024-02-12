@@ -29,8 +29,8 @@ export const blogSchemaValidator = z.object({
 const updateSchemaValidator = blogSchemaValidator.partial();
 
 const limitValidator = z.object({
-  size: z.number().min(1).optional(),
-  limit: z.number().min(1).optional(),
+  size: z.string().min(1).optional(),
+  limit: z.string().min(1).optional(),
   search:z.string().min(1).optional()
 })
 
@@ -40,7 +40,7 @@ const validateLimit = (
   next: NextFunction
 ) => {
   try {
-    const dataToValidate = req.body ;
+    const dataToValidate = req.query ;
     limitValidator.parse(dataToValidate);
     next();
   } catch (err) {

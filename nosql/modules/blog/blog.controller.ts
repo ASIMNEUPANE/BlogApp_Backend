@@ -6,8 +6,8 @@ const create = async (payload: Iblog): Promise<Iblog> => {
 };
 
 const get = async (
-  limit: number,
-  page: number,
+  limit: string,
+  page: string,
   search: string
 ): Promise<Paginate[]> => {
   const pageNum = parseInt(page) || 1;
