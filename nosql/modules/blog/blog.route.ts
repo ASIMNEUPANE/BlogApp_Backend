@@ -39,11 +39,10 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-router.get("/",validateLimit,async (req: Request, res: Response, next: NextFunction) => {
+router.get("/", validateLimit, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    
-    const {limit,page,search} = req.query
-    const result = await controller.get(limit,page,search);
+    const { limit, page, search } = req.query;
+    const result = await controller.get(String(limit), String(page), String(search));
     res.status(200).json({ data: result, msg: "success" });
   } catch (err) {
     next(err);
