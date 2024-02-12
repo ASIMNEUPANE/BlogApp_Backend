@@ -46,20 +46,20 @@ export default {
         summary: "Get all the blogs",
         description: "Returns all the blogs",
         operationId: "list",
-        // consumes: ["application/json"],
+        consumes: ["application/json"],
         produces: ["application/json"],
         parameters: [
           {
             name: "limit",
-            in: "body",
-            description: "limit of blog to return in a page",
+            in: "query",
+            description: "Required payload for getting all blog",
             required: true,
             type: "number",
           },
           {
             name: "page",
-            in: "body",
-            description: "page no. of blog to return",
+            in: "query",
+            description: "Required payload for getting all blog",
             required: true,
             type: "number",
           },
@@ -170,7 +170,7 @@ export default {
             description: "Invalid Operation",
           },
           404: {
-            description: "Todo not found",
+            description: "blog not found",
           },
         },
       },
@@ -179,8 +179,8 @@ export default {
 
       delete: {
         tags: ["blogs"],
-        summary: "Delete todo status by ID",
-        description: "Deletes a single todo",
+        summary: "Delete blog by ID",
+        description: "Deletes a single b;og",
         operationId: "delete",
         produces: ["application/json"],
         parameters: [
@@ -211,7 +211,7 @@ export default {
             description: "Invalid Operation",
           },
           404: {
-            description: "Todo not found",
+            description: "blog not found",
           },
         },
       },
