@@ -40,11 +40,6 @@ const get = async (
             {
               $limit: size,
             },
-            // {
-            //   $project: {
-            //     _id: 0, // Exclude the _id field from the result
-            //   },
-            // },
           ],
         },
       },
