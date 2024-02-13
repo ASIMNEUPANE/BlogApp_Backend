@@ -17,19 +17,19 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.use((req, res, next) => {
-  if (req.method === "GET" || req.method === "DELETE" || req.method === "PUT") {
-    // Skip validation for 'GET' and 'DELETE'
-    return next();
-  }
-  // Continue validation for other methods
+// router.use((req, res, next) => {
+//   if (req.method === "GET" || req.method === "DELETE" || req.method === "PUT") {
+//     // Skip validation for 'GET' and 'DELETE'
+//     return next();
+//   }
+//   // Continue validation for other methods
 
-  validateBlogDataMiddleware(req, res, next);
-});
+//   validateBlogDataMiddleware(req, res, next);
+// });
 router.use(upload.single("images"));
 
 
-router.post("/", async (req: Request, res: Response, next: NextFunction) => {
+router.post("/", validateBlogDataMiddleware,async (req: Request, res: Response, next: NextFunction) => {
   try {
     req.body.images = req.file ? `blog/${req.file.filename}` : "";
     const result = await controller.create(req.body);

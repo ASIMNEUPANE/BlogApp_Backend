@@ -1,4 +1,4 @@
-const apiLocation = "localhost:3333"; // Set this to the hostname of your API server
+const apiLocation = process.env.BASE_URL; // Set this to the hostname of your API server
 const apiVersion = "/api/v1";
 
 export default {
