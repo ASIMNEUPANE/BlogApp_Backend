@@ -3,37 +3,37 @@ import model from "./auth.model";
 import userModel from "../users/user.model";
 
 import { generateOTP, verifyOTP } from "../../utils/otp";
-import { authData, verifyData } from "./auth.types";
+import { verifyData, UserLogin } from "./auth.types";
+import { authData } from "../users/user.types";
 import { mailer } from "../../services/mailer";
 import { generateJWT } from "../../utils/jwt";
+import { DeleteResult } from "../blog/blog.type";
 
-const register = async (payload: authData): Promise<unknown> => {
+const register = async (payload: authData): Promise<string> => {
   try {
     const { isActive, isEmailVerified, roles, password, ...rest } = payload;
     rest.password = await bcrypt.hash(password, Number(process.env.SALT_ROUND));
     const user = await userModel.create(rest);
     const token = generateOTP();
-    console.log(typeof token);
     await model.create({ email: user?.email, token });
-    const mail = await mailer(user?.email, +token);
-    return mail;
+    return await mailer(user?.email, +token);
   } catch (error) {
     console.error("Error during registration:", error);
     throw error; // Rethrow the error for handling at a higher level if needed
   }
 };
-const verify = async (payload: verifyData): Promise<unknown> => {
+const verify = async (payload: verifyData): Promise<boolean> => {
   const { email, token } = payload;
   const auth = await model.findOne({ email });
   if (!auth) throw new Error("User is not available");
-
   const isValidToken = await verifyOTP(token);
+
   if (!isValidToken) throw new Error("Token Expired");
 
   const emailValid = auth?.token === +token;
   if (!emailValid) throw new Error("Token mismatch");
 
-  const user = await userModel
+  await userModel
     .findOneAndUpdate(
       { email },
       { isEmailVerified: true, isActive: true },
@@ -41,11 +41,13 @@ const verify = async (payload: verifyData): Promise<unknown> => {
     )
     .select("-password");
   await model.deleteOne({ email });
-  return user;
+  return true;
 };
 
-const regenerateToken = async (email: string) => {
+const regenerateToken = async (email: string): Promise<Boolean> => {
+  console.log(email, "email");
   const auth = await model.findOne({ email });
+  console.log(auth);
   if (!auth) throw new Error("User not found");
 
   const newToken = generateOTP();
@@ -54,7 +56,7 @@ const regenerateToken = async (email: string) => {
   return true;
 };
 
-const login = async (email: string, password: string): Promise<any> => {
+const login = async (email: string, password: string): Promise<UserLogin> => {
   const user = await userModel.findOne({ email }).select("+password");
   if (!user) throw new Error("User not found");
   if (!user?.isEmailVerified) throw new Error("Email is not verified yet");
@@ -62,7 +64,6 @@ const login = async (email: string, password: string): Promise<any> => {
     throw new Error("User is not active. Please contact admin");
   const isValidPw = await bcrypt.compare(password, user?.password);
   if (!isValidPw) throw new Error("User or password invalid");
-
   const payload = {
     id: user?._id,
     email: user?.email,
@@ -70,12 +71,12 @@ const login = async (email: string, password: string): Promise<any> => {
   };
   const token = generateJWT(payload);
   return {
-    user: { name: user.name, role: user.roles, email: user.email },
+    user: { name: user.name, roles: user.roles, email: user.email },
     token,
   };
 };
 
-const generateFPToken = async (email: string) => {
+const generateFPToken = async (email: string): Promise<boolean> => {
   const user = await userModel.findOne({
     email,
     isActive: true,
@@ -92,7 +93,7 @@ const forgetPassowrd = async (
   email: string,
   token: string,
   password: string
-) => {
+): Promise<DeleteResult> => {
   const auth = await model.findOne({ email });
   if (!auth) throw new Error("user not found");
   const isValidToken = await verifyOTP(token);
@@ -107,8 +108,6 @@ const forgetPassowrd = async (
   );
   return await model.deleteOne({ email });
 };
-
-
 
 export default {
   register,

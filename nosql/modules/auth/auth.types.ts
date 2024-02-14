@@ -14,6 +14,17 @@ export interface Iauth extends Document{
 //   password: string,
 //   image?:String,
 // }
+
+export type  UserLogin= {
+    user:{
+        name: string,
+        roles: string[],
+        email: string,
+    },
+    token:string
+    
+}
+
 export type authData = z.infer<typeof registerValidator>  
 export type verifyData = z.infer<typeof verify>
    

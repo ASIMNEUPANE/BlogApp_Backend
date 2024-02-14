@@ -11,7 +11,6 @@ router.post(
   authValidatorMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log(req.body);
       const result = await controller.register(req.body);
       res.status(200).json({ data: result, msg: "success" });
     } catch (e) {
@@ -24,7 +23,6 @@ router.post(
   verifyAuthMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log(req.body);
       const result = await controller.verify(req.body);
       res.status(200).json({ data: result, msg: "success" });
     } catch (e) {
@@ -33,14 +31,13 @@ router.post(
   }
 );
 router.post(
-  "/regenerateToken",
-  
+  "/generateToken",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       console.log(req.body)
       const { email } = req.body;
       if (!email) throw new Error("Email  is missing");
-      const result = await controller.regenerateToken(email);
+      const result = await controller.generateToken(email);
       res.status(200).json({ data: result, msg: "success" });
     } catch (e) {
       next(e);
@@ -60,13 +57,14 @@ router.post(
     }
   }
 );
-router.put(
-  "/generateFPToken",
+router.post(
+  "/regenerateToken",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email } = req.body;
+      console.log(email,'route')
       if (!email) throw new Error("Email is missing");
-      const result = await controller.generateFPToken(email);
+      const result = await controller.regenerateToken(email);
       res.status(200).json({ data: result, msg: "success" });
     } catch (e) {
       next(e);

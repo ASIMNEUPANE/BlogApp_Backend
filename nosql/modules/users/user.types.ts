@@ -5,6 +5,7 @@ import { registerValidator } from "../auth/auth.validator";
 
 // export type authData = z.infer<typeof registerValidator> & Document;
 export interface authData extends Document {
+    _id?:string,
     name: string;
     email: string;
     password: string;
@@ -13,3 +14,4 @@ export interface authData extends Document {
     isActive: boolean;
     roles: Array<string>; // Specify the type argument for the Array type.
 }
+
