@@ -1,6 +1,6 @@
 import { Document } from "mongoose";
 import {z} from "zod"
-import {registerValidator} from './auth.validator'
+import {registerValidator, verify} from './auth.validator'
 
 export interface Iauth extends Document{
     email:string;
@@ -15,4 +15,5 @@ export interface Iauth extends Document{
 //   image?:String,
 // }
 export type authData = z.infer<typeof registerValidator>  
+export type verifyData = z.infer<typeof verify>
    

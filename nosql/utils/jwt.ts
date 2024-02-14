@@ -1,6 +1,6 @@
 import JWT from "jsonwebtoken";
 
-const generateJWT = (payload:string) => {
+const generateJWT = (payload: string) => {
   return JWT.sign(
     {
       data: payload,
@@ -10,12 +10,11 @@ const generateJWT = (payload:string) => {
   );
 };
 
-
-const verifyJWT = (token:number) => {
-  try{
-    return JWT.verify(token, process.env.JWT_SECRET)
-}catch(e){
-throw new Error('Token is invalid')
+const verifyJWT = (token: string) => {
+  try {
+    return JWT.verify(token, process.env.JWT_SECRET);
+  } catch (e) {
+    throw new Error("Token is invalid");
+  }
 };
-}
-export default { generateJWT, verifyJWT };
+export  { generateJWT, verifyJWT };

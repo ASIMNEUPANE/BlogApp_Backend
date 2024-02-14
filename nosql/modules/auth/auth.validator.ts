@@ -34,6 +34,7 @@ export const registerValidator = z.object({
   
 });
 
+
 const authValidatorMiddleware = (
   req: Request,
   res: Response,
@@ -49,4 +50,26 @@ const authValidatorMiddleware = (
 
 }
 
-export {authValidatorMiddleware}
+export const verify = z.object({
+  email: z
+    .string()
+    .min(1, { message: "This field has to be filled." })
+    .email("This is not a valid email."),
+    token: z.string(), // 6-digit number
+  })
+const verifyAuthMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const dataToValidate = req.body ;
+    verify.parse(dataToValidate);
+    next();
+  } catch (err) {
+    next(err);
+  }
+
+}
+
+export {authValidatorMiddleware,verifyAuthMiddleware}
