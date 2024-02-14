@@ -8,11 +8,10 @@ import {mailer} from '../../services/mailer';
 
 const register = async (payload: authData): Promise<unknown> => {
   try {
-    const { roles, password, ...rest } = payload;
+    const { isActive, isEmailVerified,roles, password, ...rest } = payload;
     rest.password = await bcrypt.hash(password, Number(process.env.SAL_ROUND));
     const user = await userModel.create(rest);
-    const token = await generateOTP();
-    console.log(typeof(token));
+    const token =  generateOTP();
     await model.create({ email: user?.email, token });
     const mail = await mailer(user?.email, token);
     return mail;

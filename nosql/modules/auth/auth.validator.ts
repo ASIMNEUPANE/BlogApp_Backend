@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Request, Response, NextFunction } from "express";
 
 export const registerValidator = z.object({
   name: z.string().min(1),
@@ -30,7 +31,22 @@ export const registerValidator = z.object({
       }
     )
     .optional(),
-  roles: z.enum(["admin", "user"]).optional(),
-  isEmailVerified: z.boolean().optional(),
-  isActive:z.boolean().optional()
+  
 });
+
+const authValidatorMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const dataToValidate = req.body ;
+    registerValidator.parse(dataToValidate);
+    next();
+  } catch (err) {
+    next(err);
+  }
+
+}
+
+export {authValidatorMiddleware}
