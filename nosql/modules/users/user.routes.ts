@@ -2,6 +2,8 @@ import express, { NextFunction, Request, Response, Router } from "express";
 import multer from "multer";
 import controller from "./user.controller";
 import secureAPI from "../../utils/secure";
+import { authValidatorMiddleware } from "../auth/auth.validator";
+import {limitValidatorMiddleware,updateMiddleware} from './user.validator'
 
 const router: Router = express.Router();
 
@@ -20,11 +22,13 @@ const upload = multer({ storage: storage });
 router.post(
   "/",
   upload.single("images"),
+  authValidatorMiddleware,
   secureAPI(["admin"]),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      // req.body.created_by = req.currentUser;
-      // req.body.updated_by = req.currentUser;
+      req.body.images = req.file ? `blog/${req.file.filename}` : "";
+      req.body.created_by = req.currentUser;
+      req.body.updated_by = req.currentUser;
       req.body.created_at = new Date();
       const result = await controller.create(req.body);
       res.status(200).json({ data: result, msg: "success" });
@@ -34,7 +38,7 @@ router.post(
   }
 );
 
-router.get("/", secureAPI(["admin"]), async (req, res, next) => {
+router.get("/",limitValidatorMiddleware, secureAPI(["admin"]), async (req, res, next) => {
   try {
     console.log(req.query);
     const { limit, page, search } = req.query;
@@ -64,6 +68,7 @@ router.get(
 router.put(
   "/profile",
   secureAPI(["admin", "user"]),
+  updateMiddleware,
   upload.single("image"),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -78,7 +83,7 @@ router.put(
         ? req.body.id
         : req.currentUser;
       if (!me) throw new Error("User ID is required");
-      const result = await controller.updateById(id, rest);
+      const result = await controller.updateById(me, rest);
       res.status(200).json({ data: result, msg: "success" });
     } catch (e) {
       next(e);
@@ -88,7 +93,7 @@ router.put(
 
 router.put(
   "/change-password",
-  secureAPI(["user","admin"]),
+  secureAPI(["user", "admin"]),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { oldPassword, newPassword, id } = req.body;
@@ -131,7 +136,7 @@ router.patch("/status/:id", secureAPI(["admin"]), async (req, res, next) => {
 
 router.get("/:id", secureAPI(["admin"]), async (req, res, next) => {
   try {
-    console.log(req.params.id,'params')
+    console.log(req.params.id, "params");
     const result = await controller.getById(req.params.id);
     res.status(200).json({ data: result, msg: "success" });
   } catch (e) {

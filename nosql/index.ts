@@ -10,8 +10,7 @@ import swaggerUI from "swagger-ui-express";
 import ErrorHandler from "./middlewares/ErrorHandler";
 import limiter from "./middlewares/rateLimit";
 
-
-import swaggerJsDocs from './documentation';
+import swaggerJsDocs from "./documentation";
 import IndexRouter from "./routes/index";
 const PORT = parseInt(process.env.PORT || "3333");
 
@@ -27,12 +26,27 @@ mongoose
   .catch((error) => {
     console.error("Database connection error:", error);
   });
-
+  
+declare global {
+  namespace NodeJS {
+    interface ProcessEnv {
+      JWT_SECRET: string;
+      PORT: string;
+      NODE_ENV: string;
+      OTP_SECRET: string;
+      OTP_DURATION: number;
+    }
+  }
+}
 const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(express.static("public"));
-app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerJsDocs, { explorer: true }));
+app.use(
+  "/api-docs",
+  swaggerUI.serve,
+  swaggerUI.setup(swaggerJsDocs, { explorer: true })
+);
 
 app.use(express.urlencoded({ extended: false }));
 

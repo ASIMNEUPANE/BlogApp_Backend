@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
-import { authData } from "./user.types";
-const userSchema = new Schema<authData>(
+import { baseData } from "./user.types";
+const userSchema = new Schema<baseData>(
   {
     name: { type: String, required: true },
     email: {
@@ -14,12 +14,11 @@ const userSchema = new Schema<authData>(
       type: Array,
       // enum: ["user", "admin"],
       default: ["user"],
-      required: true,
     },
     images: { type: String },
 
     isActive: { type: Boolean, default: false },
-    isArchive:{type:Boolean, default:false}
+    isArchive: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

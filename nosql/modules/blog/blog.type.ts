@@ -17,14 +17,14 @@ export interface Iblog extends Document {
   page?: number;
   search?: string | boolean;
 }
-export interface Paginate {
+export interface Paginate extends Iblog {
   total: number;
   data: unknown[]; // Array of unknown elements
   limit: number;
   page: number;
 }
 
-export interface DeleteResult {
+export interface DeleteResult  {
   acknowledged: boolean;
   deletedCount?: number;
 }

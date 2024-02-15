@@ -4,12 +4,12 @@ import userModel from "../users/user.model";
 
 import { generateOTP, verifyOTP } from "../../utils/otp";
 import { verifyData, UserLogin } from "./auth.types";
-import { authData } from "../users/user.types";
+import { baseData } from "../users/user.types";
 import { mailer } from "../../services/mailer";
 import { generateJWT } from "../../utils/jwt";
 import { DeleteResult } from "../blog/blog.type";
 
-const register = async (payload: authData): Promise<string> => {
+const register = async (payload: baseData): Promise<string> => {
   try {
     const { isActive, isEmailVerified, roles, password, ...rest } = payload;
     rest.password = await bcrypt.hash(password, Number(process.env.SALT_ROUND));

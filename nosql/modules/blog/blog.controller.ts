@@ -73,7 +73,7 @@ const updateById = async (
   return await model.findOneAndUpdate({ _id: id }, payload, { new: true });
 };
 
-const deleteById = async (id: string): Promise<DeleteResult> => {
+const deleteById = async (id: string): Promise<DeleteResult | null> => {
   return await model.deleteOne({ _id: id });
 };
 

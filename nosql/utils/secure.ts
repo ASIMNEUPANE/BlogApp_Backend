@@ -22,7 +22,7 @@ const secureAPI = (roles:[string,string?]) => {
     const user = await userModel.findOne({email});
     if(!user) throw new Error('user not found');
     req.currentUser   =user?._id;
-  req.currentRoles= user?.roles;
+    req.currentRoles= user?.roles;
     // compare role against secureAPI passed role
     const isValidRole = compareRole(roles ?? [], user?.roles);
     if (!isValidRole) throw new Error("user unathorized");

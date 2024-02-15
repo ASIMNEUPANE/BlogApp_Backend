@@ -37,7 +37,7 @@ router.post(
       console.log(req.body)
       const { email } = req.body;
       if (!email) throw new Error("Email  is missing");
-      const result = await controller.generateToken(email);
+      const result = await controller.regenerateToken(email);
       res.status(200).json({ data: result, msg: "success" });
     } catch (e) {
       next(e);
