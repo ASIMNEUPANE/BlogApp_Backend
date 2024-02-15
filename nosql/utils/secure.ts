@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response, Router } from "express";
 
-import  verifyJWT  from "./jwt";
+import  {verifyJWT}  from "./jwt";
 import userModel from '../modules/users/user.model'
 
 const compareRole = (requiredRole:string, userRole:string) => {
@@ -8,7 +8,7 @@ const compareRole = (requiredRole:string, userRole:string) => {
   return userRole.some((v) => requiredRole.indexOf(v) !== -1);
 };
 
-const secureAPI = (roles:string) => {
+const secureAPI = (roles:[string,string?]) => {
     
   return async (req:Request, res:Response, next:NextFunction) => {
     try{
@@ -21,7 +21,7 @@ const secureAPI = (roles:string) => {
     // check if the user has required role or not
     const user = await userModel.findOne({email});
     if(!user) throw new Error('user not found');
-    req.currentUser =user?._id;
+    req.currentUser   =user?._id;
   req.currentRoles= user?.roles;
     // compare role against secureAPI passed role
     const isValidRole = compareRole(roles ?? [], user?.roles);
