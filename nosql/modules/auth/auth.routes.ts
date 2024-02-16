@@ -1,16 +1,35 @@
 import express, { NextFunction, Request, Response, Router } from "express";
 import controller from "./auth.controller";
+import multer from "multer";
+
 import {
   authValidatorMiddleware,
   verifyAuthMiddleware,
 } from "./auth.validator";
 const router: Router = express.Router();
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./public/users");
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "." + file.originalname.split(".")[1];
+    cb(null, uniqueSuffix);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 router.post(
   "/register",
+   upload.single("images"),
   authValidatorMiddleware,
+
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      if (req?.file) {
+        req.body.images = req.file ? `blog/${req.file.filename}` : "";
+
+      }
       const result = await controller.register(req.body);
       res.status(200).json({ data: result, msg: "success" });
     } catch (e) {

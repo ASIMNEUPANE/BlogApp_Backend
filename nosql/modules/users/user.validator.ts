@@ -82,6 +82,7 @@ const updateMiddleware = (
   next: NextFunction
 ) => {
   try {
+    console.log(req.body,'update')
     const dataToValidate = req.body ;
     updateValidator.parse(dataToValidate);
     next();

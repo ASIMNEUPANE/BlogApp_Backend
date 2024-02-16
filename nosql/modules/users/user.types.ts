@@ -11,6 +11,8 @@ export interface baseData extends Document {
   isActive: boolean;
   roles?: string[];
   isArchive:boolean
+  created_by : string;
+  updated_by : string
   
   // Specify the type argument for the Array type.
   // roles: Array<string>; // Specify the type argument for the Array type.

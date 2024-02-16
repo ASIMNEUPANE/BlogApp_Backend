@@ -41,7 +41,12 @@ const authValidatorMiddleware = (
   next: NextFunction
 ) => {
   try {
-    const dataToValidate = req.body ;
+    console.log(req,'zod===================')
+    const { name, email, password } = req.body;
+    const images = req.file ? req.file.path : undefined;
+
+    const dataToValidate = {name,email, password,images} ;
+
     registerValidator.parse(dataToValidate);
     next();
   } catch (err) {

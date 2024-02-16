@@ -32,6 +32,9 @@ router.use(upload.single("images"));
 router.post("/", validateBlogDataMiddleware,async (req: Request, res: Response, next: NextFunction) => {
   try {
     req.body.images = req.file ? `blog/${req.file.filename}` : "";
+    const totalWord = parseInt(req.body.totalWord);
+    req.body.totalWord = totalWord
+
     const result = await controller.create(req.body);
     res.status(200).json({ data: result, msg: "success" });
   } catch (err) {

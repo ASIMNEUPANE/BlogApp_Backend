@@ -68,8 +68,8 @@ router.get(
 router.put(
   "/profile",
   secureAPI(["admin", "user"]),
-  updateMiddleware,
   upload.single("image"),
+  updateMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       if (req?.file) {
