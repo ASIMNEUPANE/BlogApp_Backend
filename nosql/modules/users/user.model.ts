@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
-import { baseData } from "./user.types";
-const userSchema = new Schema<baseData>(
+import { BaseData } from "./user.types";
+const userSchema = new Schema<BaseData>(
   {
     name: { type: String, required: true },
     email: {

@@ -1,12 +1,10 @@
 export default {
   paths: {
-    // Blog API
-
     "/blogs": {
       post: {
         tags: ["blogs"],
         summary: "Create a new blog",
-        description: "Return newly added blog",
+        description: "Creates a new blog and returns the newly added blog.",
         operationId: "add",
         consumes: ["application/json"],
         produces: ["application/json"],
@@ -14,18 +12,13 @@ export default {
           {
             in: "body",
             name: "body",
-            description: "Required payload for creating new blog",
+            description: "Payload for creating a new blog",
             required: true,
             schema: {
               $ref: "#/definitions/blogs",
             },
           },
         ],
-        // security: [
-        //   {
-        //     access_token: []
-        //   }
-        // ],
         responses: {
           200: {
             description: "Successful operation",
@@ -38,13 +31,10 @@ export default {
           },
         },
       },
-
-      // Get
-
       get: {
         tags: ["blogs"],
         summary: "Get all the blogs",
-        description: "Returns all the blogs",
+        description: "Returns all the blogs.",
         operationId: "list",
         consumes: ["application/json"],
         produces: ["application/json"],
@@ -52,23 +42,18 @@ export default {
           {
             name: "limit",
             in: "query",
-            description: "Required payload for getting all blog",
+            description: "Limit for number of blogs per page",
             required: true,
             type: "number",
           },
           {
             name: "page",
             in: "query",
-            description: "Required payload for getting all blog",
+            description: "Page number",
             required: true,
             type: "number",
           },
         ],
-        // security: [
-        //   {
-        //     access_token: []
-        //   }
-        // ],
         responses: {
           200: {
             description: "Successful operation",
@@ -82,14 +67,11 @@ export default {
         },
       },
     },
-
-    // GetById
-
     "/blogs/{id}": {
       get: {
         tags: ["blogs"],
         summary: "Find blogs by ID",
-        description: "Returns a single blog",
+        description: "Returns a single blog based on the provided ID.",
         operationId: "getById",
         produces: ["application/json"],
         parameters: [
@@ -101,11 +83,6 @@ export default {
             type: "string",
           },
         ],
-        // security: [
-        //   {
-        //     access_token: []
-        //   }
-        // ],
         responses: {
           200: {
             description: "Successful operation",
@@ -120,42 +97,35 @@ export default {
             description: "Invalid Operation",
           },
           404: {
-            description: "blog not found",
+            description: "Blog not found",
           },
         },
       },
-
-      // Update
-
       put: {
         tags: ["blogs"],
         summary: "Update blog status by ID",
-        description: "Returns a single blog with updated status",
+        description:
+          "Updates the status of a blog based on the provided ID and returns the updated blog.",
         operationId: "update",
         produces: ["application/json"],
         parameters: [
           {
             name: "id",
             in: "path",
-            description: "ID of blog to return",
+            description: "ID of blog to update",
             required: true,
             type: "string",
           },
           {
             in: "body",
             name: "body",
-            description: "Required payload for creating new blog",
+            description: "Payload for updating the blog status",
             required: true,
             schema: {
               $ref: "#/definitions/blogs",
             },
           },
         ],
-        // security: [
-        //   {
-        //     access_token: []
-        //   }
-        // ],
         responses: {
           200: {
             description: "Successful operation",
@@ -170,33 +140,25 @@ export default {
             description: "Invalid Operation",
           },
           404: {
-            description: "blog not found",
+            description: "Blog not found",
           },
         },
       },
-
-      // Delete
-
       delete: {
         tags: ["blogs"],
         summary: "Delete blog by ID",
-        description: "Deletes a single b;og",
+        description: "Deletes a single blog based on the provided ID.",
         operationId: "delete",
         produces: ["application/json"],
         parameters: [
           {
             name: "id",
             in: "path",
-            description: "ID of todo that needs to be deleted",
+            description: "ID of blog to delete",
             required: true,
             type: "string",
           },
         ],
-        // security: [
-        //   {
-        //     access_token: []
-        //   }
-        // ],
         responses: {
           200: {
             description: "Successful operation",
@@ -211,20 +173,17 @@ export default {
             description: "Invalid Operation",
           },
           404: {
-            description: "blog not found",
+            description: "Blog not found",
           },
         },
       },
     },
-
-    // Blog APi Documentation end here
-
-    // Auth API documentation======================================================================
     "/auths/register": {
       post: {
         tags: ["auths"],
         summary: "Register new user",
-        description: "Return status",
+        description:
+          "Registers a new user with provided details and returns status.",
         operationId: "create",
         consumes: ["multipart/form-data"],
         produces: ["application/json"],
@@ -258,11 +217,6 @@ export default {
             required: true,
           },
         ],
-        security: [
-          {
-            access_token: [],
-          },
-        ],
         responses: {
           200: {
             description: "Successful operation",
@@ -276,14 +230,11 @@ export default {
         },
       },
     },
-
-    // ==================================================================================================
-
     "/auths/verify": {
       post: {
         tags: ["auths"],
         summary: "Verify new Register user",
-        description: "Return object",
+        description: "Verifies a newly registered user with email and token.",
         operationId: "create",
         consumes: ["application/json"],
         produces: ["application/json"],
@@ -291,7 +242,7 @@ export default {
           {
             in: "body",
             name: "body",
-            description: "Email and token to verify new register user",
+            description: "Email and token to verify new registered user",
             required: true,
             schema: {
               type: "object",
@@ -320,12 +271,12 @@ export default {
         },
       },
     },
-    // complete
     "/auths/login": {
       post: {
         tags: ["auths"],
-        summary: "login user",
-        description: "Return token",
+        summary: "Login user",
+        description:
+          "Logs in a user with provided email and password and returns token.",
         operationId: "create",
         consumes: ["application/json"],
         produces: ["application/json"],
@@ -333,7 +284,7 @@ export default {
           {
             in: "body",
             name: "body",
-            description: "Email and password to Login in the system",
+            description: "Email and password for login",
             required: true,
             schema: {
               type: "object",
@@ -345,7 +296,7 @@ export default {
                   type: "string",
                 },
               },
-              required: ["email", "token"],
+              required: ["email", "password"],
             },
           },
         ],
@@ -363,18 +314,16 @@ export default {
             description: "Invalid Operation",
           },
           404: {
-            description: "Failed to Login",
+            description: "Failed to login",
           },
         },
       },
     },
-    // complete
-
     "/auths/regenerateToken": {
       post: {
         tags: ["auths"],
-        summary: "login user",
-        description: "Return token",
+        summary: "Regenerate token",
+        description: "Regenerates token for a user with provided email.",
         operationId: "create",
         consumes: ["application/json"],
         produces: ["application/json"],
@@ -382,7 +331,7 @@ export default {
           {
             in: "body",
             name: "body",
-            description: "Email and password to Login in the system",
+            description: "Email to regenerate token",
             required: true,
             schema: {
               type: "object",
@@ -409,7 +358,7 @@ export default {
             description: "Invalid Operation",
           },
           404: {
-            description: "Failed to Login",
+            description: "Failed to login",
           },
         },
       },
@@ -417,8 +366,8 @@ export default {
     "/auths/generateFPToken": {
       put: {
         tags: ["auths"],
-        summary: "login user",
-        description: "Return token",
+        summary: "Generate forget password token",
+        description: "Generates token for password reset with provided email.",
         operationId: "create",
         consumes: ["application/json"],
         produces: ["application/json"],
@@ -426,7 +375,7 @@ export default {
           {
             in: "body",
             name: "body",
-            description: "Email and password to Login in the system",
+            description: "Email to generate forget password token",
             required: true,
             schema: {
               type: "object",
@@ -453,7 +402,7 @@ export default {
             description: "Invalid Operation",
           },
           404: {
-            description: "Failed to Login",
+            description: "Failed to login",
           },
         },
       },
@@ -461,8 +410,8 @@ export default {
     "/auths/forget-password": {
       put: {
         tags: ["auths"],
-        summary: "login user",
-        description: "Return token",
+        summary: "Forget password",
+        description: "Initiates password reset process and returns token.",
         operationId: "create",
         consumes: ["application/json"],
         produces: ["application/json"],
@@ -470,7 +419,7 @@ export default {
           {
             in: "body",
             name: "body",
-            description: "Email and password to Login in the system",
+            description: "Email and password for login",
             required: true,
             schema: {
               type: "object",
@@ -503,18 +452,16 @@ export default {
             description: "Invalid Operation",
           },
           404: {
-            description: "Failed to Login",
+            description: "Failed to login",
           },
         },
       },
     },
-    // =======================
-
     "/users/": {
       get: {
         tags: ["users"],
         summary: "Get all the users",
-        description: "Returns all the users",
+        description: "Returns all the users.",
         operationId: "list",
         consumes: ["application/json"],
         produces: ["application/json"],
@@ -522,14 +469,14 @@ export default {
           {
             name: "limit",
             in: "query",
-            description: "Required payload for getting all blog",
+            description: "Limit for number of users per page",
             required: true,
             type: "number",
           },
           {
             name: "page",
             in: "query",
-            description: "Required payload for getting all blog",
+            description: "Page number",
             required: true,
             type: "number",
           },
@@ -555,12 +502,11 @@ export default {
     "/users/profile": {
       get: {
         tags: ["users"],
-        summary: "Get a user by id",
-        description: "Returns a  user",
+        summary: "Get a user by ID",
+        description: "Returns a user by ID.",
         operationId: "list",
         consumes: ["application/json"],
         produces: ["application/json"],
-
         security: [
           {
             access_token: [],
@@ -579,12 +525,11 @@ export default {
         },
       },
     },
-
     "/users/update/profile": {
       put: {
         tags: ["users"],
-        summary: "update a user",
-        description: "return a user",
+        summary: "Update a user",
+        description: "Updates user profile information.",
         operationId: "update",
         consumes: ["multipart/form-data"],
         produces: ["application/json"],
@@ -620,12 +565,11 @@ export default {
         },
       },
     },
-
     "/users/change-password": {
       put: {
         tags: ["users"],
-        summary: "Change a password",
-        description: "return a success",
+        summary: "Change password",
+        description: "Changes the password of a user.",
         operationId: "update",
         consumes: ["application/json"],
         produces: ["application/json"],
@@ -633,7 +577,7 @@ export default {
           {
             in: "body",
             name: "body",
-            description: "Email and token to verify new register user",
+            description: "Payload for changing password",
             required: true,
             schema: {
               type: "object",
@@ -670,8 +614,8 @@ export default {
     "/users/reset-password": {
       put: {
         tags: ["users"],
-        summary: "reset a password",
-        description: "return a success",
+        summary: "Reset password",
+        description: "Resets the password of a user.",
         operationId: "update",
         consumes: ["application/json"],
         produces: ["application/json"],
@@ -679,19 +623,22 @@ export default {
           {
             in: "body",
             name: "body",
-            description: "Email and token to verify new register user",
+            description: "Payload for resetting password",
             required: true,
             schema: {
               type: "object",
               properties: {
-                id: {
+                email: {
+                  type: "string",
+                },
+                token: {
                   type: "string",
                 },
                 password: {
                   type: "string",
                 },
               },
-              required: ["id", "password"],
+              required: ["email", "token", "password"],
             },
           },
         ],
@@ -716,8 +663,8 @@ export default {
     "/users/status/{id}": {
       patch: {
         tags: ["users"],
-        summary: "Reset a password",
-        description: "Return a success",
+        summary: "Update user status",
+        description: "Updates the status of a user by ID.",
         operationId: "update",
         consumes: ["application/json"],
         produces: ["application/json"],
@@ -726,13 +673,13 @@ export default {
             in: "path",
             name: "id",
             type: "string",
-            description: "ID to find the user",
+            description: "ID of the user to update status",
             required: true,
           },
           {
             in: "body",
             name: "body",
-            description: "Status of the user",
+            description: "New status of the user",
             required: true,
             schema: {
               type: "object",
@@ -765,8 +712,8 @@ export default {
     "/users/{id}": {
       delete: {
         tags: ["users"],
-        summary: "Delete a users",
-        description: "deleting a users",
+        summary: "Delete a user",
+        description: "Deletes a user by ID.",
         operationId: "delete",
         consumes: ["application/json"],
         produces: ["application/json"],
@@ -775,13 +722,13 @@ export default {
             in: "path",
             name: "id",
             type: "string",
-            description: "ID to find the user",
+            description: "ID of the user to delete",
             required: true,
           },
           {
             in: "body",
             name: "body",
-            description: "Status of the user",
+            description: "Optional additional data",
             required: true,
             schema: {
               type: "object",
@@ -811,12 +758,11 @@ export default {
         },
       },
     },
-
     "/users": {
       post: {
         tags: ["users"],
-        summary: "create new user",
-        description: "Return users",
+        summary: "Create a new user",
+        description: "Creates a new user.",
         operationId: "create",
         consumes: ["multipart/form-data"],
         produces: ["application/json"],
@@ -849,12 +795,11 @@ export default {
             description: "Password of the user",
             required: true,
           },
-
           {
             in: "formData",
             name: "roles",
             type: "string",
-            description: "roles of the user",
+            description: "Roles of the user",
             required: true,
           },
         ],

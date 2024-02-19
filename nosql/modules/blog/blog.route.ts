@@ -2,7 +2,7 @@ import express, { NextFunction, Request, Response, Router } from "express";
 import multer from "multer";
 import controller from "./blog.controller";
 import {validateBlogDataMiddleware,validateLimit,updateValidateBlogDataMiddleware} from "./blog.validator";
-
+import secureAPI from "../../utils/secure";
 const router: Router = express.Router();
 
 const storage = multer.diskStorage({
@@ -29,7 +29,7 @@ const upload = multer({ storage: storage });
 router.use(upload.single("images"));
 
 
-router.post("/", validateBlogDataMiddleware,async (req: Request, res: Response, next: NextFunction) => {
+router.post("/", validateBlogDataMiddleware, secureAPI(["admin"]),async (req: Request, res: Response, next: NextFunction) => {
   try {
     req.body.images = req.file ? `blog/${req.file.filename}` : "";
     const totalWord = parseInt(req.body.totalWord);
@@ -61,7 +61,7 @@ router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-router.put("/:id", updateValidateBlogDataMiddleware,async (req: Request, res: Response, next: NextFunction) => {
+router.put("/:id", updateValidateBlogDataMiddleware, secureAPI(["admin"]),async (req: Request, res: Response, next: NextFunction) => {
   try {
     req.body.images = req.file ? `blog/${req.file.filename}` : "";
 
@@ -73,7 +73,7 @@ router.put("/:id", updateValidateBlogDataMiddleware,async (req: Request, res: Re
 });
 
 router.delete(
-  "/:id",
+  "/:id", secureAPI(["admin"]),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = await controller.deleteById(req.params.id);

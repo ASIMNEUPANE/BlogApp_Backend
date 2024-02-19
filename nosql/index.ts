@@ -12,6 +12,8 @@ import limiter from "./middlewares/rateLimit";
 
 import swaggerJsDocs from "./documentation";
 import IndexRouter from "./routes/index";
+import { request } from "http";
+import { string } from "zod";
 const PORT = parseInt(process.env.PORT || "3333");
 
 if (!process.env.DB_URL) {
@@ -35,6 +37,7 @@ declare global {
       NODE_ENV: string;
       OTP_SECRET: string;
       OTP_DURATION: number;
+      SALT_ROUND:number
     }
   }
 }

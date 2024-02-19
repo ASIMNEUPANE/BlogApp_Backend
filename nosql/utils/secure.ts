@@ -1,7 +1,8 @@
 import express, { NextFunction, Request, Response, Router } from "express";
 
 import { verifyJWT } from "./jwt";
-import userModel from "../modules/users/user.model";
+import userModel from "../modules/users/user.model"; // Import the User interface
+ 
 
 const compareRole = (requiredRole: string, userRole: string) => {
   if (requiredRole.length < 1) return true;
@@ -23,7 +24,7 @@ const secureAPI = (roles: [string, string?]) => {
       req.currentUser = user?._id;
       req.currentRoles = user?.roles;
       // compare role against secureAPI passed role
-      const isValidRole = compareRole(roles ?? [], user?.roles);
+      const isValidRole = compareRole(roles:string ?? [], user?.roles:string);
       if (!isValidRole) throw new Error("user unathorized");
       next();
     } catch (e) {

@@ -60,7 +60,7 @@ router.get(
 
 router.get(
   "/profile",
-  secureAPI(["admin", "user"]),
+  secureAPI(["admin", "users"]),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = await controller.getById(req.currentUser);
@@ -140,7 +140,6 @@ router.patch("/status/:id", secureAPI(["admin"]), async (req, res, next) => {
 
 router.get("/:id", secureAPI(["admin"]), async (req, res, next) => {
   try {
-    console.log(req.params.id, "params");
     const result = await controller.getById(req.params.id);
     res.status(200).json({ data: result, msg: "success" });
   } catch (e) {

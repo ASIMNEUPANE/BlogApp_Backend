@@ -4,12 +4,12 @@ import userModel from "../users/user.model";
 
 import { generateOTP, verifyOTP } from "../../utils/otp";
 import { verifyData, UserLogin } from "./auth.types";
-import { baseData } from "../users/user.types";
+import { BaseData } from "../users/user.types";
 import { mailer } from "../../services/mailer";
 import { generateJWT } from "../../utils/jwt";
 import { DeleteResult } from "../blog/blog.type";
 
-const register = async (payload: baseData): Promise<string> => {
+const register = async (payload: BaseData): Promise<string> => {
   try {
     const { isActive, isEmailVerified, roles, password, ...rest } = payload;
     rest.password = await bcrypt.hash(password, Number(process.env.SALT_ROUND));
@@ -106,8 +106,8 @@ const forgetPassowrd = async (
 
     { new: true }
   );
-   await model.deleteOne({ email });
-   return true;
+  await model.deleteOne({ email });
+  return true;
 };
 
 export default {

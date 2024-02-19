@@ -1,6 +1,6 @@
 import { Document } from "mongoose";
 
-export interface baseData extends Document {
+export interface BaseData extends Document {
   _id?: string;
   id: string;
   name: string;
@@ -10,14 +10,15 @@ export interface baseData extends Document {
   isEmailVerified: boolean;
   isActive: boolean;
   roles?: string[];
-  isArchive:boolean
-  created_by : string;
-  updated_by : string
-  select:string
-  
+  isArchive: boolean;
+  created_by: string;
+  updated_by: string;
+  select: string;
+  currentUser: string;
+  currentRoles: string;
+
   // Specify the type argument for the Array type.
   // roles: Array<string>; // Specify the type argument for the Array type.
 }
 
-
-export interface payloadTypes extends baseData {}
+export interface payloadTypes extends BaseData {}
