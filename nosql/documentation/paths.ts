@@ -539,8 +539,8 @@ export default {
           },
         },
       },
-    },
-    "/users/update/profile": {
+    
+    
       put: {
         tags: ["users"],
         summary: "Update a user",
