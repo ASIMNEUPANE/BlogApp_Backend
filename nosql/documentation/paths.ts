@@ -19,6 +19,11 @@ export default {
             },
           },
         ],
+        security: [
+          {
+            access_token: [],
+          },
+        ],
         responses: {
           200: {
             description: "Successful operation",
@@ -126,6 +131,11 @@ export default {
             },
           },
         ],
+        security: [
+          {
+            access_token: [],
+          },
+        ],
         responses: {
           200: {
             description: "Successful operation",
@@ -157,6 +167,11 @@ export default {
             description: "ID of blog to delete",
             required: true,
             type: "string",
+          },
+        ],
+        security: [
+          {
+            access_token: [],
           },
         ],
         responses: {
