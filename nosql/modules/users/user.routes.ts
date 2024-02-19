@@ -3,7 +3,7 @@ import multer from "multer";
 import controller from "./user.controller";
 import secureAPI from "../../utils/secure";
 import { authValidatorMiddleware } from "../auth/auth.validator";
-import {limitValidatorMiddleware,updateMiddleware} from './user.validator'
+import { limitValidatorMiddleware, updateMiddleware } from "./user.validator";
 
 const router: Router = express.Router();
 
@@ -38,20 +38,25 @@ router.post(
   }
 );
 
-router.get("/",limitValidatorMiddleware, secureAPI(["admin"]), async (req, res, next) => {
-  try {
-    console.log(req.query);
-    const { limit, page, search } = req.query;
-    const result = await controller.get(
-      String(limit),
-      String(page),
-      String(search)
-    );
-    res.status(200).json({ data: result, msg: "success" });
-  } catch (e) {
-    next(e);
+router.get(
+  "/",
+  limitValidatorMiddleware,
+  secureAPI(["admin"]),
+  async (req, res, next) => {
+    try {
+      console.log(req.query);
+      const { limit, page, search } = req.query;
+      const result = await controller.get(
+        String(limit),
+        String(page),
+        String(search)
+      );
+      res.status(200).json({ data: result, msg: "success" });
+    } catch (e) {
+      next(e);
+    }
   }
-});
+);
 
 router.get(
   "/profile",
@@ -66,9 +71,9 @@ router.get(
   }
 );
 router.put(
-  "/profile",
-  secureAPI(["admin", "user"]),
-  upload.single("image"),
+  "/update/profile",
+  secureAPI(["admin", "users"]),
+  upload.single("images"),
   updateMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -79,9 +84,7 @@ router.put(
       const { id, ...rest } = req.body;
       rest.created_by = req.currentUser;
       rest.updated_by = req.currentUser;
-      const me = req.currentRoles.includes("admin")
-        ? req.body.id
-        : req.currentUser;
+      const me = req.body.id ? req.body.id : req.currentUser;
       if (!me) throw new Error("User ID is required");
       const result = await controller.updateById(me, rest);
       res.status(200).json({ data: result, msg: "success" });
@@ -93,14 +96,15 @@ router.put(
 
 router.put(
   "/change-password",
-  secureAPI(["user", "admin"]),
+  secureAPI(["admin", "users"]),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { oldPassword, newPassword, id } = req.body;
+      const { oldPassword, newPassword } = req.body;
       if (!oldPassword || !newPassword)
         throw new Error("Passwords are missing");
+      const me = req.body.id ? req.body.id : req.currentUser;
       const result = await controller.changePassword(
-        id,
+        me,
         oldPassword,
         newPassword
       );

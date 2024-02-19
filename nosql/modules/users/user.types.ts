@@ -13,6 +13,7 @@ export interface baseData extends Document {
   isArchive:boolean
   created_by : string;
   updated_by : string
+  select:string
   
   // Specify the type argument for the Array type.
   // roles: Array<string>; // Specify the type argument for the Array type.

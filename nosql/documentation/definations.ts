@@ -28,8 +28,6 @@ export default {
         data: { type: "string" },
         msg: { type: "string" },
       },
-
-      
     },
     login: {
       type: "object",

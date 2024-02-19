@@ -10,6 +10,7 @@ const create = async (payload: payloadTypes): Promise<baseData | null> => {
   rest.isEmailVerified = true;
   rest.isActive = true;
   return await model.create(rest);
+  // return (await model.create(rest)).select('-password'); this is not working
 };
 
 const get = async (
@@ -84,7 +85,9 @@ const updateById = async (
   id: string,
   payload: payloadTypes
 ): Promise<baseData | null> => {
-  return await model.findOneAndUpdate({ _id: id }, payload, { new: true });
+  return await model
+    .findOneAndUpdate({ _id: id }, payload, { new: true })
+    .select("-password");
 };
 
 const changePassword = async (
@@ -103,11 +106,9 @@ const changePassword = async (
   const newPass = await bcrypt.hash(newPassword, +process.env.SALT_ROUND);
 
   // update the userpassword
-  return await model.findOneAndUpdate(
-    { _id: user?._id },
-    { password: newPass },
-    { new: true }
-  );
+  return await model
+    .findOneAndUpdate({ _id: user?._id }, { password: newPass }, { new: true })
+    .select("-password");
 };
 
 const resetPassword = async (
@@ -130,7 +131,9 @@ const block = async (
 ): Promise<baseData | null> => {
   const user = await model.find({ _id: id });
   if (!user) throw new Error("User not found");
-  return await model.findOneAndUpdate({ _id: id }, payload, { new: true });
+  return await model
+    .findOneAndUpdate({ _id: id }, payload, { new: true })
+    .select("-password");
 };
 
 const archive = async (
@@ -139,7 +142,9 @@ const archive = async (
 ): Promise<baseData | null> => {
   const user = await model.find({ _id: id });
   if (!user) throw new Error("User not found");
-  return await model.findOneAndUpdate({ _id: id }, payload, { new: true });
+  return await model
+    .findOneAndUpdate({ _id: id }, payload, { new: true })
+    .select("-password");
 };
 
 export default {
