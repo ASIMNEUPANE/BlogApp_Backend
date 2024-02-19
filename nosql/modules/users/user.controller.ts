@@ -4,8 +4,8 @@ import { Paginate } from "../blog/blog.type";
 import { payloadTypes, baseData } from "../users/user.types";
 
 const create = async (payload: payloadTypes): Promise<baseData | null> => {
-  const { password, roles, ...rest  } = payload;
-  rest.password  = await bcrypt.hash(password, +process.env.SALT_ROUND);
+  const { password, roles, ...rest } = payload;
+  rest.password = await bcrypt.hash(password, +process.env.SALT_ROUND);
   rest.roles = [roles];
   rest.isEmailVerified = true;
   rest.isActive = true;
@@ -58,10 +58,15 @@ const get = async (
             page: pageNum,
           },
         },
+        {
+          $project: {
+            "data.password": 0,
+          },
+        },
       ])
       .allowDiskUse(true);
     const newResult = result[0];
-    const { data, total } = newResult;
+    let { data, total } = newResult;
 
     return { data, total, limit, page };
   } catch (error) {

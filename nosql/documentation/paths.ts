@@ -216,5 +216,369 @@ export default {
         },
       },
     },
+
+    // Blog APi Documentation end here
+
+    // Auth API documentation======================================================================
+    "/auths/register": {
+      post: {
+        tags: ["auths"],
+        summary: "Register new user",
+        description: "Return status",
+        operationId: "create",
+        consumes: ["multipart/form-data"],
+        produces: ["application/json"],
+        parameters: [
+          {
+            in: "formData",
+            name: "images",
+            type: "file",
+            description: "Image file to upload",
+            required: true,
+          },
+          {
+            in: "formData",
+            name: "name",
+            type: "string",
+            description: "Name of the user",
+            required: true,
+          },
+          {
+            in: "formData",
+            name: "email",
+            type: "string",
+            description: "Email of the user",
+            required: true,
+          },
+          {
+            in: "formData",
+            name: "password",
+            type: "string",
+            description: "Password of the user",
+            required: true,
+          },
+        ],
+        security: [
+          {
+            access_token: [],
+          },
+        ],
+        responses: {
+          200: {
+            description: "Successful operation",
+            schema: {
+              $ref: "#/definitions/auths",
+            },
+          },
+          500: {
+            description: "Invalid register",
+          },
+        },
+      },
+    },
+
+    // ==================================================================================================
+
+    "/auths/verify": {
+      post: {
+        tags: ["auths"],
+        summary: "Verify new Register user",
+        description: "Return object",
+        operationId: "create",
+        consumes: ["application/json"],
+        produces: ["application/json"],
+        parameters: [
+          {
+            in: "body",
+            name: "body",
+            description: "Email and token to verify new register user",
+            required: true,
+            schema: {
+              type: "object",
+              properties: {
+                email: {
+                  type: "string",
+                },
+                token: {
+                  type: "string",
+                },
+              },
+              required: ["email", "token"],
+            },
+          },
+        ],
+        responses: {
+          200: {
+            description: "Successful operation",
+            schema: {
+              $ref: "#/definitions/auths",
+            },
+          },
+          500: {
+            description: "Invalid register",
+          },
+        },
+      },
+    },
+    // complete
+    "/auths/login": {
+      post: {
+        tags: ["auths"],
+        summary: "login user",
+        description: "Return token",
+        operationId: "create",
+        consumes: ["application/json"],
+        produces: ["application/json"],
+        parameters: [
+          {
+            in: "body",
+            name: "body",
+            description: "Email and password to Login in the system",
+            required: true,
+            schema: {
+              type: "object",
+              properties: {
+                email: {
+                  type: "string",
+                },
+                password: {
+                  type: "string",
+                },
+              },
+              required: ["email", "token"],
+            },
+          },
+        ],
+        responses: {
+          200: {
+            description: "Successful operation",
+            schema: {
+              $ref: "#/definitions/login",
+            },
+          },
+          400: {
+            description: "Invalid ID supplied",
+          },
+          500: {
+            description: "Invalid Operation",
+          },
+          404: {
+            description: "Failed to Login",
+          },
+        },
+      },
+    },
+    // complete
+
+    "/auths/regenerateToken": {
+      post: {
+        tags: ["auths"],
+        summary: "login user",
+        description: "Return token",
+        operationId: "create",
+        consumes: ["application/json"],
+        produces: ["application/json"],
+        parameters: [
+          {
+            in: "body",
+            name: "body",
+            description: "Email and password to Login in the system",
+            required: true,
+            schema: {
+              type: "object",
+              properties: {
+                email: {
+                  type: "string",
+                },
+              },
+              required: ["email"],
+            },
+          },
+        ],
+        responses: {
+          200: {
+            description: "Successful operation",
+            schema: {
+              $ref: "#/definitions/auths",
+            },
+          },
+          400: {
+            description: "Invalid ID supplied",
+          },
+          500: {
+            description: "Invalid Operation",
+          },
+          404: {
+            description: "Failed to Login",
+          },
+        },
+      },
+    },
+    "/auths/generateFPToken": {
+      put: {
+        tags: ["auths"],
+        summary: "login user",
+        description: "Return token",
+        operationId: "create",
+        consumes: ["application/json"],
+        produces: ["application/json"],
+        parameters: [
+          {
+            in: "body",
+            name: "body",
+            description: "Email and password to Login in the system",
+            required: true,
+            schema: {
+              type: "object",
+              properties: {
+                email: {
+                  type: "string",
+                },
+              },
+              required: ["email"],
+            },
+          },
+        ],
+        responses: {
+          200: {
+            description: "Successful operation",
+            schema: {
+              $ref: "#/definitions/auths",
+            },
+          },
+          400: {
+            description: "Invalid ID supplied",
+          },
+          500: {
+            description: "Invalid Operation",
+          },
+          404: {
+            description: "Failed to Login",
+          },
+        },
+      },
+    },
+    "/auths/forget-password": {
+      put: {
+        tags: ["auths"],
+        summary: "login user",
+        description: "Return token",
+        operationId: "create",
+        consumes: ["application/json"],
+        produces: ["application/json"],
+        parameters: [
+          {
+            in: "body",
+            name: "body",
+            description: "Email and password to Login in the system",
+            required: true,
+            schema: {
+              type: "object",
+              properties: {
+                email: {
+                  type: "string",
+                },
+                token: {
+                  type: "string",
+                },
+                password: {
+                  type: "string",
+                },
+              },
+              required: ["email"],
+            },
+          },
+        ],
+        responses: {
+          200: {
+            description: "Successful operation",
+            schema: {
+              $ref: "#/definitions/forgetPassword",
+            },
+          },
+          400: {
+            description: "Invalid ID supplied",
+          },
+          500: {
+            description: "Invalid Operation",
+          },
+          404: {
+            description: "Failed to Login",
+          },
+        },
+      },
+    },
+    // =======================
+
+    "/users/": {
+      get: {
+        tags: ["users"],
+        summary: "Get all the users",
+        description: "Returns all the users",
+        operationId: "list",
+        consumes: ["application/json"],
+        produces: ["application/json"],
+        parameters: [
+          {
+            name: "limit",
+            in: "query",
+            description: "Required payload for getting all blog",
+            required: true,
+            type: "number",
+          },
+          {
+            name: "page",
+            in: "query",
+            description: "Required payload for getting all blog",
+            required: true,
+            type: "number",
+          },
+        ],
+        security: [
+          {
+            access_token: [],
+          },
+        ],
+        responses: {
+          200: {
+            description: "Successful operation",
+            schema: {
+              $ref: "#/definitions/users",
+            },
+          },
+          500: {
+            description: "Invalid Operation",
+          },
+        },
+      },
+    },
+    "/users/profile":{
+      get: {
+        tags: ["users"],
+        summary: "Get a user by id",
+        description: "Returns a  user",
+        operationId: "list",
+        consumes: ["application/json"],
+        produces: ["application/json"],
+        
+        
+        security: [
+          {
+            access_token: [],
+          },
+        ],
+        responses: {
+          200: {
+            description: "Successful operation",
+            schema: {
+              $ref: "#/definitions/users",
+            },
+          },
+          500: {
+            description: "Invalid Operation",
+          },
+        },
+      },
+    }
   },
 };

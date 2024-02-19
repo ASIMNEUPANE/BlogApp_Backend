@@ -93,7 +93,7 @@ const forgetPassowrd = async (
   email: string,
   token: string,
   password: string
-): Promise<DeleteResult> => {
+): Promise<boolean> => {
   const auth = await model.findOne({ email });
   if (!auth) throw new Error("user not found");
   const isValidToken = await verifyOTP(token);
@@ -106,7 +106,8 @@ const forgetPassowrd = async (
 
     { new: true }
   );
-  return await model.deleteOne({ email });
+   await model.deleteOne({ email });
+   return true;
 };
 
 export default {

@@ -19,12 +19,12 @@ export default {
   schemes: ["http", "https"],
   host: apiLocation,
   basePath: apiVersion,
-  // securityDefinitions: {
-  //   access_token: {
-  //     type: "apiKey",
-  //     in: "header",
-  //     name: "access_token",
-  //     description: "get token using user login method",
-  //   },
-  // },
+  securityDefinitions: {
+    access_token: {
+      type: "apiKey",
+      in: "header",
+      name: "authorization",
+      description: "get token using user login method",
+    },
+  },
 };

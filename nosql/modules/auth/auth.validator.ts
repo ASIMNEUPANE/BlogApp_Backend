@@ -41,7 +41,7 @@ const authValidatorMiddleware = (
   next: NextFunction
 ) => {
   try {
-    console.log(req,'zod===================')
+    console.log("========",req,'zod===================')
     const { name, email, password } = req.body;
     const images = req.file ? req.file.path : undefined;
 

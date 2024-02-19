@@ -4,9 +4,13 @@ export default  {
         name: 'blogs',
         description: 'Blogs API Operations',
       },
-      // {
-      //   name: 'subtasks',
-      //   description: 'Subtask API Operations',
-      // },
+      {
+        name: 'auths',
+        description: 'Authentication API Operations',
+      },
+      {
+        name: 'users',
+        description: 'Users Management API Operations',
+      },
     ],
   };

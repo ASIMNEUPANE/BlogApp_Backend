@@ -76,14 +76,14 @@ router.post(
     }
   }
 );
-router.post(
-  "/regenerateToken",
+router.put(
+  "/generateFPToken",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email } = req.body;
       console.log(email,'route')
       if (!email) throw new Error("Email is missing");
-      const result = await controller.regenerateToken(email);
+      const result = await controller.generateFPToken(email);
       res.status(200).json({ data: result, msg: "success" });
     } catch (e) {
       next(e);
