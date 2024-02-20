@@ -10,7 +10,10 @@ import { generateJWT } from "../../utils/jwt";
 
 const register = async (payload: BaseData): Promise<string> => {
   try {
-    const { isActive, isEmailVerified, roles, password, ...rest }  = payload 
+    let { isActive, isEmailVerified, roles, password, ...rest }  =  payload as {
+      password: string;
+      [key: string]: any;
+    }
     rest.password = await bcrypt.hash(password, Number(process.env.SALT_ROUND) ?? 0);
     const user = await userModel.create(rest);
     const token = generateOTP();

@@ -1,11 +1,11 @@
 import JWT from "jsonwebtoken";
 
-const generateJWT = (payload: string) => {
+const generateJWT = (payload: { [key: string]: any }) => {
   return JWT.sign(
     {
       data: payload,
     },
-    process.env.JWT_SECRET,
+    process.env.JWT_SECRET || "",
     { expiresIn: process.env.JWT_DURATION }
   );
 };
