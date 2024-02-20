@@ -4,21 +4,28 @@ import { Paginate } from "../blog/blog.type";
 import { payloadTypes, BaseData } from "../users/user.types";
 
 const create = async (payload: payloadTypes): Promise<BaseData | null> => {
-  const { password, roles, ...rest } = payload;
-  rest.password = await bcrypt.hash(password, +process.env.SALT_ROUND);
-  rest.roles = [roles];
+  let { password, roles, ...rest } = payload as {
+    password: string;
+    roles?: string;
+    [key: string]: any;
+  };
+
+  rest.password = bcrypt.hash(password, +process.env.SALT_ROUND ?? 0);
+  rest.roles = roles ? [roles] : [];
   rest.isEmailVerified = true;
   rest.isActive = true;
-  return (await model.create(rest).select({ password: 0 })) as BaseData | null;
+  // return (await model.create(rest).select("-password")) as BaseData | null;; not working
+  return await model.create(rest);
 };
+// };
 
 const get = async (
-  limit: string,
-  page: string,
+  limit: number,
+  page: number,
   search: string
-): Promise<Paginate[]> => {
-  const pageNum = parseInt(page) || 1;
-  const size = parseInt(limit) || 4;
+): Promise<Paginate | null> => {
+  const pageNum = page || 1;
+  const size = limit || 4;
   const isArchive: boolean = Boolean(search);
   const query = { isArchive: false };
 
@@ -75,7 +82,7 @@ const get = async (
   }
 };
 
-const getById = async (id: payloadTypes): Promise<BaseData | null> => {
+const getById = async (id: string): Promise<BaseData | null> => {
   console.log(id, "controller");
   return await model.findOne({ _id: id });
 };
@@ -116,7 +123,10 @@ const resetPassword = async (
 ): Promise<BaseData | null> => {
   const user = await model.findOne({ _id: id });
   if (!user) throw new Error("User not found");
-  const newPass = await bcrypt.hash(payload.password, +process.env.SALT_ROUND);
+  const newPass = await bcrypt.hash(
+    payload.password as string,
+    +process.env.SALT_ROUND
+  );
   return await model.findOneAndUpdate(
     { _id: user?._id },
     { ...payload, password: newPass },

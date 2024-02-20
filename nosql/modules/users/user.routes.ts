@@ -27,8 +27,8 @@ router.post(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       req.body.images = req.file ? `blog/${req.file.filename}` : "";
-      req.body.created_by = req.currentUser;
-      req.body.updated_by = req.currentUser;
+      req.body.created_by = (req as any).currentUser;
+      req.body.updated_by = (req as any).currentUser;
       req.body.created_at = new Date();
       const result = await controller.create(req.body);
       res.status(200).json({ data: result, msg: "success" });
@@ -47,8 +47,8 @@ router.get(
       console.log(req.query);
       const { limit, page, search } = req.query;
       const result = await controller.get(
-        String(limit),
-        String(page),
+        Number(limit),
+        Number(page),
         String(search)
       );
       res.status(200).json({ data: result, msg: "success" });
@@ -63,7 +63,7 @@ router.get(
   secureAPI(["admin", "users"]),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await controller.getById(req.currentUser);
+      const result = await controller.getById((req as any).currentUser );
       res.status(200).json({ data: result, msg: "success" });
     } catch (err) {
       next(err);
@@ -82,9 +82,9 @@ router.put(
       }
 
       const { id, ...rest } = req.body;
-      rest.created_by = req.currentUser;
-      rest.updated_by = req.currentUser;
-      const me = req.body.id ? req.body.id : req.currentUser;
+      rest.created_by =(req as any).currentUser;
+      rest.updated_by =(req as any).currentUser;
+      const me = req.body.id ? req.body.id : (req as any).currentUser;
       if (!me) throw new Error("User ID is required");
       const result = await controller.updateById(me, rest);
       res.status(200).json({ data: result, msg: "success" });
@@ -102,7 +102,7 @@ router.put(
       const { oldPassword, newPassword } = req.body;
       if (!oldPassword || !newPassword)
         throw new Error("Passwords are missing");
-      const me = req.body.id ? req.body.id : req.currentUser;
+      const me = req.body.id ? req.body.id : (req as any).currentUser;
       const result = await controller.changePassword(
         me,
         oldPassword,
@@ -118,8 +118,8 @@ router.put(
 router.put("/reset-password", secureAPI(["admin"]), async (req, res, next) => {
   try {
     const { id, ...rest } = req.body;
-    // rest.created_by = req.currentUser;
-    // rest.updated_by = req.currentUser;
+    rest.created_by = (req as any).currentUser
+    rest.updated_by = (req as any).currentUser
     const result = await controller.resetPassword(id, rest);
     res.status(200).json({ data: result, msg: "success" });
   } catch (e) {
@@ -129,8 +129,8 @@ router.put("/reset-password", secureAPI(["admin"]), async (req, res, next) => {
 
 router.patch("/status/:id", secureAPI(["admin"]), async (req, res, next) => {
   try {
-    // req.body.created_by = req.currentUser;
-    // req.body.updated_by = req.currentUser;
+    req.body.created_by = (req as any).currentUser;
+    req.body.updated_by = (req as any).currentUser;
     const result = await controller.block(req.params.id, req.body);
     res.status(200).json({ data: result, msg: "success" });
   } catch (e) {
@@ -148,8 +148,8 @@ router.get("/:id", secureAPI(["admin"]), async (req, res, next) => {
 });
 router.delete("/:id", secureAPI(["admin"]), async (req, res, next) => {
   try {
-    // req.body.created_by = req.currentUser;
-    // req.body.updated_by = req.currentUser;
+    req.body.created_by = (req as any).currentUser;
+    req.body.updated_by = (req as any).currentUser;
     req.body.updated_at = new Date();
 
     const result = await controller.archive(req.params.id, req.body);

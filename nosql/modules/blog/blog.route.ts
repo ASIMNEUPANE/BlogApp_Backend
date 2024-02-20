@@ -1,7 +1,11 @@
 import express, { NextFunction, Request, Response, Router } from "express";
 import multer from "multer";
 import controller from "./blog.controller";
-import {validateBlogDataMiddleware,validateLimit,updateValidateBlogDataMiddleware} from "./blog.validator";
+import {
+  validateBlogDataMiddleware,
+  validateLimit,
+  updateValidateBlogDataMiddleware,
+} from "./blog.validator";
 import secureAPI from "../../utils/secure";
 const router: Router = express.Router();
 
@@ -28,29 +32,41 @@ const upload = multer({ storage: storage });
 // });
 router.use(upload.single("images"));
 
+router.post(
+  "/",
+  validateBlogDataMiddleware,
+  secureAPI(["admin"]),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      req.body.images = req.file ? `blog/${req.file.filename}` : "";
+      const totalWord = parseInt(req.body.totalWord);
+      req.body.totalWord = totalWord;
 
-router.post("/", validateBlogDataMiddleware, secureAPI(["admin"]),async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    req.body.images = req.file ? `blog/${req.file.filename}` : "";
-    const totalWord = parseInt(req.body.totalWord);
-    req.body.totalWord = totalWord
-
-    const result = await controller.create(req.body);
-    res.status(200).json({ data: result, msg: "success" });
-  } catch (err) {
-    next(err);
+      const result = await controller.create(req.body);
+      res.status(200).json({ data: result, msg: "success" });
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
-router.get("/", validateLimit, async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { limit, page, search } = req.query;
-    const result = await controller.get(String(limit), String(page), String(search));
-    res.status(200).json({ data: result, msg: "success" });
-  } catch (err) {
-    next(err);
+router.get(
+  "/",
+  validateLimit,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { limit, page, search } = req.query;
+      const result = await controller.get(
+        Number(limit),
+        Number(page),
+        String(search)
+      );
+      res.status(200).json({ data: result, msg: "success" });
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -61,19 +77,25 @@ router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-router.put("/:id", updateValidateBlogDataMiddleware, secureAPI(["admin"]),async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    req.body.images = req.file ? `blog/${req.file.filename}` : "";
+router.put(
+  "/:id",
+  updateValidateBlogDataMiddleware,
+  secureAPI(["admin"]),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      req.body.images = req.file ? `blog/${req.file.filename}` : "";
 
-    const result = await controller.updateById(req.params.id, req.body);
-    res.status(200).json({ data: result, msg: "success" });
-  } catch (err) {
-    next(err);
+      const result = await controller.updateById(req.params.id, req.body);
+      res.status(200).json({ data: result, msg: "success" });
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 router.delete(
-  "/:id", secureAPI(["admin"]),
+  "/:id",
+  secureAPI(["admin"]),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = await controller.deleteById(req.params.id);

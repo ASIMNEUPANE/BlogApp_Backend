@@ -7,12 +7,11 @@ import { verifyData, UserLogin } from "./auth.types";
 import { BaseData } from "../users/user.types";
 import { mailer } from "../../services/mailer";
 import { generateJWT } from "../../utils/jwt";
-import { DeleteResult } from "../blog/blog.type";
 
 const register = async (payload: BaseData): Promise<string> => {
   try {
-    const { isActive, isEmailVerified, roles, password, ...rest } = payload;
-    rest.password = await bcrypt.hash(password, Number(process.env.SALT_ROUND));
+    const { isActive, isEmailVerified, roles, password, ...rest }  = payload 
+    rest.password = await bcrypt.hash(password, Number(process.env.SALT_ROUND) ?? 0);
     const user = await userModel.create(rest);
     const token = generateOTP();
     await model.create({ email: user?.email, token });

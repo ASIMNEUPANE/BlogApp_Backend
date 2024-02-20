@@ -6,15 +6,17 @@ const create = async (payload: Iblog): Promise<Iblog> => {
 };
 
 const get = async (
-  limit: string,
-  page: string,
+  limit: number,
+  page: number,
   search: string
-): Promise<Paginate[]> => {
-  const pageNum = parseInt(page) || 1;
-  const size = parseInt(limit) || 4;
-  const status = typeof search === "string" ? search : "published"; // Set status based on search
+): Promise<Paginate | null> => {
+  const pageNum = page || 1;
+  const size = limit || 4;
 
-  const query = { status: status || "published" };
+  const status: string = search;
+  // const query = { status: status || "published" }; this is not working
+
+  const query = { status: "published" }; 
 
   try {
     const result = await model.aggregate([
@@ -51,9 +53,11 @@ const get = async (
           page: pageNum,
         },
       },
-    ]);
+    ]).allowDiskUse(true);
     const newResult = result[0];
-    const { data, total } = newResult;
+    let { data, total } = newResult;
+    total = total || 0;
+
 
     return { data, total, limit, page };
   } catch (error) {
