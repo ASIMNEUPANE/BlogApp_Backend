@@ -5,6 +5,7 @@ import compression from "compression";
 import mongoose from "mongoose";
 import cors from "cors";
 import swaggerUI from "swagger-ui-express";
+import createServer from "./utils/server";
 
 // Middleware
 import ErrorHandler from "./middlewares/ErrorHandler";
@@ -12,8 +13,7 @@ import limiter from "./middlewares/rateLimit";
 
 import swaggerJsDocs from "./documentation";
 import IndexRouter from "./routes/index";
-import { request } from "http";
-import { string } from "zod";
+
 const PORT = parseInt(process.env.PORT || "3333");
 
 if (!process.env.DB_URL) {
