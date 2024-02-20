@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 // Define interface outside the object
 interface DatabaseModule {
@@ -10,8 +10,8 @@ const common: DatabaseModule = {
   async connectDatabase() {
     try {
       await mongoose.connect((global as any).__MONGO_URI__, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
+        // useNewUrlParser: true,
+        // useUnifiedTopology: true,
       });
       await mongoose.connection.db.dropDatabase();
     } catch (error) {
@@ -19,7 +19,7 @@ const common: DatabaseModule = {
     }
   },
 
-  async closeDatabase(done: any) {
+  async closeDatabase(done:any) {
     try {
       await mongoose.connection.db.dropDatabase();
     } catch (error) {

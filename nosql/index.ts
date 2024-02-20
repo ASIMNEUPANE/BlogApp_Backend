@@ -5,7 +5,6 @@ import compression from "compression";
 import mongoose from "mongoose";
 import cors from "cors";
 import swaggerUI from "swagger-ui-express";
-import createServer from "./utils/server";
 
 // Middleware
 import ErrorHandler from "./middlewares/ErrorHandler";

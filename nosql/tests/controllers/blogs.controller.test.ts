@@ -1,20 +1,18 @@
+import common from "../common";
+import create from "../../modules/blog/blog.controller";
 
-const  common = require( '../common')
-const {create} = require( '../../modules/blog/blog.controller')
-
-
-const blogData ={
-  title : "wonder-world",
-  content:'best of the world',
-  description:"boom blastic...",
-  category : 'Technology',
-  status : 'published',
-  author: 'asim the don',
+const blogData = {
+  title: "wonder-world",
+  content: "best of the world",
+  description: "boom blastic...",
+  category: "Technology",
+  status: "published",
+  author: "asim the don",
   totalWord: 11,
-  images: 'images.jpg'
-}
+  images: "images.jpg",
+};
 
-describe('blog Model Test', () => {
+describe("blog Model Test", () => {
   beforeAll(async () => {
     console.log("Connecting to database...");
     await common.connectDatabase();
@@ -28,7 +26,7 @@ describe('blog Model Test', () => {
   });
 
   // Add Operation
-  it('create & save blog successfully', async () => {
+  it("create & save blog successfully", async () => {
     console.log("Creating blog...");
     const createdBlog = await create(blogData);
     console.log("Blog created:", createdBlog);
