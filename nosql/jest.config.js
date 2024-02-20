@@ -1,14 +1,12 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
-  preset: 'ts-jest',
-  testEnvironment: 'node',
-  // preset: "ts-jest",
-  // testEnvironment: "node",
-  testMatch: ["**/**/*.test.ts"],
+
+   bail: 1,
   verbose: true,
-  forceExit: true,
-  // clearMocks: true,
-  // resetMocks: true,
-  // restoreMocks: true,
-  // clearMocks:true,
+  clearMocks: true,
+  coverageDirectory: './coverage',
+  coverageReporters: ['text', 'lcov'],
+  preset: '@shelf/jest-mongodb',
+  testMatch: ['**/tests/**/*.test.ts'],
+
 };
