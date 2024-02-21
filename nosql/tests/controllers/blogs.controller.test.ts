@@ -1,5 +1,6 @@
 import common from "../common";
-import { create,get } from "../../modules/blog/blog.controller";
+import { create, get } from "../../modules/blog/blog.controller";
+import MongoClient from "mongodb";
 
 const blogData = {
   title: "wonder-world",
@@ -12,25 +13,29 @@ const blogData = {
   images: "images.jpg",
 };
 
-const getData ={
-  limit:2,
-  page:1,
-}
+const getData = {
+  limit: 2,
+  page: 1,
+};
 
-describe("blog Model Test", () => {
+// Add Operation
+
+describe("Blog Model Test", () => {
+  let connection;
+  let db;
+
   beforeAll(async () => {
-    console.log("Connecting to database...");
-    await common.connectDatabase();
-    console.log("Connected to database");
+    connection = await MongoClient.connect(globalThis.__MONGO_URI__, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    db = await connection.db(globalThis.__MONGO_DB_NAME__);
   });
 
   afterAll(async () => {
-    console.log("Closing database connection...");
-    await common.closeDatabase();
-    console.log("Database connection closed");
+    await connection.close();
   });
 
-  // Add Operation
   it("create & save blog successfully", async () => {
     console.log("Creating blog...");
     const createdBlog = await create(blogData);
@@ -49,8 +54,8 @@ describe("blog Model Test", () => {
   });
   // List Operation
 
-  it('lists all todos with their subtasks', async () => {
-    const allData = await get(2,2,'');
+  it("lists all todos with their subtasks", async () => {
+    const allData = await get(2, 2, "");
 
     expect(allData).toBeDefined();
     expect(Array.isArray(allData)).toBe(true);
