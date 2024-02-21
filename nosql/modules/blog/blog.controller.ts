@@ -81,4 +81,4 @@ const deleteById = async (id: string): Promise<DeleteResult | null> => {
   return await model.deleteOne({ _id: id });
 };
 
-export default { create, get, getById, updateById, deleteById };
+export   { create, get, getById, updateById, deleteById };

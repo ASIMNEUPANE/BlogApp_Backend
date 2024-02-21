@@ -39,8 +39,8 @@ describe("blog Model Test", () => {
     expect(createdBlog.totalWord).toBe(blogData.totalWord);
     expect(createdBlog.images).toBe(blogData.images);
     expect(createdBlog._id).toBeDefined();
-    expect(createdBlog.createdAt).toBeDefined();
-    expect(createdBlog.createdAt).toBeDefined();
+    expect(createdBlog.created_at).toBeDefined();
+    expect(createdBlog.updated_at).toBeDefined();
   });
 
   // List Operation
