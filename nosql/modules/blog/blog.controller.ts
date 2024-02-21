@@ -16,52 +16,52 @@ const get = async (
   const status: string = search;
   // const query = { status: status || "published" }; this is not working
 
-  const query = { status: "published" }; 
+  const query = { status: "published" };
 
   try {
-    const result = await model.aggregate([
-      {
-        $facet: {
-          // Stage 1: Calculate the total count
-          total: [
-            {
-              $match: query,
-            },
-            {
-              $count: "total",
-            },
-          ],
-          // Stage 2: Fetch paginated data
-          data: [
-            {
-              $match: query,
-            },
-            {
-              $skip: (pageNum - 1) * size,
-            },
-            {
-              $limit: size,
-            },
-          ],
+    const result = await model
+      .aggregate([
+        {
+          $facet: {
+            // Stage 1: Calculate the total count
+            total: [
+              {
+                $match: query,
+              },
+              {
+                $count: "total",
+              },
+            ],
+            // Stage 2: Fetch paginated data
+            data: [
+              {
+                $match: query,
+              },
+              {
+                $skip: (pageNum - 1) * size,
+              },
+              {
+                $limit: size,
+              },
+            ],
+          },
         },
-      },
-      {
-        $project: {
-          total: { $arrayElemAt: ["$total.total", 0] }, // Extract total count from the 'total' array
-          data: 1, // Include the 'data' array
-          limit: size,
-          page: pageNum,
+        {
+          $project: {
+            total: { $arrayElemAt: ["$total.total", 0] }, // Extract total count from the 'total' array
+            data: 1, // Include the 'data' array
+            limit: size,
+            page: pageNum,
+          },
         },
-      },
-    ]).allowDiskUse(true);
+      ])
+      .allowDiskUse(true);
     const newResult = result[0];
     let { data, total } = newResult;
     total = total || 0;
 
-
     return { data, total, limit, page };
   } catch (error) {
-    console.error("Error occurred:", error);
     throw new Error();
   }
 };
@@ -81,4 +81,4 @@ const deleteById = async (id: string): Promise<DeleteResult | null> => {
   return await model.deleteOne({ _id: id });
 };
 
-export   { create, get, getById, updateById, deleteById };
+export { create, get, getById, updateById, deleteById };

@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80.95% </span>
+                <span class="strong">90% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>17/21</span>
+                <span class='fraction'>18/20</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">60% </span>
+                <span class="strong">80% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/5</span>
+                <span class='fraction'>4/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80.95% </span>
+                <span class="strong">90% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>17/21</span>
+                <span class='fraction'>18/20</span>
             </div>
         
             
@@ -151,7 +151,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -203,15 +203,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -223,7 +223,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -249,52 +249,52 @@ const get = async (
   const status: string = search;
   // const query = { status: status || "published" }; this is not working
 &nbsp;
-  const query = { status: "published" }; 
+  const query = { status: "published" };
 &nbsp;
   try {
-    const result = await model.aggregate([
-      {
-        $facet: {
-          // Stage 1: Calculate the total count
-          total: [
-            {
-              $match: query,
-            },
-            {
-              $count: "total",
-            },
-          ],
-          // Stage 2: Fetch paginated data
-          data: [
-            {
-              $match: query,
-            },
-            {
-              $skip: (pageNum - 1) * size,
-            },
-            {
-              $limit: size,
-            },
-          ],
+    const result = await model
+      .aggregate([
+        {
+          $facet: {
+            // Stage 1: Calculate the total count
+            total: [
+              {
+                $match: query,
+              },
+              {
+                $count: "total",
+              },
+            ],
+            // Stage 2: Fetch paginated data
+            data: [
+              {
+                $match: query,
+              },
+              {
+                $skip: (pageNum - 1) * size,
+              },
+              {
+                $limit: size,
+              },
+            ],
+          },
         },
-      },
-      {
-        $project: {
-          total: { $arrayElemAt: ["$total.total", 0] }, // Extract total count from the 'total' array
-          data: 1, // Include the 'data' array
-          limit: size,
-          page: pageNum,
+        {
+          $project: {
+            total: { $arrayElemAt: ["$total.total", 0] }, // Extract total count from the 'total' array
+            data: 1, // Include the 'data' array
+            limit: size,
+            page: pageNum,
+          },
         },
-      },
-    ]).allowDiskUse(true);
+      ])
+      .allowDiskUse(true);
     const newResult = result[0];
     let { data, total } = newResult;
     total = total || <span class="branch-1 cbranch-no" title="branch not covered" >0;</span>
 &nbsp;
-&nbsp;
     return { data, total, limit, page };
   } catch (error) {
-<span class="cstat-no" title="statement not covered" >    console.error("Error occurred:", error);</span>
 <span class="cstat-no" title="statement not covered" >    throw new Error();</span>
   }
 };
@@ -303,18 +303,18 @@ const getById = async (id: string): Promise&lt;Iblog | null&gt; =&gt; {
   return model.findOne({ _id: id });
 };
 &nbsp;
-const updateById = <span class="fstat-no" title="function not covered" >as</span>ync (
+const updateById = async (
   id: string,
   payload: Iblog
 ): Promise&lt;Iblog | null&gt; =&gt; {
-<span class="cstat-no" title="statement not covered" >  return await model.findOneAndUpdate({ _id: id }, payload, { new: true });</span>
+  return await model.findOneAndUpdate({ _id: id }, payload, { new: true });
 };
 &nbsp;
 const deleteById = <span class="fstat-no" title="function not covered" >as</span>ync (id: string): Promise&lt;DeleteResult | null&gt; =&gt; {
 <span class="cstat-no" title="statement not covered" >  return await model.deleteOne({ _id: id });</span>
 };
 &nbsp;
-export   { create, get, getById, updateById, deleteById };
+export { create, get, getById, updateById, deleteById };
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -322,7 +322,7 @@ export   { create, get, getById, updateById, deleteById };
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-02-21T08:33:32.665Z
+                at 2024-02-21T09:26:53.603Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

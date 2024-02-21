@@ -42,7 +42,7 @@ router.post(
       const totalWord = parseInt(req.body.totalWord);
       req.body.totalWord = totalWord;
 
-      const result = await controller.create(req.body);
+      const result = await create(req.body);
       res.status(200).json({ data: result, msg: "success" });
     } catch (err) {
       next(err);
@@ -70,7 +70,7 @@ router.get(
 
 router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await controller.getById(req.params.id);
+    const result = await getById(req.params.id);
     res.json({ data: result, msg: "success" });
   } catch (err) {
     next(err);
@@ -85,7 +85,7 @@ router.put(
     try {
       req.body.images = req.file ? `blog/${req.file.filename}` : "";
 
-      const result = await controller.updateById(req.params.id, req.body);
+      const result = await updateById(req.params.id, req.body);
       res.status(200).json({ data: result, msg: "success" });
     } catch (err) {
       next(err);
