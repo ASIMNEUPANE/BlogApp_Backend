@@ -1,5 +1,5 @@
 import common from "../common";
-import create from "../../modules/blog/blog.controller";
+import {create} from "../../modules/blog/blog.controller";
 
 const blogData = {
   title: "wonder-world",
