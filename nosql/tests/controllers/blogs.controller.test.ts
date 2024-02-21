@@ -1,5 +1,5 @@
 import common from "../common";
-import {create} from "../../modules/blog/blog.controller";
+import { create,get } from "../../modules/blog/blog.controller";
 
 const blogData = {
   title: "wonder-world",
@@ -11,6 +11,11 @@ const blogData = {
   totalWord: 11,
   images: "images.jpg",
 };
+
+const getData ={
+  limit:2,
+  page:1,
+}
 
 describe("blog Model Test", () => {
   beforeAll(async () => {
@@ -39,8 +44,16 @@ describe("blog Model Test", () => {
     expect(createdBlog.totalWord).toBe(blogData.totalWord);
     expect(createdBlog.images).toBe(blogData.images);
     expect(createdBlog._id).toBeDefined();
-    expect(createdBlog.created_at).toBeDefined();
-    expect(createdBlog.updated_at).toBeDefined();
+    expect(createdBlog.createdAt).toBeDefined();
+    expect(createdBlog.updatedAt).toBeDefined();
+  });
+  // List Operation
+
+  it('lists all todos with their subtasks', async () => {
+    const allData = await get(2,2,'');
+
+    expect(allData).toBeDefined();
+    expect(Array.isArray(allData)).toBe(true);
   });
 
   // List Operation

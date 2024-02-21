@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">28.57% </span>
+                <span class="strong">76.19% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>6/21</span>
+                <span class='fraction'>16/21</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/6</span>
+                <span class='fraction'>3/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">20% </span>
+                <span class="strong">40% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/5</span>
+                <span class='fraction'>2/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">28.57% </span>
+                <span class="strong">76.19% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>6/21</span>
+                <span class='fraction'>16/21</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -159,18 +159,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -203,12 +201,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -238,21 +238,21 @@ const create = async (payload: Iblog): Promise&lt;Iblog&gt; =&gt; {
   return await model.create(payload);
 };
 &nbsp;
-const get = <span class="fstat-no" title="function not covered" >as</span>ync (
+const get = async (
   limit: number,
   page: number,
   search: string
 ): Promise&lt;Paginate | null&gt; =&gt; {
-  const pageNum = <span class="cstat-no" title="statement not covered" >page || 1;</span>
-  const size = <span class="cstat-no" title="statement not covered" >limit || 4;</span>
+  const pageNum = page || <span class="branch-1 cbranch-no" title="branch not covered" >1;</span>
+  const size = limit || <span class="branch-1 cbranch-no" title="branch not covered" >4;</span>
 &nbsp;
-  const status: string = <span class="cstat-no" title="statement not covered" >search;</span>
+  const status: string = search;
   // const query = { status: status || "published" }; this is not working
 &nbsp;
-  const query = <span class="cstat-no" title="statement not covered" >{ status: "published" }; </span>
+  const query = { status: "published" }; 
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  try {</span>
-    const result = <span class="cstat-no" title="statement not covered" >await model.aggregate([</span>
+  try {
+    const result = await model.aggregate([
       {
         $facet: {
           // Stage 1: Calculate the total count
@@ -287,12 +287,12 @@ const get = <span class="fstat-no" title="function not covered" >as</span>ync (
         },
       },
     ]).allowDiskUse(true);
-    const newResult = <span class="cstat-no" title="statement not covered" >result[0];</span>
-    let { data, total } = <span class="cstat-no" title="statement not covered" >newResult;</span>
-<span class="cstat-no" title="statement not covered" >    total = total || 0;</span>
+    const newResult = result[0];
+    let { data, total } = newResult;
+    total = total || <span class="branch-1 cbranch-no" title="branch not covered" >0;</span>
 &nbsp;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    return { data, total, limit, page };</span>
+    return { data, total, limit, page };
   } catch (error) {
 <span class="cstat-no" title="statement not covered" >    console.error("Error occurred:", error);</span>
 <span class="cstat-no" title="statement not covered" >    throw new Error();</span>
@@ -314,7 +314,7 @@ const deleteById = <span class="fstat-no" title="function not covered" >as</span
 <span class="cstat-no" title="statement not covered" >  return await model.deleteOne({ _id: id });</span>
 };
 &nbsp;
-export  { create, get, getById, updateById, deleteById };
+export   { create, get, getById, updateById, deleteById };
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -322,7 +322,7 @@ export  { create, get, getById, updateById, deleteById };
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-02-21T04:48:01.474Z
+                at 2024-02-21T05:13:44.100Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

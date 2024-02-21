@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response, Router } from "express";
 import multer from "multer";
-import controller from "./blog.controller";
+import {get,getById,create,updateById,deleteById} from "./blog.controller";
 import {
   validateBlogDataMiddleware,
   validateLimit,
@@ -56,7 +56,7 @@ router.get(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { limit, page, search } = req.query;
-      const result = await controller.get(
+      const result = await get(
         Number(limit),
         Number(page),
         String(search)

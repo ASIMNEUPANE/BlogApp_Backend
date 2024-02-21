@@ -10,21 +10,21 @@ export interface Iblog extends Document {
   author: string;
   totalWord: number;
   images?: string;
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
   timestamps: boolean;
   limit?: number;
   page?: number;
   search?: string | boolean;
 }
-export interface Paginate  {
+export interface Paginate {
   total: number;
   data: unknown[]; // Array of unknown elements
   limit: number;
   page: number;
 }
 
-export interface DeleteResult  {
+export interface DeleteResult {
   acknowledged: boolean;
   deletedCount?: number;
 }
