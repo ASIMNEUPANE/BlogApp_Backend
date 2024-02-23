@@ -1,5 +1,10 @@
 import express, { NextFunction, Request, Response, Router } from "express";
-import controller from "./auth.controller";
+import { register,
+  verify,
+  regenerateToken,
+  login,
+  generateFPToken,
+  forgetPassowrd,} from "./auth.controller";
 import multer from "multer";
 
 import {
@@ -30,7 +35,7 @@ router.post(
         req.body.images = req.file ? `blog/${req.file.filename}` : "";
 
       }
-      const result = await controller.register(req.body);
+      const result = await register(req.body);
       res.status(200).json({ data: result, msg: "success" });
     } catch (e) {
       next(e);
@@ -42,7 +47,7 @@ router.post(
   verifyAuthMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await controller.verify(req.body);
+      const result = await verify(req.body);
       res.status(200).json({ data: result, msg: "success" });
     } catch (e) {
       next(e);
@@ -56,7 +61,7 @@ router.post(
       console.log(req.body)
       const { email } = req.body;
       if (!email) throw new Error("Email  is missing");
-      const result = await controller.regenerateToken(email);
+      const result = await regenerateToken(email);
       res.status(200).json({ data: result, msg: "success" });
     } catch (e) {
       next(e);
@@ -69,7 +74,7 @@ router.post(
     try {
       const { email, password } = req.body;
       if (!email) throw new Error("Email  is missing");
-      const result = await controller.login(email, password);
+      const result = await login(email, password);
       res.status(200).json({ data: result, msg: "success" });
     } catch (e) {
       next(e);
@@ -83,7 +88,7 @@ router.put(
       const { email } = req.body;
       console.log(email,'route')
       if (!email) throw new Error("Email is missing");
-      const result = await controller.generateFPToken(email);
+      const result = await generateFPToken(email);
       res.status(200).json({ data: result, msg: "success" });
     } catch (e) {
       next(e);
@@ -98,7 +103,7 @@ router.put(
       console.log(typeof(token))
       if (!email || !password || !token)
         throw new Error("Email or Password or token is missing");
-      const result = await controller.forgetPassowrd(email, token, password);
+      const result = await forgetPassowrd(email, token, password);
       res.status(200).json({ data: result, msg: "success" });
     } catch (e) {
       next(e);

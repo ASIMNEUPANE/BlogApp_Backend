@@ -1,3 +1,4 @@
+import { send } from "process";
 import model from "./blog.model";
 import { Iblog, DeleteResult, Paginate } from "./blog.type";
 
@@ -18,7 +19,7 @@ const get = async (
 
   const query = { status: "published" };
 
-  try {
+
     const result = await model
       .aggregate([
         {
@@ -57,13 +58,11 @@ const get = async (
       ])
       .allowDiskUse(true);
     const newResult = result[0];
-    let { data, total } = newResult;
+    let { data,total } = newResult;
     total = total || 0;
 
     return { data, total, limit, page };
-  } catch (error) {
-    throw new Error();
-  }
+  
 };
 
 const getById = async (id: string): Promise<Iblog | null> => {

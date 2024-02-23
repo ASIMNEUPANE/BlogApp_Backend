@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for modules/blog/blog.model.ts</title>
+    <title>Code coverage report for nosql/documentation/base.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">modules/blog</a> blog.model.ts</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">nosql/documentation</a> base.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
@@ -85,9 +85,15 @@
 <a name='L20'></a><a href='#L20'>20</a>
 <a name='L21'></a><a href='#L21'>21</a>
 <a name='L22'></a><a href='#L22'>22</a>
-<a name='L23'></a><a href='#L23'>23</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -107,28 +113,46 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Schema, model } from "mongoose";
-import { Iblog } from "./blog.type";
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const apiLocation = process.env.BASE_URL; // Set this to the hostname of your API server
+const apiVersion = "/api/v1";
 &nbsp;
-const blogSchema = new Schema&lt;Iblog&gt;(
-  {
-    title: { type: String, required: true },
-    content: { type: String, required: true },
-    description: { type: String, required: true },
-    category: {
-      type: String,
-      enum: ["Technology", "Travel", "Food", "Lifestyle"],
-      default: "Technology",
+export default {
+  swagger: "2.0", // Change this to the correct version of Swagger you're using
+  info: {
+    title: "Blog System API Documentation",
+    version: "1.0",
+    description:
+      "This is API Documentation for this blog application made with Express and documented with Swagger.",
+    license: {
+      name: "MIT",
+      url: "https://spdx.org/licenses/MIT.html",
     },
-    status: { type: String, enum: ["published", "draft"], default: "draft" },
-    author: { type: String, required: true },
-    totalWord: { type: Number, required: true },
-    images: { type: String },
+    contact: {
+      email: "asimneupane11@gmail.com",
+    },
   },
-  { timestamps: true } // its create updated_at &amp; created_at time
-);
-&nbsp;
-export default model("Blog", blogSchema);
+  schemes: ["http", "https"],
+  host: apiLocation,
+  basePath: apiVersion,
+  securityDefinitions: {
+    access_token: {
+      type: "apiKey",
+      in: "header",
+      name: "authorization",
+      description: "get token using user login method",
+    },
+  },
+};
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -136,7 +160,7 @@ export default model("Blog", blogSchema);
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-02-23T10:06:00.365Z
+                at 2024-02-22T11:48:57.823Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

@@ -7,15 +7,12 @@ export interface Iblog extends Document {
   description: string;
   category: string;
   status: string;
-  author: string;
+   author: string;
   totalWord: number;
   images?: string;
   createdAt: Date;
   updatedAt: Date;
   timestamps: boolean;
-  limit?: number;
-  page?: number;
-  search?: string | boolean;
 }
 export interface Paginate {
   total: number;

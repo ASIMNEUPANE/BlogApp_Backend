@@ -18,7 +18,7 @@ export const mailer = async (email:string, token:number) => {
     subject: "OTP Verification",
     html: `<div> Hi ! Your OTP Code is <b>${token}</b></div>`,
   });
-  return info.messageId;
+  return true;
 };
 
 

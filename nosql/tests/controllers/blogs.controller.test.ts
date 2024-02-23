@@ -1,6 +1,7 @@
 import common from "../common";
 import {
   create,
+  deleteById,
   get,
   getById,
   updateById,
@@ -18,14 +19,11 @@ const blogData = {
   images: "images.jpg",
 };
 
-const getData = {
-  limit: 2,
-  page: 1,
-};
+
 
 // Add Operation
 
-describe("Blog Model Test", () => {
+describe("Blog controller Test", () => {
   beforeAll(async () => {
     await common.connectDatabase();
   });
@@ -82,7 +80,7 @@ describe("Blog Model Test", () => {
     const createdBlog = await create(blogData);
     const getData = await getById(createdBlog._id);
     expect(getData).toBeDefined();
-    expect(getData.title).toBe(getData.title);
+    expect(getData?.title).toBe(getData?.title);
   });
 
   // Update By Id Operation
@@ -102,6 +100,116 @@ describe("Blog Model Test", () => {
     expect(updatedBlog).toBeDefined();
 
     // Assertion to check if title matches the updated title
-    expect(updatedBlog.title).toBe("Hello");
+    expect(updatedBlog?.title).toBe("Hello");
+  });
+
+  // Delete an blog by id
+
+  it("Delete a blog by Id ", async () => {
+    const createdBlog = await create(blogData);
+    console.log("Created Blog:", createdBlog);
+
+    // Step 2: Delete the created blog
+    const deletedBlog = await deleteById(createdBlog._id);
+    console.log("Deleted Blog:", deletedBlog);
+
+    // Step 4: Check the deletedCount property
+    console.log("Deleted Count:", deletedBlog?.deletedCount);
+
+    // Step 5: Assertion
+    expect(deletedBlog?.deletedCount).toBe(1);
+  });
+  test("rejects to octopus", async () => {
+   
   });
 });
+
+
+
+
+
+
+// import common from "../common";
+// import { generateOTP } from "../../utils/otp";
+// import { totp } from 'otplib';
+// import {
+//   register,
+//   verify,
+// } from "../../modules/auth/auth.controller";
+
+// // Mocking totp.generate
+// jest.mock('otplib', () => {
+//   const originalModule = jest.requireActual('otplib');
+//   return {
+//     ...originalModule,
+//     totp: {
+//       ...originalModule.totp,
+//       generate: jest.fn(),
+//       check: jest.fn(),
+//     },
+//   };
+// });
+
+// // Test suite
+// describe("User controller Test", () => {
+//   beforeAll(async () => {
+//     await common.connectDatabase();
+//   });
+
+//   afterAll(async () => {
+//     await common.closeDatabase();
+//   });
+
+//   // Test case for registering a user
+//   it("Register & save users successfully", async () => {
+//     const userData = {
+//       name: "John Doe",
+//       email: "john.doe@example.com",
+//       password: "Password123",
+//       images: "avatar.jpg",
+//     };
+
+//     console.log("Creating user...");
+//     const createdUser = await register(userData);
+//     console.log("User created:", createdUser);
+    
+//     expect(createdUser).toBe(true);
+//     // Debugging suggestion: Check if createdUser is not null and contains necessary fields
+//     // expect(createdUser.name).toBe(userData.name);
+//     // expect(createdUser.email).toBe(userData.email);
+//     // Add more assertions based on the expected structure of createdUser
+//   });
+
+//   // Test case for verifying registered user
+//    it("Register user and verify OTP", async () => {
+//     const userData = {
+//       name: "Jane Doe",
+//       email: "jane.doe@example.com",
+//       password: "Password456",
+//       images: "avatar.jpg",
+//     };
+
+//     // Registering a user
+//     console.log("Registering user...");
+//     const createdUser = await register(userData);
+//     console.log("User created:", createdUser);
+
+//     // Mocking OTP generation
+//     (totp.generate as jest.Mock).mockReturnValue('123456');
+
+//     // Generating OTP
+//     console.log("Generating OTP...");
+//     const otp = generateOTP();
+//     console.log("OTP generated:", otp);
+
+//     // Verifying OTP for registered user
+//     console.log("Verifying OTP...");
+//     const isVerified = await verify({
+//       email: userData.email,
+//       token: otp, // Use the generated OTP
+//     });
+
+//     // Debugging suggestion: Check if verifyUser is true if verification is successful
+//     expect(isVerified).toBe(true);
+//   });
+// });
