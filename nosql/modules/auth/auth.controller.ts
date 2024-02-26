@@ -8,19 +8,22 @@ import { BaseData } from "../users/user.types";
 import { mailer } from "../../services/mailer";
 import { generateJWT } from "../../utils/jwt";
 
-const register = async (payload: BaseData): Promise<boolean > => {
-  
-    let { isActive, isEmailVerified, roles, password, ...rest }  =  payload as {
-      password: string;
-      [key: string]: any;
-    }
-    rest.password = await bcrypt.hash(password, Number(process.env.SALT_ROUND) ?? 0);
-    const user = await userModel.create(rest);
-    const token = generateOTP();
-    await model.create({ email: user?.email, token });
-  return   await mailer(user?.email, +token);
- 
+const register = async (payload: BaseData): Promise<boolean> => {
+  let { isActive, isEmailVerified, roles, password, ...rest } = payload as {
+    password: string;
+    [key: string]: any;
+  };
+  rest.password = await bcrypt.hash(
+    password,
+    Number(process.env.SALT_ROUND) ?? 0
+  );
+  const user = await userModel.create(rest);
+
+  const token = generateOTP();
+  await model.create({ email: user?.email, token });
+  return await mailer(user?.email, +token);
 };
+
 const verify = async (payload: verifyData): Promise<boolean> => {
   const { email, token } = payload;
   const auth = await model.findOne({ email });
@@ -109,7 +112,7 @@ const forgetPassowrd = async (
   return true;
 };
 
-export  {
+export {
   register,
   verify,
   regenerateToken,

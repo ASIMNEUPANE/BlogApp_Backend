@@ -18,6 +18,7 @@ const userSchema = new Schema<BaseData>(
     images: { type: String },
 
     isActive: { type: Boolean, default: false },
+    
     isArchive: { type: Boolean, default: false },
   },
   { timestamps: true }

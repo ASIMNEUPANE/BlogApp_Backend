@@ -16,7 +16,6 @@ export const create = async (payload: payloadTypes): Promise<BaseData | null> =>
   rest.isActive = true;
   // return (await model.create(rest).select("-password")) as BaseData | null;; not working
   const result = await model.create(rest);
-  console.log(result)
   return result
 };
 // };
@@ -89,22 +88,22 @@ export const getById = async (id: string): Promise<BaseData | null> => {
   return await model.findOne({ _id: id });
 };
 
-const updateById = async (
+export const updateById = async (
   id: string,
   payload: payloadTypes
 ): Promise<BaseData | null> => {
   return (await model
     .findOneAndUpdate({ _id: id }, payload, { new: true })
-    .select("-password")) as BaseData | null;
+  )
 };
 
-const changePassword = async (
+export const changePassword = async (
   id: string,
   oldPassword: string,
   newPassword: string
 ): Promise<BaseData | null> => {
   // check if user exits
-  const user = await model.findOne({ _id: id }).select("+password");
+  const user = await model.findOne({ _id: id })
   if (!user) throw new Error("User not found");
   // check if old pass hash match to existing
   const isValid = await bcrypt.compare(oldPassword, user?.password);
@@ -116,7 +115,8 @@ const changePassword = async (
   // update the userpassword
   return (await model
     .findOneAndUpdate({ _id: user?._id }, { password: newPass }, { new: true })
-    .select("-password")) as BaseData | null;
+    // .select("-password")) as BaseData | null;
+  )
 };
 
 const resetPassword = async (
