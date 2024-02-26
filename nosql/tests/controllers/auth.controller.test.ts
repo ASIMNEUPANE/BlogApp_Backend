@@ -3,12 +3,16 @@ import { generateOTP, verifyOTP } from "../../utils/otp";
 import { totp } from "otplib";
 import { register, verify } from "../../modules/auth/auth.controller";
 import * as authModel from "../../modules/auth/auth.controller";
+import userModel from "../../modules/users/user.model"; // Fixed import
 
 // Mocking database operations
 jest.mock("../../modules/auth/auth.controller", () => {
   const originalModule = jest.requireActual(
     "../../modules/auth/auth.controller"
   );
+  jest.mock("bcrypt", () => ({
+    hash: jest.fn().mockResolvedValue("hashedPassword"),
+  }));
   const mockDb = new Map();
   return {
     ...originalModule,
@@ -42,8 +46,8 @@ jest.mock("../../utils/otp", () => ({
   verifyOTP: jest.fn().mockReturnValue(true),
 }));
 
-// Test suite
-describe("User controller Test", () => {
+// Test suite for register function
+describe("User controller Test - Register", () => {
   beforeAll(async () => {
     await common.connectDatabase();
   });
@@ -52,7 +56,31 @@ describe("User controller Test", () => {
     await common.closeDatabase();
   });
 
-  // Test case for verifying registered user
+  it("should register a user", async () => {
+    const userData = {
+      name: "Jane Doe",
+      email: "jane.doe@example.com",
+      password: "Password456",
+      images: "avatar.jpg",
+    };
+
+    await register(userData);
+
+    expect(require("bcrypt").hash).toHaveBeenCalledWith(userData.password, expect.any(Number));
+
+    expect(userModel.create).toHaveBeenCalledWith({
+      name: userData.name,
+      email: userData.email,
+      password: "hashedPassword",
+      images: userData.images,
+    });
+
+    expect(require("../../modules/auth/auth.controller").mailer).toHaveBeenCalledWith(userData.email, 123456);
+  });
+});
+
+// Test suite for verify function
+describe("User controller Test - Verify", () => {
   it("verify user", async () => {
     const userData = {
       name: "Jane Doe",

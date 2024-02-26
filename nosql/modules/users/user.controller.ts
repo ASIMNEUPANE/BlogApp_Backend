@@ -3,23 +3,25 @@ import bcrypt from "bcrypt";
 import { Paginate } from "../blog/blog.type";
 import { payloadTypes, BaseData } from "../users/user.types";
 
-const create = async (payload: payloadTypes): Promise<BaseData | null> => {
+export const create = async (payload: payloadTypes): Promise<BaseData | null> => {
   let { password, roles, ...rest } = payload as {
     password: string;
     roles?: string;
     [key: string]: any;
   };
 
-  rest.password = bcrypt.hash(password, +process.env.SALT_ROUND ?? 0);
+  rest.password =await  bcrypt.hash(password, +process.env.SALT_ROUND ?? 0);
   rest.roles = roles ? [roles] : [];
   rest.isEmailVerified = true;
   rest.isActive = true;
   // return (await model.create(rest).select("-password")) as BaseData | null;; not working
-  return await model.create(rest);
+  const result = await model.create(rest);
+  console.log(result)
+  return result
 };
 // };
 
-const get = async (
+export const get = async (
   limit: number,
   page: number,
   search: string
@@ -82,7 +84,7 @@ const get = async (
   }
 };
 
-const getById = async (id: string): Promise<BaseData | null> => {
+export const getById = async (id: string): Promise<BaseData | null> => {
   console.log(id, "controller");
   return await model.findOne({ _id: id });
 };
