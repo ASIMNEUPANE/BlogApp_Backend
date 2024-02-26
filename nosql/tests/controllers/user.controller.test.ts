@@ -182,32 +182,36 @@ describe("Auth /users", () => {
         isEmailVerified: true,
         isActive: true,
       };
-  
+
       // Mock findOne method
       jest.spyOn(model, "findOne").mockResolvedValue(initialUserData);
-  
+
       // Call the changePassword function with incorrect old password
+      jest.spyOn(model, "findOneAndUpdate").mockResolvedValue({
+        ...initialUserData,
+        password: "newPassword",
+      });
       await expect(changePassword(
         initialUserData._id, // User ID
         "incorrectOldPassword", // Old password
         "newPassword" // New password
       )).rejects.toThrow("Old password is incorrect");
-  
+
       // Assert that findOneAndUpdate was not called
       expect(model.findOneAndUpdate).not.toHaveBeenCalled();
     });
-  
+
     it("should throw an error if user not found", async () => {
       // Mock findOne method to return null (user not found)
       jest.spyOn(model, "findOne").mockResolvedValue(null);
-  
+
       // Call the changePassword function
       await expect(changePassword(
         "nonExistingUserId", // Non-existing user ID
         "oldPassword", // Old password
         "newPassword" // New password
-      )).rejects.toThrow("_user.default.findOne(...).select is not a function");
-  
+      )).rejects.toThrow("User not found");
+
       // Assert that findOneAndUpdate was not called
       expect(model.findOneAndUpdate).not.toHaveBeenCalled();
     });
