@@ -3,20 +3,22 @@ import bcrypt from "bcrypt";
 import { Paginate } from "../blog/blog.type";
 import { payloadTypes, BaseData } from "../users/user.types";
 
-export const create = async (payload: payloadTypes): Promise<BaseData | null> => {
+export const create = async (
+  payload: payloadTypes
+): Promise<BaseData | null> => {
   let { password, roles, ...rest } = payload as {
     password: string;
     roles?: string;
     [key: string]: any;
   };
 
-  rest.password =await  bcrypt.hash(password, +process.env.SALT_ROUND ?? 0);
+  rest.password = await bcrypt.hash(password, +process.env.SALT_ROUND ?? 0);
   rest.roles = roles ? [roles] : [];
   rest.isEmailVerified = true;
   rest.isActive = true;
   // return (await model.create(rest).select("-password")) as BaseData | null;; not working
   const result = await model.create(rest);
-  return result
+  return result;
 };
 // };
 
@@ -92,9 +94,7 @@ export const updateById = async (
   id: string,
   payload: payloadTypes
 ): Promise<BaseData | null> => {
-  return (await model
-    .findOneAndUpdate({ _id: id }, payload, { new: true })
-  )
+  return await model.findOneAndUpdate({ _id: id }, payload, { new: true });
 };
 
 export const changePassword = async (
@@ -103,7 +103,7 @@ export const changePassword = async (
   newPassword: string
 ): Promise<BaseData | null> => {
   // check if user exits
-  const user = await model.findOne({ _id: id })
+  const user = await model.findOne({ _id: id });
   if (!user) throw new Error("User not found");
   // check if old pass hash match to existing
   const isValid = await bcrypt.compare(oldPassword, user?.password);
@@ -113,13 +113,15 @@ export const changePassword = async (
   const newPass = await bcrypt.hash(newPassword, +process.env.SALT_ROUND);
 
   // update the userpassword
-  return (await model
-    .findOneAndUpdate({ _id: user?._id }, { password: newPass }, { new: true })
-    // .select("-password")) as BaseData | null;
-  )
+  return await model.findOneAndUpdate(
+    { _id: user?._id },
+    { password: newPass },
+    { new: true }
+  );
+  // .select("-password")) as BaseData | null;
 };
 
-const resetPassword = async (
+export const resetPassword = async (
   id: string,
   payload: payloadTypes
 ): Promise<BaseData | null> => {
@@ -136,7 +138,7 @@ const resetPassword = async (
   );
 };
 
-const block = async (
+export const block = async (
   id: string,
   payload: payloadTypes
 ): Promise<BaseData | null> => {
@@ -144,18 +146,19 @@ const block = async (
   if (!user) throw new Error("User not found");
   return (await model
     .findOneAndUpdate({ _id: id }, payload, { new: true })
-    .select("-password")) as BaseData | null;
+    // .select("-password")) as BaseData | null;
+  )
 };
 
-const archive = async (
+export const archive = async (
   id: string,
   payload: payloadTypes
 ): Promise<BaseData | null> => {
   const user = await model.find({ _id: id });
   if (!user) throw new Error("User not found");
-  return (await model
-    .findOneAndUpdate({ _id: id }, payload, { new: true })
-    .select("-password")) as BaseData | null;
+  return (await model.findOneAndUpdate({ _id: id }, payload, { new: true })
+  // .select("-password")) as BaseData | null;
+  );
 };
 
 export default {

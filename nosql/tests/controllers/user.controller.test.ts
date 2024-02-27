@@ -6,9 +6,13 @@ import {
   create,
   updateById,
   changePassword,
+  resetPassword,
+  block,
+  archive,
 } from "../../modules/users/user.controller";
 import * as controller from "../../modules/users/user.controller";
 import bcrypt from "bcrypt";
+import { boolean } from "zod";
 
 // Mocking bcrypt.hash function to return "hashedPassword"
 jest.mock("bcrypt", () => ({
@@ -21,10 +25,11 @@ describe("Auth /users", () => {
     create: jest.fn().mockResolvedValue({
       /* mock data returned by create */
     }),
-    findOne: jest.fn().mockResolvedValue(mockUsers[0]),
-    findOneAndUpdate: jest.fn().mockResolvedValue(mockUsers[0]),
-    changePassword: jest.fn().mockResolvedValue(mockUsers[0]),
-    // changePassword: jest.fn().mockResolvedValue(mockUsers[0]),
+    findOne: jest.fn(),
+    findOneAndUpdate: jest.fn(),
+    changePassword: jest.fn(),
+    resetPassword: jest.fn(),
+    block: jest.fn(),
   }));
 
   const mockUsers = [
@@ -65,40 +70,40 @@ describe("Auth /users", () => {
     jest.clearAllMocks();
   });
 
-  // describe("create", () => {
-  //   it("should register user with hashed password", async () => {
-  //     const payload = {
-  //       name: "asim",
-  //       email: "test@example.com",
-  //       password: "password123",
-  //       roles: "user",
-  //     };
+  describe("create", () => {
+    it("should register user with hashed password", async () => {
+      const payload = {
+        name: "asim",
+        email: "test@example.com",
+        password: "password123",
+        roles: "user",
+      };
 
-  //     const expectedResult = {
-  //       _id: expect.any(String),
-  //       name: "asim",
-  //       email: payload.email,
-  //       password: "hashedPassword",
-  //       roles: ["user"],
-  //       isEmailVerified: true,
-  //       isActive: true,
-  //     };
-  //     // @ts-ignore
+      const expectedResult = {
+        _id: expect.any(String),
+        name: "asim",
+        email: payload.email,
+        password: "hashedPassword",
+        roles: ["user"],
+        isEmailVerified: true,
+        isActive: true,
+      };
+      // @ts-ignore
 
-  //     const result = await create(payload);
-  //     console.log(result, "======");
+      const result = await create(payload);
+      console.log(result, "===result the hero===");
 
-  //     // Asserting that bcrypt.hash was called with the password
-  //     expect(bcrypt.hash).toHaveBeenCalledWith(
-  //       payload.password,
-  //       expect.any(Number)
-  //     );
+      // Asserting that bcrypt.hash was called with the password
+      expect(bcrypt.hash).toHaveBeenCalledWith(
+        payload.password,
+        expect.any(Number)
+      );
 
-  //     expect(result?.password).toEqual(expectedResult.password);
-  //     expect(result?.email).toEqual(expectedResult.email);
-  //     expect(result?.password).toEqual(expectedResult.password);
-  //   });
-  // });
+      expect(result?.password).toEqual(expectedResult.password);
+      expect(result?.email).toEqual(expectedResult.email);
+      expect(result?.password).toEqual(expectedResult.password);
+    });
+  });
 
   describe("getById", () => {
     it("should find and return a user by id", async () => {
@@ -129,10 +134,6 @@ describe("Auth /users", () => {
     });
   });
   describe("changePassword", () => {
-    // afterEach(() => {
-    //   jest.clearAllMocks(); // Clear mock calls after each test
-    // });
-
     it("should change the password", async () => {
       // Mock initial user data
       const initialUserData = {
@@ -145,33 +146,20 @@ describe("Auth /users", () => {
         isActive: true,
       };
 
-      // Mock findOne and findOneAndUpdate methods
-      jest.spyOn(model, "findOne").mockResolvedValue(initialUserData);
+      jest.spyOn(bcrypt, "compare").mockResolvedValue(true);
+
       jest.spyOn(model, "findOneAndUpdate").mockResolvedValue({
         ...initialUserData,
         password: "hashedPassword",
       });
 
       // Call the changePassword function
+
       const result = await changePassword(
         initialUserData._id, // User ID
         "helloworld", // Old password
-        "hellobuddy" // New password
+        "hellobuddy" // New password}
       );
-      // Assert that findOneAndUpdate was called with the correct parameters
-      expect(model.findOneAndUpdate).toHaveBeenCalledWith(
-        { _id: initialUserData._id }, // Filter by user ID
-        { password: "hashedPassword" }, // New hashed password
-        { new: true } // Options
-      );
-
-      // Assert that the bcrypt hash function was called with the new password
-      expect(bcrypt.hash).toHaveBeenCalledWith(
-        "hellobuddy",
-        expect.any(Number)
-      );
-
-      // Assert that the returned result contains the updated password
       expect(result?.password).toEqual("hashedPassword");
     });
 
@@ -211,6 +199,148 @@ describe("Auth /users", () => {
       ).rejects.toThrow("User not found");
 
       expect(model.findOneAndUpdate).not.toHaveBeenCalled();
+    });
+  });
+  describe("resetPassword", () => {
+    it("should reset the password", async () => {
+      const mockUserId = "1234567890";
+      const mockUser = {
+        _id: mockUserId,
+        name: "John Doe",
+        email: "john@example.com",
+        password: "oldPassword",
+        roles: ["user"],
+        isEmailVerified: true,
+        isActive: true,
+      };
+
+      // Mock bcrypt.hash to return hashed password
+      jest.spyOn(bcrypt, "hash").mockResolvedValue("hashedPassword");
+
+      // Mock findOne to return the user
+      jest.spyOn(model, "findOne").mockResolvedValue(mockUser);
+
+      // Mock findOneAndUpdate to return the updated user
+      jest.spyOn(model, "findOneAndUpdate").mockResolvedValue({
+        ...mockUser,
+        password: "hashedPassword",
+      });
+
+      const result = await resetPassword(mockUserId, {
+        password: "newPassword",
+      });
+      // Assert that findOneAndUpdate was called with the correct parameters
+      expect(model.findOneAndUpdate).toHaveBeenCalledWith(
+        { _id: mockUserId },
+        { password: "hashedPassword" },
+        { new: true }
+      );
+
+      // Assert that the result contains the updated password
+      expect(result?.password).toEqual("hashedPassword");
+    });
+    it("should throw error if user not found ", async () => {
+      jest.spyOn(model, "findOne").mockResolvedValue(null);
+
+      await expect(
+        resetPassword(
+          "nonExistingUserId", // Non-existing user ID
+          "oldPassword"
+        )
+      ).rejects.toThrow("User not found");
+    });
+  });
+  describe("block", () => {
+    it("should block the user", async () => {
+      const mockUser = {
+        _id: "1",
+        name: "User 1",
+        email: "user1@example.com",
+        password: "password1",
+        isArchive: false,
+        isActive: true,
+      };
+      jest.spyOn(model, "find").mockResolvedValue([mockUser]);
+
+      // Mock findOneAndUpdate to return the updated user
+      const updatedUser = {
+        ...mockUser,
+        isActive: false,
+      };
+      jest.spyOn(model, "findOneAndUpdate").mockResolvedValue(updatedUser);
+
+      // Call block function
+      const payload = {
+        isActive: false,
+      };
+      const result = await block(mockUser._id, payload);
+
+      // Assert that findOneAndUpdate was called with the correct parameters
+      expect(model.findOneAndUpdate).toHaveBeenCalledWith(
+        { _id: mockUser._id },
+        payload,
+        { new: true }
+      );
+
+      // Assert that the result contains the updated user
+      expect(result?.isActive).toEqual(false);
+    });
+    it("should throw an error if user not found", async () => {
+      jest.spyOn(model, "find").mockResolvedValue(null);
+      const payload = {
+        isActive: false,
+      };
+      await expect(block("12c134d324dx42", payload)).rejects.toThrow(
+        "User not found"
+      );
+
+      // Assert that findOneAndUpdate was not called
+      expect(model.findOneAndUpdate).not.toHaveBeenCalled();
+    });
+  });
+  describe("Archive", () => {
+    it("should archive the user", async () => {
+      const mockUser = {
+        _id: "1",
+        name: "User 1",
+        email: "user1@example.com",
+        password: "password1",
+        isArchive: false,
+        isActive: true,
+      };
+      jest.spyOn(model, "find").mockResolvedValue([mockUser]);
+
+      // Mock findOneAndUpdate to return the updated user
+      const updatedUser = {
+        ...mockUser,
+        isArchive: true,
+      };
+      jest.spyOn(model, "findOneAndUpdate").mockResolvedValue(updatedUser);
+
+      // Call block function
+      const payload = {
+        isArchive: true,
+      };
+      const result = await archive(mockUser._id, payload);
+      console.log(result, "archive -=======");
+      // Assert that findOneAndUpdate was called with the correct parameters
+      expect(model.findOneAndUpdate).toHaveBeenCalledWith(
+        { _id: mockUser._id },
+        payload,
+        { new: true }
+      );
+
+      // Assert that the result contains the updated user
+      expect(result?.isArchive).toEqual(true);
+    });
+    it("should throw and error if user is not found", async () => {
+      jest.spyOn(model, "find").mockResolvedValue(null);
+      const payload = {
+        isArchive: true,
+      };
+      await expect(archive("12321j3h2432j", payload)).rejects.toThrow(
+        "User not found"
+      );
     });
   });
 });
