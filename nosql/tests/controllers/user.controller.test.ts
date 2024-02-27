@@ -12,7 +12,6 @@ import {
 } from "../../modules/users/user.controller";
 import * as controller from "../../modules/users/user.controller";
 import bcrypt from "bcrypt";
-import { boolean } from "zod";
 
 // Mocking bcrypt.hash function to return "hashedPassword"
 jest.mock("bcrypt", () => ({
@@ -230,7 +229,7 @@ describe("Auth /users", () => {
         password: "newPassword",
       });
       // Assert that findOneAndUpdate was called with the correct parameters
-      expect(model.findOneAndUpdate).toHaveBeenCalledWith(
+      expect(model.findOneAndUpdate). (
         { _id: mockUserId },
         { password: "hashedPassword" },
         { new: true }

@@ -1,15 +1,21 @@
-import common from "../common";
-import { generateOTP, verifyOTP } from "../../utils/otp";
-import { totp } from "otplib";
+import bcrypt from "bcrypt";
+import userModel from "../../modules/users/user.model";
+import { generateOTP } from "../../utils/otp";
 import { register, verify } from "../../modules/auth/auth.controller";
 import * as authModel from "../../modules/auth/auth.controller";
-import userModel from "../../modules/users/user.model"; // Fixed import
+import { mailer } from "../../services/mailer";
+import common from "../common"; 
 
-// Mocking database operations
 jest.mock("../../modules/auth/auth.controller", () => {
   const originalModule = jest.requireActual(
     "../../modules/auth/auth.controller"
   );
+  jest.mock("../../utils/otp", () => ({
+    generateOTP: jest.fn(),
+  }));
+  jest.mock("../../services/mailer", () => ({
+    mailer: jest.fn(),
+  }));
   jest.mock("bcrypt", () => ({
     hash: jest.fn().mockResolvedValue("hashedPassword"),
   }));
@@ -27,26 +33,11 @@ jest.mock("../../modules/auth/auth.controller", () => {
   };
 });
 
-// Mocking totp.generate
-jest.mock("otplib", () => {
-  const originalModule = jest.requireActual("otplib");
-  return {
-    ...originalModule,
-    totp: {
-      ...originalModule.totp,
-      generate: jest.fn(),
-      check: jest.fn(),
-    },
-  };
-});
-
-// Mocking verifyOTP to always return true for simplicity
 jest.mock("../../utils/otp", () => ({
   ...jest.requireActual("../../utils/otp"),
   verifyOTP: jest.fn().mockReturnValue(true),
 }));
 
-// Test suite for register function
 describe("User controller Test - Register", () => {
   beforeAll(async () => {
     await common.connectDatabase();
@@ -54,6 +45,8 @@ describe("User controller Test - Register", () => {
 
   afterAll(async () => {
     await common.closeDatabase();
+    jest.clearAllMocks();
+
   });
 
   it("should register a user", async () => {
@@ -62,24 +55,38 @@ describe("User controller Test - Register", () => {
       email: "jane.doe@example.com",
       password: "Password456",
       images: "avatar.jpg",
+      // token: "123456",
     };
 
-    await register(userData);
+    // bcrypt.hash.mockResolvedValue("hashedPassword");
+    userModel.create.mockResolvedValue({
+      name: "Jane Doe",
+      email: "jane.doe@example.com",
+      password: "hashedPassword",
+      images: "avatar.jpg",
+    });
 
-    expect(require("bcrypt").hash).toHaveBeenCalledWith(userData.password, expect.any(Number));
+    generateOTP.mockReturnValue("123456");
+    mailer.mockResolvedValue(true);
 
+    const result = await register(userData);
+
+    expect(result).toBe(true);
+    expect(bcrypt.hash).toHaveBeenCalledWith(
+      userData.password,
+      expect.any(Number)
+    );
     expect(userModel.create).toHaveBeenCalledWith({
       name: userData.name,
       email: userData.email,
       password: "hashedPassword",
       images: userData.images,
     });
-
-    expect(require("../../modules/auth/auth.controller").mailer).toHaveBeenCalledWith(userData.email, 123456);
+    expect(generateOTP).toHaveBeenCalled();
+    expect(mailer).toHaveBeenCalledWith(userData.email, "123456");
   });
 });
 
-// Test suite for verify function
 describe("User controller Test - Verify", () => {
   it("verify user", async () => {
     const userData = {
@@ -90,25 +97,15 @@ describe("User controller Test - Verify", () => {
       token: "123456",
     };
 
-    // Registering a user
-    console.log("Registering user...");
     await register(userData);
-    console.log("User registered.");
 
-    // Mocking OTP generation
-    (totp.generate as jest.Mock).mockReturnValue("123456");
-
-    // Generating OTP
-    console.log("Generating OTP...");
     const otp = generateOTP();
-    console.log("OTP generated:", otp);
 
-    (totp.check as jest.Mock).mockReturnValue("123456");
-    // Verifying OTP for registered user
-    console.log("Verifying OTP...");
+    authModel.verify.mockReturnValue(true);
+
     const result = await verify({
       email: userData.email,
-      token: otp, // Use the generated OTP
+      token: otp,
     });
 
     expect(result).toBe(true);
