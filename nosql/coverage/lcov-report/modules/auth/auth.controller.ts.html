@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">34.32% </span>
+                <span class="strong">47.76% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>23/67</span>
+                <span class='fraction'>32/67</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">21.42% </span>
+                <span class="strong">28.57% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>6/28</span>
+                <span class='fraction'>8/28</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">33.33% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/6</span>
+                <span class='fraction'>3/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">35.71% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>20/56</span>
+                <span class='fraction'>28/56</span>
             </div>
         
             
@@ -213,14 +213,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -234,15 +234,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -355,16 +355,16 @@ const verify = async (payload: verifyData): Promise&lt;boolean&gt; =&gt; {
 <span class="cstat-no" title="statement not covered" >  return true;</span>
 };
 &nbsp;
-const regenerateToken = <span class="fstat-no" title="function not covered" >as</span>ync (email: string): Promise&lt;Boolean&gt; =&gt; {
-<span class="cstat-no" title="statement not covered" >  console.log(email, "email");</span>
-  const auth = <span class="cstat-no" title="statement not covered" >await model.findOne({ email });</span>
-<span class="cstat-no" title="statement not covered" >  console.log(auth);</span>
-<span class="cstat-no" title="statement not covered" >  if (!auth) <span class="cstat-no" title="statement not covered" >throw new Error("User not found");</span></span>
+const regenerateToken = async (email: string): Promise&lt;Boolean&gt; =&gt; {
+  console.log(email, "email");
+  const auth = await model.findOne({ email });
+  console.log(auth);
+  if (!auth) throw new Error("User not found");
 &nbsp;
-  const newToken = <span class="cstat-no" title="statement not covered" >generateOTP();</span>
-<span class="cstat-no" title="statement not covered" >  await model.findOneAndUpdate({ email }, { token: +newToken }, { new: true });</span>
-<span class="cstat-no" title="statement not covered" >  await mailer(email, +newToken);</span>
-<span class="cstat-no" title="statement not covered" >  return true;</span>
+  const newToken = generateOTP();
+  await model.findOneAndUpdate({ email }, { token: +newToken }, { new: true });
+  await mailer(email, +newToken);
+  return true;
 };
 &nbsp;
 const login = <span class="fstat-no" title="function not covered" >as</span>ync (email: string, password: string): Promise&lt;UserLogin&gt; =&gt; {
@@ -436,7 +436,7 @@ export {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-02-29T06:31:39.250Z
+                at 2024-02-29T07:11:03.033Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
