@@ -19,8 +19,6 @@ const blogData = {
   images: "images.jpg",
 };
 
-
-
 // Add Operation
 
 describe("Blog controller Test", () => {
@@ -36,7 +34,6 @@ describe("Blog controller Test", () => {
   it("create & save blog successfully", async () => {
     console.log("Creating blog...");
     const createdBlog = await create(blogData);
-    console.log("Blog created:", createdBlog);
     expect(createdBlog.title).toBe(blogData.title);
     expect(createdBlog.content).toBe(blogData.content);
     expect(createdBlog.description).toBe(blogData.description);
@@ -89,12 +86,9 @@ describe("Blog controller Test", () => {
     const createdBlog = await create(blogData);
 
     // Debugging output
-    console.log("Created blog:", createdBlog);
-
     const updatedBlog = await updateById(createdBlog._id, { title: "Hello" });
 
     // Debugging output
-    console.log("Updated blog:", updatedBlog);
 
     // Assertion to check if updated data is defined
     expect(updatedBlog).toBeDefined();
@@ -119,12 +113,4 @@ describe("Blog controller Test", () => {
     // Step 5: Assertion
     expect(deletedBlog?.deletedCount).toBe(1);
   });
-  test("rejects to octopus", async () => {
-   
-  });
 });
-
-
-
-
-

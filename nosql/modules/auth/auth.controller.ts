@@ -21,7 +21,8 @@ const register = async (payload: BaseData): Promise<boolean> => {
 
   const token = generateOTP();
   await model.create({ email: user?.email, token });
-  return await mailer(user?.email, +token);
+   await mailer(user?.email, +token);
+  return user
 };
 
 const verify = async (payload: verifyData): Promise<boolean> => {
@@ -29,7 +30,6 @@ const verify = async (payload: verifyData): Promise<boolean> => {
   const auth = await model.findOne({ email });
   if (!auth) throw new Error("User is not available");
   const isValidToken = await verifyOTP(token);
-
   if (!isValidToken) throw new Error("Token Expired");
 
   const emailValid = auth?.token === +token;
@@ -41,7 +41,7 @@ const verify = async (payload: verifyData): Promise<boolean> => {
       { isEmailVerified: true, isActive: true },
       { new: true }
     )
-    .select("-password");
+   
   await model.deleteOne({ email });
   return true;
 };
@@ -78,7 +78,7 @@ const login = async (email: string, password: string): Promise<UserLogin> => {
   };
 };
 
-const generateFPToken = async (email: string): Promise<boolean> => {
+ const generateFPToken = async (email: string): Promise<boolean> => {
   const user = await userModel.findOne({
     email,
     isActive: true,
