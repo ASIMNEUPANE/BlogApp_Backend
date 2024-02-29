@@ -6,14 +6,14 @@ import {
   regenerateToken,
   register,
   verify,
+  generateFPToken,
+  forgetPassowrd,
 } from "../../modules/auth/auth.controller";
 import bcrypt from "bcrypt";
 import { totp } from "otplib";
 import nodemailer from "nodemailer";
 import JWT from "jsonwebtoken";
-import { verifyOTP } from "../../utils/otp";
-import { generateJWT } from "../../utils/jwt";
-import { string } from "zod";
+
 
 // Mocking bcrypt.hash function to return "hashedPassword"
 jest.mock("bcrypt", () => ({
@@ -273,7 +273,6 @@ describe("Auth ", () => {
       await expect(login(mockUser.email, mockUser.password)).rejects.toThrow(
         "User not found"
       );
-     
     });
     it("should throw and error if user email is not verified", async () => {
       const mockUser = {
@@ -294,8 +293,7 @@ describe("Auth ", () => {
       await expect(login(mockUser.email, mockUser.password)).rejects.toThrow(
         "Email is not verified yet"
       );
-      expect(userModel.findOne).toHaveBeenCalledWith({email:mockUser.email})
-
+      expect(userModel.findOne).toHaveBeenCalledWith({ email: mockUser.email });
     });
     it("should throw and error if user is not active", async () => {
       const mockUser = {
@@ -309,15 +307,14 @@ describe("Auth ", () => {
         isArchive: false,
         isEmailVerified: true,
       };
-     
+
       jest.spyOn(userModel, "findOne").mockReturnValue({
         select: jest.fn().mockResolvedValueOnce(mockUser),
       } as any);
       await expect(login(mockUser.email, mockUser.password)).rejects.toThrow(
         "User is not active. Please contact admin"
       );
-      expect(userModel.findOne).toHaveBeenCalledWith({email:mockUser.email})
-
+      expect(userModel.findOne).toHaveBeenCalledWith({ email: mockUser.email });
     });
     it("should throw and error if user is not active", async () => {
       const mockUser = {
@@ -331,18 +328,121 @@ describe("Auth ", () => {
         isArchive: false,
         isEmailVerified: true,
       };
-     
+
       jest.spyOn(userModel, "findOne").mockReturnValue({
         select: jest.fn().mockResolvedValueOnce(mockUser),
       } as any);
 
-      jest.spyOn(bcrypt,'compare').mockResolvedValue(false)
+      jest.spyOn(bcrypt, "compare").mockResolvedValue(false);
 
       await expect(login(mockUser.email, mockUser.password)).rejects.toThrow(
         "User or password invalid"
       );
-expect(bcrypt.compare).toHaveBeenCalledWith(mockUser.password, mockUser.password)
-expect(userModel.findOne).toHaveBeenCalledWith({email:mockUser.email})
+      expect(bcrypt.compare).toHaveBeenCalledWith(
+        mockUser.password,
+        mockUser.password
+      );
+      expect(userModel.findOne).toHaveBeenCalledWith({ email: mockUser.email });
+    });
+  });
+  describe("generateFPToken", () => {
+    it("should generateFPToken ", async () => {
+      const mockUser = {
+        _id: "user_id",
+
+        name: "asim neupane",
+        email: "asimneupane11@gmail.com",
+        password: "hashedPassword",
+        images: "asim.jpg",
+        roles: ["user"],
+        isActive: true,
+        isArchive: false,
+        isEmailVerified: true,
+      };
+      jest.spyOn(userModel, "findOne").mockResolvedValue(mockUser);
+      jest.spyOn(totp, "generate").mockResolvedValue("123456");
+
+      jest
+        .spyOn(authModel, "create")
+        .mockReturnValue({ email: mockUser.email, token: "123456" });
+
+      const result = await generateFPToken(mockUser.email);
+      expect(result).toBe(true);
+
+      jest
+        .spyOn(nodemailer.createTransport(), "sendMail")
+        .mockResolvedValue(mockUser.email, "123456");
+      expect(userModel.findOne).toHaveBeenCalledWith({
+        email: mockUser.email,
+        isActive: true,
+        isArchive: false,
+      });
+      expect(nodemailer.createTransport().sendMail).toHaveBeenCalled();
+      expect(totp.generate).toHaveBeenCalled();
+    });
+    it("should throw an error if use not found", async () => {
+      const mockUser = {
+        _id: "user_id",
+
+        name: "asim neupane",
+        email: "asimneupane11@gmail.com",
+        password: "hashedPassword",
+        images: "asim.jpg",
+        roles: ["user"],
+        isActive: true,
+        isArchive: false,
+        isEmailVerified: true,
+      };
+      jest.spyOn(userModel, "findOne").mockResolvedValue(null);
+      await expect(generateFPToken(mockUser.email)).rejects.toThrow(
+        "user not found"
+      );
+      expect(userModel.findOne).toHaveBeenCalledWith({
+        email: mockUser.email,
+        isActive: true,
+        isArchive: false,
+      });
+    });
+  });
+  describe("forgetPassword", () => {
+    it("should forget password", async () => {
+      const mockUser = {
+        _id: "user_id",
+        name: "asim neupane",
+        email: "asimneupane11@gmail.com",
+        password: "hashedPassword",
+        images: "asim.jpg",
+        roles: ["user"],
+        isActive: true,
+        isArchive: false,
+        isEmailVerified: true,
+        token: "123456"
+      };
+      const authMock = {
+        email: "asimneupane11@gmail.com",
+        token: '123456',
+      };
+      jest.spyOn(authModel, "findOne").mockResolvedValue(authMock);
+      jest.spyOn(totp, "check").mockResolvedValue(true);
+     
+
+      jest.spyOn(bcrypt, "hash").mockResolvedValue("NewhashedPassword");
+
+      jest.spyOn(userModel, "findOneAndUpdate").mockResolvedValue({
+        email: mockUser.email,
+        password: "NewhashedPassword",
+        new: true,
+      });
+      await forgetPassowrd(
+       authMock.email,
+       authMock.token,
+       'newPassword'
+      );
+      expect(userModel.findOneAndUpdate).toHaveBeenCalledWith(
+        { email: mockUser.email },
+        { password: "NewhashedPassword" },
+        { new: true }
+      );
     });
   });
 });

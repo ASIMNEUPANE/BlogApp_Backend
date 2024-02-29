@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">67.16% </span>
+                <span class="strong">88.05% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>45/67</span>
+                <span class='fraction'>59/67</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">60.71% </span>
+                <span class="strong">78.57% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>17/28</span>
+                <span class='fraction'>22/28</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.66% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>4/6</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">67.27% </span>
+                <span class="strong">89.09% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>37/55</span>
+                <span class='fraction'>49/55</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -264,16 +264,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -281,12 +281,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -384,30 +384,30 @@ const login = async (email: string, password: string): Promise&lt;UserLogin&gt; 
   };
 };
 &nbsp;
- const generateFPToken = <span class="fstat-no" title="function not covered" >as</span>ync (email: string): Promise&lt;boolean&gt; =&gt; {
-  const user = <span class="cstat-no" title="statement not covered" >await userModel.findOne({</span>
+ const generateFPToken = async (email: string): Promise&lt;boolean&gt; =&gt; {
+  const user = await userModel.findOne({
     email,
     isActive: true,
     isArchive: false,
   });
-<span class="cstat-no" title="statement not covered" >  if (!user) <span class="cstat-no" title="statement not covered" >throw new Error("user not found");</span></span>
-  const token = <span class="cstat-no" title="statement not covered" >generateOTP();</span>
-<span class="cstat-no" title="statement not covered" >  await model.create({ email, token });</span>
-<span class="cstat-no" title="statement not covered" >  await mailer(email, +token);</span>
-<span class="cstat-no" title="statement not covered" >  return true;</span>
+  if (!user) throw new Error("user not found");
+  const token = generateOTP();
+  await model.create({ email, token });
+  await mailer(email, +token);
+  return true;
 };
 &nbsp;
-const forgetPassowrd = <span class="fstat-no" title="function not covered" >as</span>ync (
+const forgetPassowrd = async (
   email: string,
   token: string,
   password: string
 ): Promise&lt;boolean&gt; =&gt; {
-  const auth = <span class="cstat-no" title="statement not covered" >await model.findOne({ email });</span>
-<span class="cstat-no" title="statement not covered" >  if (!auth) <span class="cstat-no" title="statement not covered" >throw new Error("user not found");</span></span>
-  const isValidToken = <span class="cstat-no" title="statement not covered" >await verifyOTP(token);</span>
-<span class="cstat-no" title="statement not covered" >  if (!isValidToken) <span class="cstat-no" title="statement not covered" >throw new Error("Token expire");</span></span>
-  const emailValid = <span class="cstat-no" title="statement not covered" >auth?.token === +token;</span>
-<span class="cstat-no" title="statement not covered" >  if (!emailValid) <span class="cstat-no" title="statement not covered" >throw new Error("Token mismatch");</span></span>
+  const auth = await model.findOne({ email });
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (!auth) <span class="cstat-no" title="statement not covered" >throw new Error("user not found");</span>
+  const isValidToken = await verifyOTP(token);
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (!isValidToken) <span class="cstat-no" title="statement not covered" >throw new Error("Token expire");</span>
+  const emailValid = auth?.token === +token;
+  <span class="missing-if-branch" title="else path not taken" >E</span>if (!emailValid) throw new Error("Token mismatch");
 <span class="cstat-no" title="statement not covered" >  await userModel.findOneAndUpdate(</span>
     { email },
     { password: await bcrypt.hash(password, +process.env.SALT_ROUND) },
@@ -433,7 +433,7 @@ export {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-02-29T10:31:39.069Z
+                at 2024-02-29T11:34:11.550Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
