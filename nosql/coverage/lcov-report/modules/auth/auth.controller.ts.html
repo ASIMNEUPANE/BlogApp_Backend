@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">47.76% </span>
+                <span class="strong">67.16% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>32/67</span>
+                <span class='fraction'>45/67</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">28.57% </span>
+                <span class="strong">60.71% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>8/28</span>
+                <span class='fraction'>17/28</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">66.66% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/6</span>
+                <span class='fraction'>4/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">67.27% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>28/56</span>
+                <span class='fraction'>37/55</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -184,8 +184,7 @@
 <a name='L119'></a><a href='#L119'>119</a>
 <a name='L120'></a><a href='#L120'>120</a>
 <a name='L121'></a><a href='#L121'>121</a>
-<a name='L122'></a><a href='#L122'>122</a>
-<a name='L123'></a><a href='#L123'>123</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L122'></a><a href='#L122'>122</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -246,20 +245,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -367,21 +365,20 @@ const regenerateToken = async (email: string): Promise&lt;Boolean&gt; =&gt; {
   return true;
 };
 &nbsp;
-const login = <span class="fstat-no" title="function not covered" >as</span>ync (email: string, password: string): Promise&lt;UserLogin&gt; =&gt; {
-  const user = <span class="cstat-no" title="statement not covered" >await userModel.findOne({ email }).select("+password");</span>
-<span class="cstat-no" title="statement not covered" >  if (!user) <span class="cstat-no" title="statement not covered" >throw new Error("User not found");</span></span>
-<span class="cstat-no" title="statement not covered" >  if (!user?.isEmailVerified) <span class="cstat-no" title="statement not covered" >throw new Error("Email is not verified yet");</span></span>
-<span class="cstat-no" title="statement not covered" >  if (!user?.isActive)</span>
-<span class="cstat-no" title="statement not covered" >    throw new Error("User is not active. Please contact admin");</span>
-  const isValidPw = <span class="cstat-no" title="statement not covered" >await bcrypt.compare(password, user?.password);</span>
-<span class="cstat-no" title="statement not covered" >  if (!isValidPw) <span class="cstat-no" title="statement not covered" >throw new Error("User or password invalid");</span></span>
-  const payload = <span class="cstat-no" title="statement not covered" >{</span>
+const login = async (email: string, password: string): Promise&lt;UserLogin&gt; =&gt; {
+  const user = await userModel.findOne({ email }).select("+password")
+  if (!user) throw new Error("User not found");
+  if (!user?.isEmailVerified) throw new Error("Email is not verified yet");
+  if (!user?.isActive) throw new Error("User is not active. Please contact admin");
+  const isValidPw = await bcrypt.compare(password, user?.password);
+  if (!isValidPw) throw new Error("User or password invalid");
+  const payload = {
     id: user?._id,
     email: user?.email,
-    roles: user?.roles || [],
+    roles: user?.roles || <span class="branch-1 cbranch-no" title="branch not covered" >[],</span>
   };
-  const token = <span class="cstat-no" title="statement not covered" >generateJWT(payload);</span>
-<span class="cstat-no" title="statement not covered" >  return {</span>
+  const token = generateJWT(payload);
+  return {
     user: { name: user.name, roles: user.roles, email: user.email },
     token,
   };
@@ -436,7 +433,7 @@ export {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-02-29T07:11:03.033Z
+                at 2024-02-29T10:31:39.069Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

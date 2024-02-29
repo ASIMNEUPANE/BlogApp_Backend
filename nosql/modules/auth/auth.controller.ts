@@ -59,11 +59,10 @@ const regenerateToken = async (email: string): Promise<Boolean> => {
 };
 
 const login = async (email: string, password: string): Promise<UserLogin> => {
-  const user = await userModel.findOne({ email }).select("+password");
+  const user = await userModel.findOne({ email }).select("+password")
   if (!user) throw new Error("User not found");
   if (!user?.isEmailVerified) throw new Error("Email is not verified yet");
-  if (!user?.isActive)
-    throw new Error("User is not active. Please contact admin");
+  if (!user?.isActive) throw new Error("User is not active. Please contact admin");
   const isValidPw = await bcrypt.compare(password, user?.password);
   if (!isValidPw) throw new Error("User or password invalid");
   const payload = {
