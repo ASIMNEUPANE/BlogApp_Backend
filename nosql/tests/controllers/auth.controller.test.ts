@@ -13,13 +13,13 @@ import bcrypt from "bcrypt";
 import { totp } from "otplib";
 import nodemailer from "nodemailer";
 import JWT from "jsonwebtoken";
-import exp from "constants";
+import * as otp from '../../utils/secure'
 
 // Mocking bcrypt.hash function to return "hashedPassword"
-jest.mock("bcrypt", () => ({
-  hash: jest.fn(),
-  compare: jest.fn(),
-}));
+// jest.mock("bcrypt", () => ({
+//   hash: jest.fn(),
+//   compare: jest.fn(),
+// }));
 
 // Mocking nodemailer.createTransport().sendMail function
 jest.mock("nodemailer", () => ({
@@ -405,44 +405,45 @@ describe("Auth ", () => {
     });
   });
   describe("forgetPassword", () => {
-    // it("should forget password", async () => {
-    //   const mockUser = {
-    //     _id: "user_id",
-    //     name: "asim neupane",
-    //     email: "asimneupane11@gmail.com",
-    //     password: "hashedPassword",
-    //     images: "asim.jpg",
-    //     roles: ["user"],
-    //     isActive: true,
-    //     isArchive: false,
-    //     isEmailVerified: true,
-    //     token: "123456"
-    //   };
-    //   const authMock = {
-    //     email: "asimneupane11@gmail.com",
-    //     token: '123456',
-    //   };
-    //   jest.spyOn(authModel, "findOne").mockResolvedValue(authMock);
-    //   jest.spyOn(totp, "check").mockResolvedValue(true);
+    it("should forget password", async () => {
+      const mockUser = {
+        _id: "user_id",
+        name: "asim neupane",
+        email: "asimneupane11@gmail.com",
+        password: "hashedPassword",
+        images: "asim.jpg",
+        roles: ["user"],
+        isActive: true,
+        isArchive: false,
+        isEmailVerified: true,
+        // token: "123456"
+      };
+      jest.spyOn(totp, "generate").mockResolvedValue("123456");
+      const authMock = {
+        email: "asimneupane11@gmail.com",
+        token: '123456',
+      };
+      jest.spyOn(authModel, "findOne").mockResolvedValue(authMock);
+      jest.spyOn(totp, "check").mockResolvedValue("123456");
 
-    //   jest.spyOn(bcrypt, "hash").mockResolvedValue("NewhashedPassword");
+      jest.spyOn(bcrypt, "hash").mockResolvedValue("NewhashedPassword");
 
-    //   jest.spyOn(userModel, "findOneAndUpdate").mockResolvedValue({
-    //     email: mockUser.email,
-    //     password: "NewhashedPassword",
-    //     new: true,
-    //   });
-    //   await forgetPassowrd(
-    //    authMock.email,
-    //    authMock.token,
-    //    'newPassword'
-    //   );
-    //   expect(userModel.findOneAndUpdate).toHaveBeenCalledWith(
-    //     { email: mockUser.email },
-    //     { password: "NewhashedPassword" },
-    //     { new: true }
-    //   );
-    // });
+      jest.spyOn(userModel, "findOneAndUpdate").mockResolvedValue({
+        email: mockUser.email,
+        password: "NewhashedPassword",
+        new: true,
+      });
+      await forgetPassowrd(
+       authMock.email,
+       authMock.token,
+       'newPassword'
+      );
+      expect(userModel.findOneAndUpdate).toHaveBeenCalledWith(
+        { email: mockUser.email },
+        { password: "NewhashedPassword" },
+        { new: true }
+      );
+    });
     it("should throw an error if user not found", async () => {
       const mockUser = {
         _id: "user_id",
@@ -468,7 +469,7 @@ describe("Auth ", () => {
         forgetPassowrd(authMock.email, authMock.token, "newPassword")
       ).rejects.toThrow("user not found");
     });
-  });
+
   it("should throw an error if Token is expired", async () => {
     const authMock = {
       email: "asimneupane11@gmail.com",
@@ -497,4 +498,5 @@ describe("Auth ", () => {
       forgetPassowrd(authMock.email, authMock.token, "newPassword")
     ).rejects.toThrow("Token mismatch");
   });
+});
 });
