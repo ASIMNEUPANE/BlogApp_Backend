@@ -60,6 +60,8 @@ describe("Users", () => {
 
   beforeAll(async () => {
     await common.connectDatabase();
+    
+
   });
 
   afterAll(async () => {

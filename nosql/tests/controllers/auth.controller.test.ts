@@ -50,7 +50,9 @@ describe("Auth ", () => {
     findOneAndUpdate: jest.fn(),
   }));
   beforeAll(async () => {
+
     await common.connectDatabase();
+    
   });
 
   afterAll(async () => {
