@@ -35,7 +35,7 @@ const verify = async (payload: verifyData): Promise<boolean> => {
   const emailValid = auth?.token === +token;
   if (!emailValid) throw new Error("Token mismatch");
 
-  await userModel
+  const user = await userModel
     .findOneAndUpdate(
       { email },
       { isEmailVerified: true, isActive: true },
@@ -43,7 +43,7 @@ const verify = async (payload: verifyData): Promise<boolean> => {
     )
    
   await model.deleteOne({ email });
-  return true;
+  return user;
 };
 
 const regenerateToken = async (email: string): Promise<Boolean> => {

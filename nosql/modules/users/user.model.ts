@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model , ObjectId} from "mongoose";
 import { BaseData } from "./user.types";
 const userSchema = new Schema<BaseData>(
   {
@@ -20,6 +20,8 @@ const userSchema = new Schema<BaseData>(
     isActive: { type: Boolean, default: false },
     
     isArchive: { type: Boolean, default: false },
+    created_by:{type:Schema.ObjectId, ref:"User"},
+    updated_by:{type:Schema.ObjectId, ref:"User"}
   },
   { timestamps: true }
 );

@@ -15,11 +15,7 @@ import nodemailer from "nodemailer";
 import JWT from "jsonwebtoken";
 import * as otp from '../../utils/secure'
 
-// Mocking bcrypt.hash function to return "hashedPassword"
-// jest.mock("bcrypt", () => ({
-//   hash: jest.fn(),
-//   compare: jest.fn(),
-// }));
+
 
 // Mocking nodemailer.createTransport().sendMail function
 jest.mock("nodemailer", () => ({
@@ -52,7 +48,7 @@ describe("Auth ", () => {
   beforeAll(async () => {
 
     await common.connectDatabase();
-    
+
   });
 
   afterAll(async () => {
@@ -118,35 +114,35 @@ describe("Auth ", () => {
     });
   });
   describe("verify a user", () => {
-    // it("should verify the user", async () => {
-    //   const userData = {
-    //     name: "Jane Doe",
-    //     email: "jane.doe@example.com",
-    //     password: "Password456",
-    //     images: "avatar.jpg",
-    //     token: "123456",
-    //   };
+    it("should verify the user", async () => {
+      const userData = {
+        name: "Jane Doe",
+        email: "jane.doe@example.com",
+        password: "Password456",
+        images: "avatar.jpg",
+        token: "123456",
+      };
 
-    //   jest.spyOn(authModel, "findOne").mockResolvedValue({
-    //     email: userData.email,
-    //     token: "123456",
-    //   });
+      jest.spyOn(authModel, "findOne").mockResolvedValue({
+        email: userData.email,
+        token: "123456",
+      });
 
-    //   jest.spyOn(totp, "check").mockResolvedValue(true);
+      jest.spyOn(totp, "check").mockResolvedValue(true);
 
-    //   const result = await verify({
-    //     email: userData.email,
-    //     token: "123456",
-    //   });
+      const result = await verify({
+        email: userData.email,
+        token: "123456",
+      });
 
-    //   expect(result).toBe(true);
-    //   expect(totp.check).toHaveBeenCalledWith(userData.token, "Asim");
+      expect(result).toBe(true);
+      expect(totp.check).toHaveBeenCalledWith(userData.token, "Asim");
 
-    //   expect(verify).toHaveBeenCalledWith({
-    //     email: userData.email,
-    //     token: "123456",
-    //   });
-    // });
+      expect(verify).toHaveBeenCalledWith({
+        email: userData.email,
+        token: "123456",
+      });
+    });
     it("should throw an error if user is not available ", async () => {
       const payload = {
         email: "invalidtest@example.com",
@@ -501,4 +497,4 @@ describe("Auth ", () => {
     ).rejects.toThrow("Token mismatch");
   });
 });
-});
+})
