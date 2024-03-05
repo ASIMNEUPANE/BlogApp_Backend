@@ -7,6 +7,8 @@ import {
   verify,
   regenerateToken,
   login,
+  generateFPToken,
+  forgetPassowrd
 } from "../../modules/auth/auth.controller";
 import { hashPassword } from "../../utils/bcrypt";
 import { mailer } from "../../services/mailer";
@@ -421,5 +423,74 @@ describe("user login ", () => {
       mockUser.password
     );
     expect(userModel.findOne).toHaveBeenCalledWith({ email: mockUser.email });
+  });
+});
+
+describe("generateFPToken", () => {
+  beforeAll(async () => {
+    await common.connectDatabase();
+  });
+
+  afterAll(async () => {
+    await common.closeDatabase();
+  });
+  beforeEach(() => {
+    // Clear mocks before each test
+    jest.clearAllMocks();
+  });
+  it("should generateFPToken ", async () => {
+    const mockUser = {
+      _id: "user_id",
+
+      name: "asim neupane",
+      email: "asimneupane11@gmail.com",
+      password: "hashedPassword",
+      images: "asim.jpg",
+      roles: ["user"],
+      isActive: true,
+      isArchive: false,
+      isEmailVerified: true,
+    };
+    jest.spyOn(userModel, "findOne").mockResolvedValue(mockUser);
+    jest.spyOn(OTP, "generateOTP").mockReturnValue("123456");
+
+    jest
+      .spyOn(authModel, "create")
+      .mockReturnValue({ email: mockUser.email, token: "123456" });
+
+    const result = await generateFPToken(mockUser.email);
+    expect(result).toBe(true);
+
+    expect(userModel.findOne).toHaveBeenCalledWith({
+      email: mockUser.email,
+      isActive: true,
+      isArchive: false,
+    });
+    expect(mailer).toHaveBeenCalledWith("asimneupane11@gmail.com", 123456);
+    expect(OTP.generateOTP).toHaveBeenCalled();
+    expect(authModel.create).toHaveBeenCalledWith({ email: mockUser.email, token: "123456" })
+  });
+  it("should throw an error if use not found", async () => {
+    const mockUser = {
+      _id: "user_id",
+
+      name: "asim neupane",
+      email: "asimneupane11@gmail.com",
+      password: "hashedPassword",
+      images: "asim.jpg",
+      roles: ["user"],
+      isActive: true,
+      isArchive: false,
+      isEmailVerified: true,
+    };
+    jest.spyOn(userModel, "findOne").mockResolvedValue(null);
+    await expect(generateFPToken(mockUser.email)).rejects.toThrow(
+      "user not found"
+    );
+    expect(userModel.findOne).toHaveBeenCalledWith({
+      email: mockUser.email,
+      isActive: true,
+      isArchive: false,
+    });
   });
 });
