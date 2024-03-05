@@ -62,14 +62,14 @@ describe("User Registration Testing", () => {
       images: "asim.jpg",
     };
 
-    jest.spyOn(bcrypt, "hash").mockResolvedValue("hashedPassword");
+    jest.spyOn(bcrypt, "hash").mockResolvedValue("hashedPassword" as never );
     // Mocking userModel.create function
     jest.spyOn(userModel, "create").mockResolvedValue({
-      name: payload.name,
+      name: payload.name ,
       email: payload.email,
       password: "hashedPassword",
       images: payload.images,
-    });
+    })
 
     // Mocking totp.generate function
     jest.spyOn(OTP, "generateOTP").mockReturnValue("123456");

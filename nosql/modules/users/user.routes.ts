@@ -45,11 +45,10 @@ router.get(
   async (req, res, next) => {
     try {
       console.log(req.query);
-      const { limit, page, search } = req.query;
+      const { limit, page } = req.query;
       const result = await controller.get(
         Number(limit),
         Number(page),
-        String(search)
       );
       res.status(200).json({ data: result, msg: "success" });
     } catch (e) {

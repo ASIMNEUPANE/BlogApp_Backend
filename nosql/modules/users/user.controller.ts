@@ -24,66 +24,80 @@ export const create = async (
 
 export const get = async (
   limit: number,
-  page: number,
-  search: string
+  page: number
 ): Promise<Paginate | null> => {
   const pageNum = page || 1;
   const size = limit || 4;
-  const isArchive: boolean = Boolean(search);
   const query = { isArchive: false };
 
-  try {
-    const result = await model
-      .aggregate([
-        {
-          $facet: {
-            // Stage 1: Calculate the total count
-            total: [
-              {
-                $match: query,
-              },
-              {
-                $count: "total",
-              },
-            ],
-            // Stage 2: Fetch paginated data
-            data: [
-              {
-                $match: query,
-              },
-              {
-                $skip: (pageNum - 1) * size,
-              },
-              {
-                $limit: size,
-              },
-            ],
+  const result = await model.aggregate([
+    {
+      $facet: {
+        // Stage 1: Calculate the total count
+        total: [
+          {
+            $match: query,
           },
-        },
-        {
-          $project: {
-            total: { $arrayElemAt: ["$total.total", 0] }, // Extract total count from the 'total' array
-            data: 1, // Include the 'data' array
-            limit: size,
-            page: pageNum,
+          {
+            $count: "total",
           },
-        },
-        {
-          $project: {
-            "data.password": 0,
+        ],
+        // Stage 2: Fetch paginated data
+        data: [
+          {
+            $match: query,
           },
-        },
-      ])
-      .allowDiskUse(true);
-    const newResult = result[0];
-    let { data, total } = newResult;
+          {
+            $skip: (pageNum - 1) * size,
+          },
+          {
+            $limit: size,
+          },
+        ],
+      },
+    },
+    {
+      $project: {
+        total: { $arrayElemAt: ["$total.total", 0] }, // Extract total count from the 'total' array
+        data: 1, // Include the 'data' array
+        limit: size,
+        page: pageNum,
+      },
+    },
+    {
+      $project: {
+        "data.password": 0,
+      },
+    },
+  ])
 
-    return { data, total, limit, page };
-  } catch (error) {
-    console.error("Error occurred:", error);
-    throw new Error();
-  }
+  const newResult = result[0];
+  let { data, total } = newResult;
+  total = total || 0;
+  console.log(total);
+  return { data, total, limit, page };
 };
+// export const get = async(limit:number,page:number,search:string,  )=>{
+
+//   const skip = (page - 1) * limit; // Calculate the number of documents to skip
+//     const query = { name: search.name || null }; // Assuming you're filtering by name
+
+//     try {
+//         // Query MongoDB to get paginated data
+//         const data = await model.find(query).skip(skip).limit(limit);
+//         const total = await model.countDocuments(query); // Count total matching documents
+
+//         return {
+//             data: data,
+//             total: total,
+//             page: page,
+//             limit: limit
+//         };
+//     } catch (error) {
+//         console.error("Error occurred while fetching paginated data:", error);
+//         throw error; // Rethrow the error for handling at a higher level
+//     }
+// }
 
 export const getById = async (id: string): Promise<BaseData | null> => {
   console.log(id, "controller");
@@ -133,7 +147,7 @@ export const resetPassword = async (
   );
   return await model.findOneAndUpdate(
     { _id: user?._id },
-    {  password: newPass },
+    { password: newPass },
     { new: true }
   );
 };
@@ -144,10 +158,8 @@ export const block = async (
 ): Promise<BaseData | null> => {
   const user = await model.findOne({ _id: id });
   if (!user) throw new Error("User not found");
-  return (await model
-    .findOneAndUpdate({ _id: id }, payload, { new: true })
-    // .select("-password")) as BaseData | null;
-  )
+  return await model.findOneAndUpdate({ _id: id }, payload, { new: true });
+  // .select("-password")) as BaseData | null;
 };
 
 export const archive = async (
@@ -156,9 +168,8 @@ export const archive = async (
 ): Promise<BaseData | null> => {
   const user = await model.findOne({ _id: id });
   if (!user) throw new Error("User not found");
-  return (await model.findOneAndUpdate({ _id: id }, payload, { new: true })
+  return await model.findOneAndUpdate({ _id: id }, payload, { new: true });
   // .select("-password")) as BaseData | null;
-  );
 };
 
 export default {

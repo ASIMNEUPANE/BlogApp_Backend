@@ -9,12 +9,10 @@ const create = async (payload: Iblog): Promise<Iblog> => {
 const get = async (
   limit: number,
   page: number,
-  search: string
 ): Promise<Paginate | null> => {
   const pageNum = page || 1;
   const size = limit || 4;
 
-  const status: string = search;
   // const query = { status: status || "published" }; this is not working
 
   const query = { status: "published" };
@@ -56,7 +54,7 @@ const get = async (
           },
         },
       ])
-      .allowDiskUse(true);
+      // .allowDiskUse(true);
     const newResult = result[0];
     let { data,total } = newResult;
     total = total || 0;

@@ -49,30 +49,62 @@ describe("Blog controller Test", () => {
   });
 
   // List Operation
-    describe("list all blog", () => {
-      it("lists all blogs", async () => {
-        const allData = await get(2, 2, "");
+  describe("list all blog", () => {
+    it("should return paginated data and total count", async () => {
+      const page = 1,
+        page2 = 2;
+      const limit = 4;
 
-        // Assertion to check if allData is an object
-        expect(typeof allData).toBe("object");
+      // Mock data for model.aggregate
+      jest.spyOn(blogModel, "aggregate").mockResolvedValue([
+        {
+          total: [{ total: 2 }], // Assuming total count is 2
+          data: [
+            {
+              _id: "id-1",
+              title: "blog-1",
+              content: "best of the world",
+              description: "boom blastic...",
+              category: "Technology",
+              status: "published",
+              author: "asim the don",
+              totalWord: 11,
+              images: "images.jpg",
+            },
+            {
+              _id: "id-2",
+              title: "blog-2",
+              content: "best of the world",
+              description: "boom blastic...",
+              category: "Technology",
+              status: "published",
+              author: "asim the don",
+              totalWord: 11,
+              images: "images.jpg",
+            },
+          ],
+        },
+      ]);
 
-        // Assertion to check if allData contains a property named 'data'
-        expect(allData).toHaveProperty("data");
+      // Call the get function
+      const result = await get(limit, page);
+      console.log({ result }, "dattttttaaaaaa");
 
-        // If there is no data returned, expect 'data' property to be an empty array
-        if (allData.data.length === 0) {
-          expect(allData.data).toEqual([]);
-        } else {
-          // Assertion to check if 'data' property is an array
-          expect(Array.isArray(allData.data)).toBe(true);
+      // Call the get function for the second page
+      const pageTworesult = await get(limit, page2);
+      console.log({ pageTworesult });
 
-          // Assertion to check if each item in 'data' array is an object
-          allData.data.forEach((item) => {
-            expect(typeof item).toBe("object");
-          });
-        }
-      });
+      // Check if the result matches the expected result
+      expect(result?.data).toHaveLength(2);
+      expect(result?.page).toBe(page);
+      expect(result?.limit).toBe(limit);
+
+      // Page 2 Test
+      expect(pageTworesult?.data).toHaveLength(2); // Assuming page 2 should have no data
+      expect(pageTworesult?.total).toEqual([{ total: 2 }]); // Assuming total count remains the same
+      expect(pageTworesult?.page).toBe(page2);
     });
+  });
 
   //   // Get By Id Operation
   describe("Get blog by id ", () => {

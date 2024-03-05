@@ -61,8 +61,8 @@ router.get(
   validateLimit,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { limit, page, search } = req.query;
-      const result = await get(Number(limit), Number(page), String(search));
+      const { limit, page } = req.query;
+      const result = await get(Number(limit), Number(page));
       res.status(200).json({ data: result, msg: "success" });
     } catch (err) {
       next(err);

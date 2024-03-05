@@ -22,9 +22,8 @@ const mockAggregate = jest.fn();
 
 describe("Users", () => {
   jest.mock("../../modules/users/user.model", () => ({
-    create: jest.fn().mockResolvedValue({
-      /* mock data returned by create */
-    }),
+    find: jest.fn(),
+    create: jest.fn(),
     findOne: jest.fn(),
     findOneAndUpdate: jest.fn().mockResolvedValue(true),
     changePassword: jest.fn(),
@@ -68,11 +67,12 @@ describe("Users", () => {
     // @ts-ignore
 
     await common.closeDatabase();
+  });
+  beforeEach(() => {
+    // Clear mocks before each test
     jest.clearAllMocks();
   });
 
-  
-  
   describe("create", () => {
     it("should register user with hashed password", async () => {
       const payload = {
@@ -92,26 +92,58 @@ describe("Users", () => {
         isActive: true,
       };
       // @ts-ignore
-      
+
       const result = await create(payload);
-      
+
       // Asserting that bcrypt.hash was called with the password
       expect(bcrypt.hash).toHaveBeenCalledWith(
         payload.password,
         expect.any(Number)
-        );
-        
-        expect(result?.password).toEqual(expectedResult.password);
-        expect(result?.email).toEqual(expectedResult.email);
-        expect(result?.password).toEqual(expectedResult.password);
-      });
+      );
+
+      expect(result?.password).toEqual(expectedResult.password);
+      expect(result?.email).toEqual(expectedResult.email);
+      expect(result?.password).toEqual(expectedResult.password);
     });
-    describe("getALL", () => {
-      it("should return paginated data", async () => {
+  });
+  describe("getALL", () => {
+    it("should return paginated data and total count", async () => {
+      const page = 1,
+          page2 = 2;
+      const limit = 4;
+
+      // Mock data for model.aggregate
+      jest.spyOn(model, "aggregate").mockResolvedValue([
        
-    });
-  })
-    describe("getById", () => {
+          {
+              total: [{ total: 2 }], // Assuming total count is 2
+              data: [
+                  { name: "testuser1", email: "test@mailinator.com", isArchive: false },
+                  { name: "testuser2", email: "test2@mailinator.com", isArchive: false }
+              ]
+          }
+      ]);
+
+      // Call the get function
+      const result = await get(limit, page);
+      console.log({ result }, 'dattttttaaaaaa');
+
+      // Call the get function for the second page
+      const pageTworesult = await get(limit, page2);
+      console.log({ pageTworesult });
+
+      // Check if the result matches the expected result
+      expect(result?.data).toHaveLength(2);
+      expect(result?.page).toBe(page);
+      expect(result?.limit).toBe(limit);
+
+      // Page 2 Test
+      expect(pageTworesult?.data).toHaveLength(2); // Assuming page 2 should have no data
+      expect(pageTworesult?.total).toEqual([{"total": 2}]); // Assuming total count remains the same
+      expect(pageTworesult?.page).toBe(page2);
+  });
+  });
+  describe("getById", () => {
     it("should find and return a user by id", async () => {
       jest.spyOn(model, "findOne").mockResolvedValue(mockUsers[0]);
       const result = await getById(mockUsers[0]._id);
@@ -371,5 +403,4 @@ describe("Users", () => {
       expect(model.findOne).toHaveBeenCalledWith({ _id: "12321j3h2432j" });
     });
   });
-
-})
+});
