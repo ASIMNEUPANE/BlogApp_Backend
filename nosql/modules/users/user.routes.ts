@@ -117,10 +117,8 @@ router.put(
 
 router.put("/reset-password", secureAPI(["admin"]), async (req, res, next) => {
   try {
-    const { id, ...rest } = req.body;
-    rest.created_by = (req as any).currentUser
-    rest.updated_by = (req as any).currentUser
-    const result = await controller.resetPassword(id, rest);
+    const { id, password } = req.body;
+    const result = await controller.resetPassword(id, password);
     res.status(200).json({ data: result, msg: "success" });
   } catch (e) {
     next(e);

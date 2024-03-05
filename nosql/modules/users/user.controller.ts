@@ -123,17 +123,17 @@ export const changePassword = async (
 
 export const resetPassword = async (
   id: string,
-  payload: payloadTypes
+  password: string
 ): Promise<BaseData | null> => {
   const user = await model.findOne({ _id: id });
   if (!user) throw new Error("User not found");
   const newPass = await bcrypt.hash(
-    payload.password as string,
+    password as string,
     +process.env.SALT_ROUND
   );
   return await model.findOneAndUpdate(
     { _id: user?._id },
-    { ...payload, password: newPass },
+    {  password: newPass },
     { new: true }
   );
 };
@@ -142,7 +142,7 @@ export const block = async (
   id: string,
   payload: payloadTypes
 ): Promise<BaseData | null> => {
-  const user = await model.find({ _id: id });
+  const user = await model.findOne({ _id: id });
   if (!user) throw new Error("User not found");
   return (await model
     .findOneAndUpdate({ _id: id }, payload, { new: true })
@@ -154,7 +154,7 @@ export const archive = async (
   id: string,
   payload: payloadTypes
 ): Promise<BaseData | null> => {
-  const user = await model.find({ _id: id });
+  const user = await model.findOne({ _id: id });
   if (!user) throw new Error("User not found");
   return (await model.findOneAndUpdate({ _id: id }, payload, { new: true })
   // .select("-password")) as BaseData | null;

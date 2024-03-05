@@ -15,7 +15,7 @@ const register = async (payload: BaseData): Promise<boolean> => {
   };
   rest.password = await bcrypt.hash(
     password,
-    Number(process.env.SALT_ROUND) ?? 0
+    Number(process.env.SALT_ROUND) 
   );
   const user = await userModel.create(rest);
 
@@ -68,7 +68,7 @@ const login = async (email: string, password: string): Promise<UserLogin> => {
   const payload = {
     id: user?._id,
     email: user?.email,
-    roles: user?.roles || [],
+    roles: user?.roles ,
   };
   const token = generateJWT(payload);
   return {
@@ -99,7 +99,7 @@ const forgetPassowrd = async (
   if (!auth) throw new Error("user not found");
   const isValidToken = await verifyOTP(token);
   if (!isValidToken) throw new Error("Token expire");
-  const emailValid = auth?.token === +token;
+  const emailValid = auth?.token === token;
   if (!emailValid) throw new Error("Token mismatch");
   await userModel.findOneAndUpdate(
     { email },
