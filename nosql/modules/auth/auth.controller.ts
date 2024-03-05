@@ -21,29 +21,28 @@ const register = async (payload: BaseData): Promise<boolean> => {
 
   const token = generateOTP();
   await model.create({ email: user?.email, token });
-   await mailer(user?.email, +token);
-  return user
+  await mailer(user?.email, +token);
+  return true;
 };
-
 const verify = async (payload: verifyData): Promise<boolean> => {
   const { email, token } = payload;
   const auth = await model.findOne({ email });
+  console.log(auth,'authhhhhhh')
   if (!auth) throw new Error("User is not available");
   const isValidToken = await verifyOTP(token);
   if (!isValidToken) throw new Error("Token Expired");
-
-  const emailValid = auth?.token === +token;
+  const emailValid = auth?.token === token;
+  console.log(emailValid)
   if (!emailValid) throw new Error("Token mismatch");
 
-  const user = await userModel
-    .findOneAndUpdate(
-      { email },
-      { isEmailVerified: true, isActive: true },
-      { new: true }
-    )
-   
+  const user = await userModel.findOneAndUpdate(
+    { email },
+    { isEmailVerified: true, isActive: true },
+    { new: true }
+  );
+
   await model.deleteOne({ email });
-  return user;
+  return true;
 };
 
 const regenerateToken = async (email: string): Promise<Boolean> => {
@@ -59,10 +58,11 @@ const regenerateToken = async (email: string): Promise<Boolean> => {
 };
 
 const login = async (email: string, password: string): Promise<UserLogin> => {
-  const user = await userModel.findOne({ email }).select("+password")
+  const user = await userModel.findOne({ email }).select("+password");
   if (!user) throw new Error("User not found");
   if (!user?.isEmailVerified) throw new Error("Email is not verified yet");
-  if (!user?.isActive) throw new Error("User is not active. Please contact admin");
+  if (!user?.isActive)
+    throw new Error("User is not active. Please contact admin");
   const isValidPw = await bcrypt.compare(password, user?.password);
   if (!isValidPw) throw new Error("User or password invalid");
   const payload = {
@@ -77,7 +77,7 @@ const login = async (email: string, password: string): Promise<UserLogin> => {
   };
 };
 
- const generateFPToken = async (email: string): Promise<boolean> => {
+const generateFPToken = async (email: string): Promise<boolean> => {
   const user = await userModel.findOne({
     email,
     isActive: true,

@@ -1,4 +1,5 @@
 import JWT from "jsonwebtoken";
+import crypto from 'crypto'
 
 const generateJWT = (payload: { [key: string]: any }) => {
   return JWT.sign(
@@ -17,4 +18,7 @@ const verifyJWT = (token: string) => {
     throw new Error("Token is invalid");
   }
 };
-export  { generateJWT, verifyJWT };
+const generateRandomToken = () => {
+  return crypto.randomInt(100000, 999999);
+};
+export  { generateJWT, verifyJWT,generateRandomToken };
