@@ -52,7 +52,7 @@ const regenerateToken = async (email: string): Promise<Boolean> => {
   if (!auth) throw new Error("User not found");
 
   const newToken = generateOTP();
-  await model.findOneAndUpdate({ email }, { token: +newToken }, { new: true });
+  await model.findOneAndUpdate({ email }, { token: newToken }, { new: true });
   await mailer(email, +newToken);
   return true;
 };
