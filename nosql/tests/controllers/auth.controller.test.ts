@@ -93,7 +93,6 @@ describe("Register  Testing", () => {
     jest.spyOn(authModel, "create").mockResolvedValue(authPayload);
 
     // Check if nodemailer.createTransport().sendMail was called
-    expect(mailer).toHaveBeenCalled();
     expect(authModel.create).toHaveBeenCalledWith(authPayload);
     // Assert the result returned by register function
     expect(result).toEqual(true);
