@@ -90,7 +90,7 @@ Jest provides built-in assertion utilities such as `expect()` to make assertions
 
 #some example of testing -:
 
-`describe("Register  Testing", () => {
+```describe("Register  Testing", () => {
   beforeAll(async () => {
     await common.connectDatabase();
   });
@@ -152,7 +152,7 @@ Jest provides built-in assertion utilities such as `expect()` to make assertions
     // expect(result.password).toEqual("hashedPassword");
     expect(mailer).toHaveBeenCalledWith("asimneupane11@gmail.com", 123456);
   });
-}); `
+}); ```
 
 ## Points to Remember:
 
