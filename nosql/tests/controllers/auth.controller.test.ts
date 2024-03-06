@@ -38,7 +38,7 @@ jest.spyOn(authModel, "create");
 jest.spyOn(authModel, "findOne");
 jest.spyOn(authModel, "findOneAndUpdate").mockResolvedValue(true);
 
-describe("Auth Controller Testing", () => {
+describe("Register  Testing", () => {
   beforeAll(async () => {
     await common.connectDatabase();
   });

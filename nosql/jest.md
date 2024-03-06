@@ -88,6 +88,72 @@ Jest provides built-in assertion utilities such as `expect()` to make assertions
 
 **6.Teardown**: Clean up any resources or state changes introduced during the test case, ensuring a clean environment for subsequent tests.
 
+#some example of testing -:
+
+`describe("Register  Testing", () => {
+  beforeAll(async () => {
+    await common.connectDatabase();
+  });
+
+  afterAll(async () => {
+    await common.closeDatabase();
+  });
+  beforeEach(() => {
+    // Clear mocks before each test
+    jest.clearAllMocks();
+  });
+  it("should register the user", async () => {
+    // Define payload
+    const payload = {
+      name: "asim neupane",
+      email: "asimneupane11@gmail.com",
+      password: "helloworld",
+      images: "asim.jpg",
+    };
+
+    jest.spyOn(bcrypt, "hash").mockResolvedValue("hashedPassword" as never );
+    // Mocking userModel.create function
+    jest.spyOn(userModel, "create").mockResolvedValue(payload)
+
+    // Mocking totp.generate function
+    jest.spyOn(OTP, "generateOTP").mockReturnValue("123456");
+
+    // Call the register function
+    const result = await register(payload);
+    // Assertions
+    // Check if bcrypt.hash was called with the correct password
+    expect(bcrypt.hash).toHaveBeenCalledWith(
+      payload.password,
+      expect.any(Number)
+    );
+
+    // Check if userModel.create was called with the expected user data
+    expect(userModel.create).toHaveBeenCalledWith({
+      name: payload.name,
+      email: payload.email,
+      password: "hashedPassword",
+      images: payload.images,
+    });
+
+    // Check if totp.generate was called
+    expect(OTP.generateOTP).toHaveBeenCalled();
+    // Check if authModel.create was called
+    const authPayload = {
+      email: payload.email,
+      token: "123456",
+    };
+    jest.spyOn(authModel, "create").mockResolvedValue(authPayload);
+
+    // Check if nodemailer.createTransport().sendMail was called
+    expect(mailer).toHaveBeenCalled();
+    expect(authModel.create).toHaveBeenCalledWith(authPayload);
+    // Assert the result returned by register function
+    expect(result).toEqual(true);
+    // expect(result.password).toEqual("hashedPassword");
+    expect(mailer).toHaveBeenCalledWith("asimneupane11@gmail.com", 123456);
+  });
+}); `
+
 ## Points to Remember:
 
 - Ensure tests are focused, isolated, and cover edge cases.
