@@ -42,10 +42,28 @@ Jest is a popular JavaScript testing framework developed by Facebook. It provide
 
 **3.Testing**: Write Jest tests that interact with the MongoDB database using @shelf/mongodb utilities for mocking and assertion.
 
+## Assertion in Jest:
+
+Jest provides built-in assertion utilities such as `expect()` to make assertions about the code being tested. Assertions verify that certain conditions are met during the execution of the test.
+
+## Step to Unit Test:
+
+**1.Setup**: Initialize the test environment, including any necessary configurations or dependencies.
+
+**2.Write Tests**: Write individual test cases for each unit or component of the codebase, focusing on specific behaviors or edge cases.
+
+**3.Arrange**: Set up the necessary preconditions and inputs for the test case.
+
+**4.Act**: Invoke the function or component being tested with the provided inputs.
+
+**5.Assert**: Make assertions using Jest's built-in `expect()` function to verify the expected behavior or outcomes.
+
+**6.Teardown**: Clean up any resources or state changes introduced during the test case, ensuring a clean environment for subsequent tests.
+
 ### Points to Remember:
 
-Ensure tests are focused, isolated, and cover edge cases.
+- Ensure tests are focused, isolated, and cover edge cases.
 
-Write descriptive test names for better readability.
+- Write descriptive test names for better readability.
 
-Aim for high test coverage to minimize the risk of undiscovered bugs.
+- Aim for high test coverage to minimize the risk of undiscovered bugs.
