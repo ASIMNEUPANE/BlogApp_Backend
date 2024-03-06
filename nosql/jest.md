@@ -152,9 +152,10 @@ Jest provides built-in assertion utilities such as `expect()` to make assertions
     // expect(result.password).toEqual("hashedPassword");
     expect(mailer).toHaveBeenCalledWith("asimneupane11@gmail.com", 123456);
   });
-}); ```
+}); 
+```
 
-## Points to Remember:
+##Points to Remember:
 
 - Ensure tests are focused, isolated, and cover edge cases.
 
