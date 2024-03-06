@@ -4,7 +4,7 @@
 
 Unit testing is a software testing technique where individual units or components of a software application are tested in isolation to ensure they perform as expected. It helps detect bugs early in the development process, improves code quality, and provides confidence in the correctness of the codebase.
 
-### Why Unit Testing?
+## Why Unit Testing?
 
 Bug Detection: Identifies bugs early in the development cycle, making them cheaper and easier to fix.
 Code Quality: Ensures code quality by verifying that individual units behave as expected.
@@ -12,17 +12,41 @@ Refactoring Confidence: Facilitates refactoring by providing a safety net agains
 Documentation: Serves as documentation for how code should behave.
 Regression Testing: Guards against regressions by validating that existing functionality continues to work as intended.
 
-### What is Jest?
+## What is Jest?
 
 Jest is a popular JavaScript testing framework developed by Facebook. It provides a simple and intuitive API for writing unit tests, along with powerful features such as mocking, spying, and built-in assertion utilities.
 
 ## When to Use Mock and Spy in Jest?
 
-**- Mocking**: Use mocking to simulate dependencies or external services, ensuring isolated testing environments and predictable behavior.
+### Mocking:
 
-**- Spying**: Use spying to observe function calls and interactions, validating behavior without modifying the original function.
+Use mocking to simulate dependencies or external services, ensuring isolated testing environments and predictable behavior.
 
-### Different Mock Resolvers in Jest:
+**Purpose**: Mocking replaces entire functions or modules with fake implementations during tests.
+
+**Usage**: Used to simulate dependencies or external services, ensuring isolated testing environments.
+
+**Implementation**: Entire functions or modules are replaced with mocks using jest.mock().
+
+**Behavior Definition**: Behavior of mocks is explicitly defined to simulate different scenarios.
+
+**Isolation**: Tests are isolated from external dependencies, focusing solely on the behavior of the unit under test.
+
+### Spying:
+
+Use spying to observe function calls and interactions, validating behavior without modifying the original function.
+
+**Purpose**: Spying observes function calls and interactions without altering their behavior.
+
+**Usage**: Used to validate function behavior, such as whether a function was called or with what arguments.
+
+**Implementation**: Functions are wrapped with spies using jest.spyOn().
+
+**Observation**: Spies record function calls and arguments during test execution.
+
+**Validation**: Assertions can be made on function calls and interactions to validate expected behavior.
+
+## Different Mock Resolvers in Jest:
 
 **- mockResolvedValue**: Sets a consistent resolved value for a mocked asynchronous function.
 
@@ -60,7 +84,7 @@ Jest provides built-in assertion utilities such as `expect()` to make assertions
 
 **6.Teardown**: Clean up any resources or state changes introduced during the test case, ensuring a clean environment for subsequent tests.
 
-### Points to Remember:
+## Points to Remember:
 
 - Ensure tests are focused, isolated, and cover edge cases.
 
