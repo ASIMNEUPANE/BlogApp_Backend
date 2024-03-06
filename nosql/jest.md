@@ -26,7 +26,7 @@ Use mocking to simulate dependencies or external services, ensuring isolated tes
 
 **Usage**: Used to simulate dependencies or external services, ensuring isolated testing environments.
 
-**Implementation**: Entire functions or modules are replaced with mocks using jest.mock().
+**Implementation**: Entire functions or modules are replaced with mocks using `jest.mock()`.
 
 **Behavior Definition**: Behavior of mocks is explicitly defined to simulate different scenarios.
 
@@ -40,7 +40,7 @@ Use spying to observe function calls and interactions, validating behavior witho
 
 **Usage**: Used to validate function behavior, such as whether a function was called or with what arguments.
 
-**Implementation**: Functions are wrapped with spies using jest.spyOn().
+**Implementation**: Functions are wrapped with spies using `jest.spyOn()`.
 
 **Observation**: Spies record function calls and arguments during test execution.
 
