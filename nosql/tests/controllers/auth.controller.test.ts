@@ -64,19 +64,13 @@ describe("User Registration Testing", () => {
 
     jest.spyOn(bcrypt, "hash").mockResolvedValue("hashedPassword" as never );
     // Mocking userModel.create function
-    jest.spyOn(userModel, "create").mockResolvedValue({
-      name: payload.name ,
-      email: payload.email,
-      password: "hashedPassword",
-      images: payload.images,
-    })
+    jest.spyOn(userModel, "create").mockResolvedValue(payload)
 
     // Mocking totp.generate function
     jest.spyOn(OTP, "generateOTP").mockReturnValue("123456");
 
     // Call the register function
     const result = await register(payload);
-
     // Assertions
     // Check if bcrypt.hash was called with the correct password
     expect(bcrypt.hash).toHaveBeenCalledWith(

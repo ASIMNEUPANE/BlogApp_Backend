@@ -11,9 +11,8 @@ export const create = async (
     roles?: string;
     [key: string]: any;
   };
-
-  rest.password = await bcrypt.hash(password, +process.env.SALT_ROUND ?? 0);
-  rest.roles = roles ? [roles] : [];
+  rest.password = await bcrypt.hash(password, +process.env.SALT_ROUND );
+  rest.roles =  [roles] ;
   rest.isEmailVerified = true;
   rest.isActive = true;
   // return (await model.create(rest).select("-password")) as BaseData | null;; not working
@@ -69,7 +68,7 @@ export const get = async (
         "data.password": 0,
       },
     },
-  ])
+  ]);
 
   const newResult = result[0];
   let { data, total } = newResult;

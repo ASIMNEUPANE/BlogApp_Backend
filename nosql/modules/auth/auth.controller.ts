@@ -27,12 +27,10 @@ const register = async (payload: BaseData): Promise<boolean> => {
 const verify = async (payload: verifyData): Promise<boolean> => {
   const { email, token } = payload;
   const auth = await model.findOne({ email });
-  console.log(auth,'authhhhhhh')
   if (!auth) throw new Error("User is not available");
   const isValidToken = await verifyOTP(token);
   if (!isValidToken) throw new Error("Token Expired");
   const emailValid = auth?.token === token;
-  console.log(emailValid)
   if (!emailValid) throw new Error("Token mismatch");
 
   const user = await userModel.findOneAndUpdate(
@@ -46,9 +44,7 @@ const verify = async (payload: verifyData): Promise<boolean> => {
 };
 
 const regenerateToken = async (email: string): Promise<Boolean> => {
-  console.log(email, "email");
   const auth = await model.findOne({ email });
-  console.log(auth);
   if (!auth) throw new Error("User not found");
 
   const newToken = generateOTP();

@@ -11,9 +11,10 @@ const userSchema = new Schema<BaseData>(
 
     password: { type: String },
     roles: {
-      type: Array,
-      // enum: ["user", "admin"],
-      default: ["user"],
+      type: [String],
+      enum: ["admin", "user"],
+      default: "user",
+      required: true,
     },
     images: { type: String },
 

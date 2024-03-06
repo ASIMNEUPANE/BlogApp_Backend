@@ -8,7 +8,7 @@
     "prestart": "npm run build",
     "start": "node dist/index.js",
     "dev": "concurrently \"npx tsc -w\" \"nodemon dist/index.js\"",
-    "coverage": "jest --coverage"
+    "coverage": "jest --verbose"
   },
   "keywords": [],
   "author": "",

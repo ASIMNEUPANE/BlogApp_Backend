@@ -92,9 +92,8 @@ describe("Users", () => {
         isActive: true,
       };
       // @ts-ignore
-
       const result = await create(payload);
-
+      console.log(result, "user result");
       // Asserting that bcrypt.hash was called with the password
       expect(bcrypt.hash).toHaveBeenCalledWith(
         payload.password,
@@ -109,24 +108,31 @@ describe("Users", () => {
   describe("getALL", () => {
     it("should return paginated data and total count", async () => {
       const page = 1,
-          page2 = 2;
+        page2 = 2;
       const limit = 4;
 
       // Mock data for model.aggregate
       jest.spyOn(model, "aggregate").mockResolvedValue([
-       
-          {
-              total: [{ total: 2 }], // Assuming total count is 2
-              data: [
-                  { name: "testuser1", email: "test@mailinator.com", isArchive: false },
-                  { name: "testuser2", email: "test2@mailinator.com", isArchive: false }
-              ]
-          }
+        {
+          total: [{ total: 2 }], // Assuming total count is 2
+          data: [
+            {
+              name: "testuser1",
+              email: "test@mailinator.com",
+              isArchive: false,
+            },
+            {
+              name: "testuser2",
+              email: "test2@mailinator.com",
+              isArchive: false,
+            },
+          ],
+        },
       ]);
 
       // Call the get function
       const result = await get(limit, page);
-      console.log({ result }, 'dattttttaaaaaa');
+      console.log({ result }, "dattttttaaaaaa");
 
       // Call the get function for the second page
       const pageTworesult = await get(limit, page2);
@@ -139,9 +145,9 @@ describe("Users", () => {
 
       // Page 2 Test
       expect(pageTworesult?.data).toHaveLength(2); // Assuming page 2 should have no data
-      expect(pageTworesult?.total).toEqual([{"total": 2}]); // Assuming total count remains the same
+      expect(pageTworesult?.total).toEqual([{ total: 2 }]); // Assuming total count remains the same
       expect(pageTworesult?.page).toBe(page2);
-  });
+    });
   });
   describe("getById", () => {
     it("should find and return a user by id", async () => {
