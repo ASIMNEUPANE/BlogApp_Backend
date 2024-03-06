@@ -1,4 +1,3 @@
-//  userController
 import userModel from "../../modules/users/user.model";
 import authModel from "../../modules/auth/auth.model";
 import {
@@ -15,12 +14,10 @@ import * as JWT from "../../utils/jwt";
 import common from "../common";
 import bcrypt from "bcrypt";
 
-// import bcrypt from "bcrypt";
 
 jest.mock("../../utils/otp", () => ({
   generateOTP: jest.fn(() => "123456"),
   verifyOTP: jest.fn(),
-  // generateRandomToken: jest.fn(() => "123456"),
 }));
 jest.mock("../../utils/jwt", () => ({
   generateJWT: jest.fn().mockReturnValue("mockJWTtoken"),
@@ -41,7 +38,7 @@ jest.spyOn(authModel, "create");
 jest.spyOn(authModel, "findOne");
 jest.spyOn(authModel, "findOneAndUpdate").mockResolvedValue(true);
 
-describe("User Registration Testing", () => {
+describe("Auth Controller Testing", () => {
   beforeAll(async () => {
     await common.connectDatabase();
   });

@@ -20,7 +20,7 @@ jest.mock("bcrypt", () => ({
 }));
 const mockAggregate = jest.fn();
 
-describe("Users", () => {
+describe("Users Controller testing", () => {
   jest.mock("../../modules/users/user.model", () => ({
     find: jest.fn(),
     create: jest.fn(),

@@ -7,8 +7,7 @@ import {
   getById,
   updateById,
 } from "../../modules/blog/blog.controller";
-import { title } from "process";
-// import MongoClient from "mongodb";
+
 
 const blogData = {
   _id: "id-1",
@@ -29,7 +28,7 @@ jest.spyOn(blogModel, "deleteOne");
 
 // Add Operation
 
-describe("Blog controller Test", () => {
+describe("Blog controller Testing", () => {
   beforeAll(async () => {
     await common.connectDatabase();
   });
@@ -88,11 +87,9 @@ describe("Blog controller Test", () => {
 
       // Call the get function
       const result = await get(limit, page);
-      console.log({ result }, "dattttttaaaaaa");
 
       // Call the get function for the second page
       const pageTworesult = await get(limit, page2);
-      console.log({ pageTworesult });
 
       // Check if the result matches the expected result
       expect(result?.data).toHaveLength(2);
@@ -159,5 +156,5 @@ describe("Blog controller Test", () => {
       expect(blogModel.deleteOne).toHaveBeenCalledWith({ _id: blogData._id });
     });
   });
-  // });
+
 });
