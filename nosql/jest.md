@@ -6,11 +6,11 @@ Unit testing is a software testing technique where individual units or component
 
 ## Why Unit Testing?
 
-Bug Detection: Identifies bugs early in the development cycle, making them cheaper and easier to fix.
-Code Quality: Ensures code quality by verifying that individual units behave as expected.
-Refactoring Confidence: Facilitates refactoring by providing a safety net against unintended changes.
-Documentation: Serves as documentation for how code should behave.
-Regression Testing: Guards against regressions by validating that existing functionality continues to work as intended.
+**- Bug Detection**: Identifies bugs early in the development cycle, making them cheaper and easier to fix.
+**- Code Quality**: Ensures code quality by verifying that individual units behave as expected.
+**- Refactoring Confidence**: Facilitates refactoring by providing a safety net against unintended changes.
+**- Documentation**: Serves as documentation for how code should behave.
+**- Regression Testing**: Guards against regressions by validating that existing functionality continues to work as intended.
 
 ## What is Jest?
 
@@ -22,29 +22,29 @@ Jest is a popular JavaScript testing framework developed by Facebook. It provide
 
 Use mocking to simulate dependencies or external services, ensuring isolated testing environments and predictable behavior.
 
-**Purpose**: Mocking replaces entire functions or modules with fake implementations during tests.
+**- Purpose**: Mocking replaces entire functions or modules with fake implementations during tests.
 
-**Usage**: Used to simulate dependencies or external services, ensuring isolated testing environments.
+**- Usage**: Used to simulate dependencies or external services, ensuring isolated testing environments.
 
-**Implementation**: Entire functions or modules are replaced with mocks using `jest.mock()`.
+**- Implementation**: Entire functions or modules are replaced with mocks using `jest.mock()`.
 
-**Behavior Definition**: Behavior of mocks is explicitly defined to simulate different scenarios.
+**- Behavior Definition**: Behavior of mocks is explicitly defined to simulate different scenarios.
 
-**Isolation**: Tests are isolated from external dependencies, focusing solely on the behavior of the unit under test.
+**- Isolation**: Tests are isolated from external dependencies, focusing solely on the behavior of the unit under test.
 
 ### Spying:
 
 Use spying to observe function calls and interactions, validating behavior without modifying the original function.
 
-**Purpose**: Spying observes function calls and interactions without altering their behavior.
+**- Purpose**: Spying observes function calls and interactions without altering their behavior.
 
-**Usage**: Used to validate function behavior, such as whether a function was called or with what arguments.
+**- Usage**: Used to validate function behavior, such as whether a function was called or with what arguments.
 
-**Implementation**: Functions are wrapped with spies using `jest.spyOn()`.
+**- Implementation**: Functions are wrapped with spies using `jest.spyOn()`.
 
-**Observation**: Spies record function calls and arguments during test execution.
+**- Observation**: Spies record function calls and arguments during test execution.
 
-**Validation**: Assertions can be made on function calls and interactions to validate expected behavior.
+**- Validation**: Assertions can be made on function calls and interactions to validate expected behavior.
 
 ## Different Mock Resolvers in Jest:
 
