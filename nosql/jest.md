@@ -7,9 +7,13 @@ Unit testing is a software testing technique where individual units or component
 ## Why Unit Testing?
 
 **- Bug Detection**: Identifies bugs early in the development cycle, making them cheaper and easier to fix.
+
 **- Code Quality**: Ensures code quality by verifying that individual units behave as expected.
+
 **- Refactoring Confidence**: Facilitates refactoring by providing a safety net against unintended changes.
+
 **- Documentation**: Serves as documentation for how code should behave.
+
 **- Regression Testing**: Guards against regressions by validating that existing functionality continues to work as intended.
 
 ## What is Jest?
