@@ -17,18 +17,25 @@ Jest is a popular JavaScript testing framework developed by Facebook. It provide
 **Spying**: Use spying to observe function calls and interactions, validating behavior without modifying the original function.
 ### Different Mock Resolvers in Jest:
 **mockResolvedValue**: Sets a consistent resolved value for a mocked asynchronous function.
+
 **mockResolvedOnce**: Sets a resolved value for a mocked asynchronous function for the next call only.
+
 **mockReturnValue**: Sets a consistent return value for a mocked function.
+
 **mockReturnValueOnce**: Sets a return value for a mocked function for the next call only.
 
 ## How to Test Database Using @shelf/mongodb?
 @shelf/mongodb is a Jest plugin that provides utilities for testing MongoDB databases in Jest tests.
 
 **Installation**: Install @shelf/mongodb package using npm or yarn.
+
 **Setup**: Set up a MongoDB connection in your test environment configuration.
+
 **Testing**: Write Jest tests that interact with the MongoDB database using @shelf/mongodb utilities for mocking and assertion.
 
 ### Points to Remember:
 Ensure tests are focused, isolated, and cover edge cases.
+
 Write descriptive test names for better readability.
+
 Aim for high test coverage to minimize the risk of undiscovered bugs.
