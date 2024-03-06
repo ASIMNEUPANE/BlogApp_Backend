@@ -107,7 +107,7 @@ Function Invocation: The register function is invoked with the defined payload.
 - userModel.create is called with the expected user data.
 - OTP.generateOTP is called.
 - authModel.create is called with the appropriate payload.
-- nodemailer.createTransport().sendMail is called.
+- mailer() is called with the appropriate payload.
 - The result of register function is validated.
 - Cleanup: After each test, mocks are cleared, and the database connection is closed.
 
