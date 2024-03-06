@@ -1,15 +1,6 @@
 import common from "../common";
 import model from "../../modules/users/user.model";
-import {
-  getById,
-  get,
-  create,
-  updateById,
-  changePassword,
-  resetPassword,
-  block,
-  archive,
-} from "../../modules/users/user.controller";
+
 import * as controller from "../../modules/users/user.controller";
 import bcrypt from "bcrypt";
 
@@ -26,9 +17,6 @@ describe("Users Controller testing", () => {
     create: jest.fn(),
     findOne: jest.fn(),
     findOneAndUpdate: jest.fn().mockResolvedValue(true),
-    changePassword: jest.fn(),
-    resetPassword: jest.fn(),
-    block: jest.fn(),
     aggregate: mockAggregate,
   }));
 
@@ -92,8 +80,7 @@ describe("Users Controller testing", () => {
         isActive: true,
       };
       // @ts-ignore
-      const result = await create(payload);
-      console.log(result, "user result");
+      const result = await controller.create(payload);
       // Asserting that bcrypt.hash was called with the password
       expect(bcrypt.hash).toHaveBeenCalledWith(
         payload.password,
@@ -131,11 +118,10 @@ describe("Users Controller testing", () => {
       ]);
 
       // Call the get function
-      const result = await get(limit, page);
-      console.log({ result }, "dattttttaaaaaa");
+      const result = await controller.get(limit, page);
 
       // Call the get function for the second page
-      const pageTworesult = await get(limit, page2);
+      const pageTworesult = await controller.get(limit, page2);
       console.log({ pageTworesult });
 
       // Check if the result matches the expected result
@@ -152,7 +138,7 @@ describe("Users Controller testing", () => {
   describe("getById", () => {
     it("should find and return a user by id", async () => {
       jest.spyOn(model, "findOne").mockResolvedValue(mockUsers[0]);
-      const result = await getById(mockUsers[0]._id);
+      const result = await controller.getById(mockUsers[0]._id);
       expect(model.findOne).toHaveBeenCalledWith({ _id: mockUsers[0]._id });
       expect(result).toEqual(mockUsers[0]);
     });
@@ -163,7 +149,7 @@ describe("Users Controller testing", () => {
         ...mockUsers[0],
         name: "newName",
       });
-      const result = await updateById(
+      const result = await controller.updateById(
         mockUsers[0]._id,
         { name: "newName" },
         { new: true }
@@ -198,7 +184,7 @@ describe("Users Controller testing", () => {
 
       // Call the changePassword function
 
-      const result = await changePassword(
+      const result = await controller.changePassword(
         initialUserData._id, // User ID
         "helloworld", // Old password
         "hellobuddy" // New password}
@@ -232,7 +218,7 @@ describe("Users Controller testing", () => {
 
       // Call the changePassword function
       await expect(
-        changePassword(
+        controller.changePassword(
           initialUserData._id, // User ID
           "incorrectOldPassword", // Incorrect old password
           "newPassword" // New password
@@ -249,7 +235,7 @@ describe("Users Controller testing", () => {
 
       // Call the changePassword function
       await expect(
-        changePassword(
+        controller.changePassword(
           "nonExistingUserId", // Non-existing user ID
           "oldPassword", // Old password
           "newPassword" // New password
@@ -281,7 +267,7 @@ describe("Users Controller testing", () => {
 
       // Call the changePassword function
 
-      const result = await resetPassword(
+      const result = await controller.resetPassword(
         initialUserData._id, // User ID
         "helloworld"
         // New password}
@@ -302,7 +288,7 @@ describe("Users Controller testing", () => {
       jest.spyOn(model, "findOne").mockResolvedValue(null);
 
       await expect(
-        resetPassword(
+        controller.resetPassword(
           "nonExistingUserId", // Non-existing user ID
           "oldPassword"
         )
@@ -335,7 +321,7 @@ describe("Users Controller testing", () => {
       const payload = {
         isActive: false,
       };
-      const result = await block(initialUserData._id, payload);
+      const result = await controller.block(initialUserData._id, payload);
 
       // Assert that findOneAndUpdate was called with the correct parameters
       expect(model.findOneAndUpdate).toHaveBeenCalledWith(
@@ -353,7 +339,7 @@ describe("Users Controller testing", () => {
       const payload = {
         isActive: false,
       };
-      await expect(block("12c134d324dx42", payload)).rejects.toThrow(
+      await expect(controller.block("12c134d324dx42", payload)).rejects.toThrow(
         "User not found"
       );
 
@@ -386,7 +372,7 @@ describe("Users Controller testing", () => {
       const payload = {
         isArchive: true,
       };
-      const result = await archive(mockUser._id, payload);
+      const result = await controller.archive(mockUser._id, payload);
       // Assert that findOneAndUpdate was called with the correct parameters
       expect(model.findOneAndUpdate).toHaveBeenCalledWith(
         { _id: mockUser._id },
@@ -403,7 +389,7 @@ describe("Users Controller testing", () => {
       const payload = {
         isArchive: true,
       };
-      await expect(archive("12321j3h2432j", payload)).rejects.toThrow(
+      await expect(controller.archive("12321j3h2432j", payload)).rejects.toThrow(
         "User not found"
       );
       expect(model.findOne).toHaveBeenCalledWith({ _id: "12321j3h2432j" });
