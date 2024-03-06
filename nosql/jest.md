@@ -88,9 +88,30 @@ Jest provides built-in assertion utilities such as `expect()` to make assertions
 
 **6.Teardown**: Clean up any resources or state changes introduced during the test case, ensuring a clean environment for subsequent tests.
 
-#some example of testing -:
+# some example of testing -:
 
-```describe("Register  Testing", () => {
+Here's a brief explanation of what's happening in the provided testing code:
+
+**1. Database Setup**: Before running tests, the database connection is established.
+
+**2. Test Execution**: Each test case begins by defining a payload for user registration.
+
+**3. Mocking Dependencies**:
+
+bcrypt.hash, userModel.create, and OTP.generateOTP functions are mocked to simulate their behavior.
+Function Invocation: The register function is invoked with the defined payload.
+
+**4. Assertions**:
+
+- bcrypt.hash is called with the correct password.
+- userModel.create is called with the expected user data.
+- OTP.generateOTP is called.
+- authModel.create is called with the appropriate payload.
+- nodemailer.createTransport().sendMail is called.
+- The result of register function is validated.
+- Cleanup: After each test, mocks are cleared, and the database connection is closed.
+
+```describe("Register Testing", () => {
   beforeAll(async () => {
     await common.connectDatabase();
   });
@@ -152,7 +173,7 @@ Jest provides built-in assertion utilities such as `expect()` to make assertions
     // expect(result.password).toEqual("hashedPassword");
     expect(mailer).toHaveBeenCalledWith("asimneupane11@gmail.com", 123456);
   });
-}); 
+});
 ```
 
 ##Points to Remember:
