@@ -7,7 +7,7 @@ const ErrorHandler = (
   next: NextFunction
 ) => {
   console.log("Middleware Error Handling");
-  console.log(err,'===========================')
+  console.log('===========',err,'===========================')
   const errStatus = err.statusCode || 500;
 
   const errType = err.errors?.length ? "ZOD" : "ratelimit";

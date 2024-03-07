@@ -1,5 +1,4 @@
 import {totp} from "otplib";
-import crypto from 'crypto'
 totp.options = { digits: 6, step: Number(process.env.OTP_DURATION) };
 require("dotenv").config();
 
@@ -14,9 +13,7 @@ export const verifyOTP = async (token:string) => {
   return x;
 };
 
-export const generateRandomToken = () => {
-  return crypto.randomInt(100000, 999999);
-};
+
 
 
 

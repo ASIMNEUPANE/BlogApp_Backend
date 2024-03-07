@@ -1,7 +1,7 @@
 import { Document } from "mongoose";
 
 export interface BaseData extends Document {
-  _id?: string;
+  data: {}
   id?: string;
   name: string;
   email: string;
