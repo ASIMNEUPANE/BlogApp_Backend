@@ -143,14 +143,14 @@ router.patch("/status/:id", secureAPI(["admin"]), async (req, res, next) => {
   }
 });
 
-// router.get("/:id", secureAPI(["admin"]), async (req, res, next) => {
-//   try {
-//     const result = await controller.getById(req.params.id);
-//     res.status(200).json({ data: result, msg: "success" });
-//   } catch (e) {
-//     next(e);
-//   }
-// });
+router.get("/:id", secureAPI(["admin"]), async (req, res, next) => {
+  try {
+    const result = await controller.getById(+req.params.id);
+    res.status(200).json({ data: result, msg: "success" });
+  } catch (e) {
+    next(e);
+  }
+});
 router.delete("/:id", secureAPI(["admin"]), async (req, res, next) => {
   try {
     req.body.created_by = (req as any).currentUser;
