@@ -25,6 +25,7 @@ model User {
   roles           Role    @default(users)
   created_by      Int     @default(0)
   updated_by      Int     @default(0)
+  Blogs           Blog[]
 }
 
 enum Role {
@@ -34,6 +35,32 @@ enum Role {
 
 model Auth {
   id    Int    @id @default(autoincrement())
-  email String  @unique 
+  email String @unique
   token String
+}
+
+model Blog {
+  id          Int      @id @default(autoincrement())
+  title       String
+  content     String
+  description String
+  category    Category @default(Technology)
+  author      String
+  status      Status   @default(draft)
+  totalWord   Int
+  images      String?
+  userId      Int      
+  created_By  User     @relation(fields: [userId], references: [id])
+}
+
+enum Category {
+  Technology
+  Travel
+  Food
+  Lifestyle
+}
+
+enum Status {
+  Published
+  draft
 }
