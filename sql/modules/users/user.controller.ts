@@ -133,54 +133,52 @@ export const changePassword = async (
   // update the userpassword
   return await prisma.user.update({
     where: { id },
-    data: { password: newPass }
+    data: { password: newPass },
   });
 };
 
-// export const resetPassword = async (
-//   id: string,
-//   password: string
-// ): Promise<BaseData | null> => {
-//   const user = await model.findOne({ _id: id });
-//   if (!user) throw new Error("User not found");
-//   const newPass = await bcrypt.hash(
-//     password as string,
-//     +process.env.SALT_ROUND
-//   );
-//   return await model.findOneAndUpdate(
-//     { _id: user?._id },
-//     { password: newPass },
-//     { new: true }
-//   );
-// };
+export const resetPassword = async (
+  id: number,
+  password: string
+): Promise<BaseData | null> => {
+  const user = await prisma.user.findUnique({ where: { id } });
+  if (!user) throw new Error("User not found");
+  const newPass = await bcrypt.hash(
+    password as string,
+    +process.env.SALT_ROUND
+  );
+  return await prisma.user.update({
+    where: { id: user?.id },
+    data: { password: newPass },
+  });
+};
 
-// export const block = async (
-//   id: string,
-//   payload: payloadTypes
-// ): Promise<BaseData | null> => {
-//   const user = await model.findOne({ _id: id });
-//   if (!user) throw new Error("User not found");
-//   return await model.findOneAndUpdate({ _id: id }, payload, { new: true });
-//   // .select("-password")) as BaseData | null;
-// };
+export const block = async (
+  id: number,
+  payload: payloadTypes
+): Promise<BaseData | null> => {
+  const user = await prisma.user.findUnique({ where: { id } });
+  if (!user) throw new Error("User not found");
+  return await prisma.user.update({ where: { id }, data: payload });
+  // .select("-password")) as BaseData | null;
+};
 
-// export const archive = async (
-//   id: string,
-//   payload: payloadTypes
-// ): Promise<BaseData | null> => {
-//   const user = await model.findOne({ _id: id });
-//   if (!user) throw new Error("User not found");
-//   return await model.findOneAndUpdate({ _id: id }, payload, { new: true });
-//   // .select("-password")) as BaseData | null;
-// };
+export const archive = async (
+  id: number,
+  payload: payloadTypes
+): Promise<BaseData | null> => {
+  const user = await prisma.user.findUnique({ where: { id } });
+  if (!user) throw new Error("User not found");
+  return await prisma.user.update({ where: { id }, data: payload });
+};
 
 export default {
-  // archive,
-  // block,
+  archive,
+  block,
   changePassword,
   create,
   getById,
   // get,
-  // resetPassword,
+  resetPassword,
   updateById,
 };

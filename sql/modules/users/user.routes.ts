@@ -3,7 +3,11 @@ import multer from "multer";
 import controller from "./user.controller";
 import secureAPI from "../../utils/secure";
 import { authValidatorMiddleware } from "../users/user.validator";
-import { limitValidatorMiddleware, updateMiddleware } from "./user.validator";
+import {
+  limitValidatorMiddleware,
+  updateMiddleware,
+  newPassValidatorMiddleware,
+} from "./user.validator";
 
 const router: Router = express.Router();
 
@@ -62,7 +66,7 @@ router.get(
   secureAPI(["admin", "users"]),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await controller.getById((req as any).currentUser );
+      const result = await controller.getById((req as any).currentUser);
       res.status(200).json({ data: result, msg: "success" });
     } catch (err) {
       next(err);
@@ -81,8 +85,8 @@ router.put(
       }
 
       const { id, ...rest } = req.body;
-      rest.created_by =(req as any).currentUser;
-      rest.updated_by =(req as any).currentUser;
+      rest.created_by = (req as any).currentUser;
+      rest.updated_by = (req as any).currentUser;
       const me = req.body.id ? req.body.id : (req as any).currentUser;
       if (!me) throw new Error("User ID is required");
       const result = await controller.updateById(me, rest);
@@ -96,11 +100,14 @@ router.put(
 router.put(
   "/change-password",
   secureAPI(["admin", "users"]),
+  newPassValidatorMiddleware,
+
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { oldPassword, newPassword } = req.body;
       if (!oldPassword || !newPassword)
         throw new Error("Passwords are missing");
+
       const me = req.body.id ? req.body.id : (req as any).currentUser;
       const result = await controller.changePassword(
         me,
@@ -114,26 +121,27 @@ router.put(
   }
 );
 
-// router.put("/reset-password", secureAPI(["admin"]), async (req, res, next) => {
-//   try {
-//     const { id, password } = req.body;
-//     const result = await controller.resetPassword(id, password);
-//     res.status(200).json({ data: result, msg: "success" });
-//   } catch (e) {
-//     next(e);
-//   }
-// });
+router.put("/reset-password", secureAPI(["admin"]), async (req, res, next) => {
+  try {
+    const { id, password } = req.body;
+    const result = await controller.resetPassword(id, password);
+    res.status(200).json({ data: result, msg: "success" });
+  } catch (e) {
+    next(e);
+  }
+});
 
-// router.patch("/status/:id", secureAPI(["admin"]), async (req, res, next) => {
-//   try {
-//     req.body.created_by = (req as any).currentUser;
-//     req.body.updated_by = (req as any).currentUser;
-//     const result = await controller.block(req.params.id, req.body);
-//     res.status(200).json({ data: result, msg: "success" });
-//   } catch (e) {
-//     next(e);
-//   }
-// });
+router.patch("/status/:id", secureAPI(["admin"]), async (req, res, next) => {
+  try {
+    req.body.created_by = (req as any).currentUser;
+    req.body.updated_by = (req as any).currentUser;
+    
+    const result = await controller.block(+req.params.id, req.body);
+    res.status(200).json({ data: result, msg: "success" });
+  } catch (e) {
+    next(e);
+  }
+});
 
 // router.get("/:id", secureAPI(["admin"]), async (req, res, next) => {
 //   try {
@@ -143,17 +151,16 @@ router.put(
 //     next(e);
 //   }
 // });
-// router.delete("/:id", secureAPI(["admin"]), async (req, res, next) => {
-//   try {
-//     req.body.created_by = (req as any).currentUser;
-//     req.body.updated_by = (req as any).currentUser;
-//     req.body.updated_at = new Date();
+router.delete("/:id", secureAPI(["admin"]), async (req, res, next) => {
+  try {
+    req.body.created_by = (req as any).currentUser;
+    req.body.updated_by = (req as any).currentUser;
 
-//     const result = await controller.archive(req.params.id, req.body);
-//     res.status(200).json({ data: result, msg: "success" });
-//   } catch (e) {
-//     next(e);
-//   }
-// });
+    const result = await controller.archive(+req.params.id, req.body);
+    res.status(200).json({ data: result, msg: "success" });
+  } catch (e) {
+    next(e);
+  }
+});
 
 export default router;
