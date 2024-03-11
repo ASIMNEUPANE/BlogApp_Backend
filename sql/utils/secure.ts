@@ -1,12 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { verifyJWT } from "./jwt";
-import userModel from "../modules/users/user.model";
 import { JwtPayload } from "jsonwebtoken";
-
-const compareRole = (requiredRole: string[], userRole: string[]) => {
-  if (requiredRole.length < 1) return true;
-  return userRole.some((v) => requiredRole.indexOf(v) !== -1);
-};
+import prisma from "../DB/db.config";
 
 const secureAPI = (roles: string[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -17,11 +12,11 @@ const secureAPI = (roles: string[]) => {
       const { data } = verifyJWT(accessToken) as JwtPayload;
       if (!data) throw new Error("Data is not available");
       const { email } = data;
-      const user = await userModel.findOne({ email });
+      const user = await prisma.user.findUnique({where:{ email} });
       if (!user) throw new Error("User not found");
-      (req as any).currentUser = user?._id;
+      (req as any).currentUser = user?.id;
       (req as any).currentRoles = user?.roles;
-      const isValidRole = compareRole(roles, user?.roles || []);
+      const isValidRole = roles.some((role) => user.roles.includes(role));
       if (!isValidRole) throw new Error("User unauthorized");
       next();
     } catch (e) {

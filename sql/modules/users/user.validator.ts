@@ -30,11 +30,13 @@ export const registerValidator = z.object({
           "Invalid image file path. Supported formats: jpg, jpeg, png, gif",
       }
     )
-    .optional(),
+  
   
 });
 
-
+export const createValidator = registerValidator.extend({
+  roles: z.enum(["users", "admin"]).optional(),
+});
 
 
 const authValidatorMiddleware = (
@@ -43,8 +45,13 @@ const authValidatorMiddleware = (
   next: NextFunction
 ) => {
   try {
-    const dataToValidate = req.body ;
-    registerValidator.parse(dataToValidate);
+    console.log('===========req',req,'req===================')
+    const { name, email, password } = req.body;
+    const images = req.file ? req.file.path : undefined;
+
+    const dataToValidate = {name,email, password,images} ;
+
+    createValidator.parse(dataToValidate);
     next();
   } catch (err) {
     next(err);

@@ -30,8 +30,8 @@ export const registerValidator = z.object({
           "Invalid image file path. Supported formats: jpg, jpeg, png, gif",
       }
     )
-    .optional(),
-  
+   
+  .optional()
 });
 
 

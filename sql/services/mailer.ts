@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const mailer = async (email:string, token:number) => {
+export const mailer = async (email:string, token:string) => {
   const info = await transporter.sendMail({
     from: process.env.GMAIL_USER,
     to: email,
