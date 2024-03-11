@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Blog" ALTER COLUMN "userId" SET DEFAULT 1;

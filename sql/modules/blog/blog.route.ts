@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response, Router } from "express";
 import multer from "multer";
 import {
-  get,
+  // get,
   getById,
   create,
   updateById,
@@ -47,6 +47,7 @@ router.post(
       req.body.images = req.file ? `blog/${req.file.filename}` : "";
       const totalWord = parseInt(req.body.totalWord);
       req.body.totalWord = totalWord;
+    req.body.created_By = (req as any).currentUser;
 
       const result = await create(req.body);
       res.status(200).json({ data: result, msg: "success" });
@@ -56,23 +57,23 @@ router.post(
   }
 );
 
-router.get(
-  "/",
-  validateLimit,
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { limit, page } = req.query;
-      const result = await get(Number(limit), Number(page));
-      res.status(200).json({ data: result, msg: "success" });
-    } catch (err) {
-      next(err);
-    }
-  }
-);
+// router.get(
+//   "/",
+//   validateLimit,
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     try {
+//       const { limit, page } = req.query;
+//       const result = await get(Number(limit), Number(page));
+//       res.status(200).json({ data: result, msg: "success" });
+//     } catch (err) {
+//       next(err);
+//     }
+//   }
+// );
 
 router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await getById(req.params.id);
+    const result = await getById(+req.params.id);
     res.json({ data: result, msg: "success" });
   } catch (err) {
     next(err);
@@ -87,7 +88,7 @@ router.put(
     try {
       req.body.images = req.file ? `blog/${req.file.filename}` : "";
 
-      const result = await updateById(req.params.id, req.body);
+      const result = await updateById(+req.params.id, req.body);
       res.status(200).json({ data: result, msg: "success" });
     } catch (err) {
       next(err);
@@ -100,7 +101,7 @@ router.delete(
   secureAPI(["admin"]),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await deleteById(req.params.id);
+      const result = await deleteById(+req.params.id);
       res.json({ data: result, msg: "success" });
     } catch (err) {
       next(err);
