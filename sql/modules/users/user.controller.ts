@@ -19,82 +19,46 @@ export const create = async (payload: payloadTypes): Promise<any | null> => {
   return result;
 };
 
-// export const get = async (
-//   limit: number,
-//   page: number
-// ): Promise<Paginate | null> => {
-//   const pageNum = page || 1;
-//   const size = limit || 4;
-//   const query = { isArchive: false };
+import { PrismaClient } from '@prisma/client';
 
-//   const result = await model.aggregate([
-//     {
-//       $facet: {
-//         // Stage 1: Calculate the total count
-//         total: [
-//           {
-//             $match: query,
-//           },
-//           {
-//             $count: "total",
-//           },
-//         ],
-//         // Stage 2: Fetch paginated data
-//         data: [
-//           {
-//             $match: query,
-//           },
-//           {
-//             $skip: (pageNum - 1) * size,
-//           },
-//           {
-//             $limit: size,
-//           },
-//         ],
-//       },
-//     },
-//     {
-//       $project: {
-//         total: { $arrayElemAt: ["$total.total", 0] }, // Extract total count from the 'total' array
-//         data: 1, // Include the 'data' array
-//         limit: size,
-//         page: pageNum,
-//       },
-//     },
-//     {
-//       $project: {
-//         "data.password": 0,
-//       },
-//     },
-//   ]);
+const prisma = new PrismaClient();
 
-//   const newResult = result[0];
-//   let { data, total } = newResult;
-//   total = total || 0;
-//   console.log(total);
-//   return { data, total, limit, page };
-// };
-// // export const get = async(limit:number,page:number,search:string,  )=>{
+export const get = async (
+  limit: number,
+  page: number
+): Promise<{ data: any[]; total: number; limit: number; page: number } | null> => {
+  const pageNum = page || 1;
+  const size = limit || 4;
 
-// //   const skip = (page - 1) * limit; // Calculate the number of documents to skip
-// //     const query = { name: search.name || null }; // Assuming you're filtering by name
+  try {
+    const total =await prisma.user.count({
+      where: {
+        isArchive: false,
+      },
+    });
 
-// //     try {
-// //         // Query MongoDB to get paginated data
-// //         const data = await model.find(query).skip(skip).limit(limit);
-// //         const total = await model.countDocuments(query); // Count total matching documents
+    const data =await prisma.user.findMany({
+      where: {
+        isArchive: false,
+      },
+      skip: (pageNum - 1) * size,
+      take: size,
+      select: {
+        // Exclude password field from the returned data
+        password:false
+      },
+    });
 
-// //         return {
-// //             data: data,
-// //             total: total,
-// //             page: page,
-// //             limit: limit
-// //         };
-// //     } catch (error) {
-// //         console.error("Error occurred while fetching paginated data:", error);
-// //         throw error; // Rethrow the error for handling at a higher level
-// //     }
-// // }
+    // Execute both promises concurrently
+    
+    return { data, total, limit: size, page: pageNum };
+  } catch (error) {
+    console.error('Error:', error);
+    return null;
+  }
+};
+
+
 
 export const getById = async (id: number): Promise<BaseData | null> => {
   console.log(id, "controller");

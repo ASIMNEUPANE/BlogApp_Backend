@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response, Router } from "express";
 import multer from "multer";
 import {
-  // get,
+  get,
   getById,
   create,
   updateById,
@@ -57,19 +57,19 @@ router.post(
   }
 );
 
-// router.get(
-//   "/",
-//   validateLimit,
-//   async (req: Request, res: Response, next: NextFunction) => {
-//     try {
-//       const { limit, page } = req.query;
-//       const result = await get(Number(limit), Number(page));
-//       res.status(200).json({ data: result, msg: "success" });
-//     } catch (err) {
-//       next(err);
-//     }
-//   }
-// );
+router.get(
+  "/",
+  validateLimit,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { limit, page } = req.query;
+      const result = await get(Number(limit), Number(page));
+      res.status(200).json({ data: result, msg: "success" });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
 
 router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {

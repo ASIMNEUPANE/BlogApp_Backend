@@ -53,10 +53,10 @@ model Blog {
 }
 
 enum Category {
-  TECHNOLOGY
   Travel
   Food
   Lifestyle
+  TECHNOLOGY
 }
 
 enum Status {
