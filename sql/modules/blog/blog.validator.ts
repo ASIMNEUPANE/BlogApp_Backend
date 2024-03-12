@@ -4,11 +4,10 @@ import { Request, Response, NextFunction } from "express";
 export const blogSchemaValidator = z.object({
   title: z.string().min(1),
   content: z.string().min(1),
-  author: z.string().min(1),
   description: z.string().min(1),
-  category:z.enum(['TECHNOLOGY', 'TRAVEL', 'FOOD', 'LIFESTYLE']),
+  category: z.enum(["TECHNOLOGY", "TRAVEL", "FOOD", "LIFESTYLE"]),
   totalWord: z.string().min(1),
-  status: z.enum(['PUBLISHED' , 'DRAFT']),
+  status: z.enum(["PUBLISHED", "DRAFT"]),
   images: z
     .string()
     .refine(
@@ -22,8 +21,8 @@ export const blogSchemaValidator = z.object({
         message:
           "Invalid image file path. Supported formats: jpg, jpeg, png, gif",
       }
-    ).optional()
-    ,
+    )
+    .optional(),
 });
 
 const updateSchemaValidator = blogSchemaValidator.partial();
@@ -31,16 +30,12 @@ const updateSchemaValidator = blogSchemaValidator.partial();
 const limitValidator = z.object({
   size: z.string().min(1).optional(),
   limit: z.string().min(1).optional(),
-  search:z.string().min(1).optional()
-})
+  search: z.string().min(1).optional(),
+});
 
-const validateLimit = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const validateLimit = (req: Request, res: Response, next: NextFunction) => {
   try {
-    const dataToValidate = req.query ;
+    const dataToValidate = req.query;
     limitValidator.parse(dataToValidate);
     next();
   } catch (err) {
@@ -74,4 +69,8 @@ const updateValidateBlogDataMiddleware = (
   }
 };
 
-export  {validateBlogDataMiddleware,validateLimit,updateValidateBlogDataMiddleware};
+export {
+  validateBlogDataMiddleware,
+  validateLimit,
+  updateValidateBlogDataMiddleware,
+};
