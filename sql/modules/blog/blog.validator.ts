@@ -23,9 +23,9 @@ export const blogSchemaValidator = z.object({
       }
     )
     .optional(),
-});
+}).strict();
 
-const updateSchemaValidator = blogSchemaValidator.partial();
+const updateSchemaValidator = blogSchemaValidator.partial().strict();;
 
 const limitValidator = z.object({
   size: z.string().min(1).optional(),
@@ -50,6 +50,7 @@ const validateBlogDataMiddleware = (
   try {
     const dataToValidate = req.body || { images: req.file?.filename };
     blogSchemaValidator.parse(dataToValidate);
+
     next();
   } catch (err) {
     next(err);
