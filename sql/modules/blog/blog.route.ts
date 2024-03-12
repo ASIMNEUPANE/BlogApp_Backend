@@ -63,7 +63,9 @@ router.get(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { limit, page } = req.query;
-      const result = await get(Number(limit), Number(page));
+      const {title,author_id}= req.body;
+      const search= {title,author_id}
+      const result = await get(Number(limit), Number(page),search);
       res.status(200).json({ data: result, msg: "success" });
     } catch (err) {
       next(err);
