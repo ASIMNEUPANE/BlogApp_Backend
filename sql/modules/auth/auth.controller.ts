@@ -29,7 +29,7 @@ const verify = async (payload: verifyData): Promise<boolean> => {
   const emailValid = auth?.token === token;
   if (!emailValid) throw new Error("Token mismatch");
 
-  const user = await prisma.user.updateMany({
+  const user = await prisma.user.update({
     where: { email: email },
     data: { isEmailVerified: true, isActive: true },
   });
