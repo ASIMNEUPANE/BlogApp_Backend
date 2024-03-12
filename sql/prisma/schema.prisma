@@ -7,6 +7,13 @@
 generator client {
   provider = "prisma-client-js"
 }
+generator docs {
+  provider = "node node_modules/prisma-docs-generator"
+}
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
 
 datasource db {
   provider = "postgresql"

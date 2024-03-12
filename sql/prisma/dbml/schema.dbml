@@ -1,0 +1,56 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table User {
+  id Int [pk, increment]
+  name String [not null]
+  email String [unique, not null]
+  password String [not null]
+  isEmailVerified Boolean [not null, default: false]
+  isActive Boolean [not null, default: false]
+  isArchive Boolean [not null, default: false]
+  images String
+  roles Role [not null, default: 'USERS']
+  created_by Int [not null, default: 0]
+  updated_by Int [not null, default: 0]
+  Blogs Blog [not null]
+}
+
+Table Auth {
+  id Int [pk, increment]
+  email String [unique, not null]
+  token String [not null]
+}
+
+Table Blog {
+  id Int [pk, increment]
+  title String [not null]
+  content String [not null]
+  description String [not null]
+  category Category [not null, default: 'TECHNOLOGY']
+  status Status [not null, default: 'DRAFT']
+  totalWord Int [not null]
+  images String
+  created_By User [not null]
+  author_id Int [not null, default: 1]
+}
+
+Enum Role {
+  USERS
+  ADMIN
+}
+
+Enum Category {
+  Travel
+  Food
+  Lifestyle
+  TECHNOLOGY
+}
+
+Enum Status {
+  Published
+  DRAFT
+}
+
+Ref: Blog.author_id > User.id
