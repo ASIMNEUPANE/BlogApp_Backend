@@ -87,7 +87,8 @@ router.put(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       req.body.images = req.file ? `blog/${req.file.filename}` : "";
-
+      const totalWord = parseInt(req.body.totalWord);
+      req.body.totalWord = totalWord;
       const result = await updateById(+req.params.id, req.body);
       res.status(200).json({ data: result, msg: "success" });
     } catch (err) {

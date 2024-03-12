@@ -5,9 +5,9 @@ export const blogSchemaValidator = z.object({
   title: z.string().min(1),
   content: z.string().min(1),
   description: z.string().min(1),
-  category: z.enum(["TECHNOLOGY", "TRAVEL", "FOOD", "LIFESTYLE"]),
+  category: z.enum(["TECHNOLOGY", "Travel", "Food", "Lifestyle"]),
   totalWord: z.string().min(1),
-  status: z.enum(["PUBLISHED", "DRAFT"]),
+  status: z.enum(["Published", "DRAFT"]),
   images: z
     .string()
     .refine(

@@ -54,12 +54,12 @@ model Blog {
 
 enum Category {
   TECHNOLOGY
-  TRAVEL
-  FOOD
-  LIFESTYLE
+  Travel
+  Food
+  Lifestyle
 }
 
 enum Status {
-  PUBLISHED
+  Published
   DRAFT
 }
