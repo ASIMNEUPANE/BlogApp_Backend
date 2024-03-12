@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -34,6 +28,7 @@ model User {
   created_by      Int     @default(0)
   updated_by      Int     @default(0)
   Blogs           Blog[]
+
   @@index([isArchive])
 }
 
@@ -59,7 +54,8 @@ model Blog {
   images      String?
   created_By  User     @relation(fields: [author_id], references: [id])
   author_id   Int      @default(1)
-  @@index([status])
+
+  @@index([status,title])
 }
 
 enum Category {
