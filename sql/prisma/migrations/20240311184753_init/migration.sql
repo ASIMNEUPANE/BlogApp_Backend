@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "Blog" ALTER COLUMN "userId" DROP DEFAULT;

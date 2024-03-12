@@ -47,7 +47,7 @@ router.post(
       req.body.images = req.file ? `blog/${req.file.filename}` : "";
       const totalWord = parseInt(req.body.totalWord);
       req.body.totalWord = totalWord;
-      req.body.author_id = (req as any).currentUser;
+      req.body.author = (req as any).currentUserName;
 
       const result = await create(req.body);
       res.status(200).json({ data: result, msg: "success" });
@@ -63,8 +63,8 @@ router.get(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { limit, page } = req.query;
-      const {title,author_id}= req.body;
-      const search= {title,author_id}
+      const {title,author}= req.body;
+      const search= {title,author}
       const result = await get(Number(limit), Number(page),search);
       res.status(200).json({ data: result, msg: "success" });
     } catch (err) {

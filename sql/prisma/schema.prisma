@@ -17,7 +17,7 @@ datasource db {
 
 model User {
   id              Int     @id @default(autoincrement())
-  name            String
+  name            String @unique
   email           String  @unique
   password        String
   isEmailVerified Boolean @default(false)
@@ -51,11 +51,11 @@ model Blog {
   category    Category @default(TECHNOLOGY)
   status      Status   @default(DRAFT)
   totalWord   Int
-  images      String?
-  created_By  User     @relation(fields: [author_id], references: [id])
-  author_id   Int      @default(1)
+  images     String?
+  created_By User    @relation(fields: [author], references: [name])
+  author  String     
 
-  @@index([status,title])
+  @@index([status, title])
 }
 
 enum Category {

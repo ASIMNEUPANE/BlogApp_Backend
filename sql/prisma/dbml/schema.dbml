@@ -4,7 +4,7 @@
 
 Table User {
   id Int [pk, increment]
-  name String [not null]
+  name String [unique, not null]
   email String [unique, not null]
   password String [not null]
   isEmailVerified Boolean [not null, default: false]
@@ -33,7 +33,7 @@ Table Blog {
   totalWord Int [not null]
   images String
   created_By User [not null]
-  author_id Int [not null, default: 1]
+  author String [not null]
 }
 
 Enum Role {
@@ -53,4 +53,4 @@ Enum Status {
   DRAFT
 }
 
-Ref: Blog.author_id > User.id
+Ref: Blog.author > User.name

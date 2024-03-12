@@ -1,13 +1,13 @@
 import prisma from "../../DB/db.config";
 import { Iblog, DeleteResult, Paginate } from "./blog.type";
 
-// const create = async (payload: Iblog): Promise<Iblog> => {
-//   return await prisma.blog.create({ data: payload });
-// };
+const create = async (payload: Iblog): Promise<Iblog> => {
+  return await prisma.blog.create({ data: payload });
+};
 const get = async (
   limit: number,
   page: number,
-  search: { title?: string; author_id?: number }
+  search: { title?: string; author?: string }
 ): Promise<{
   data: any[];
   total: number;
@@ -25,8 +25,8 @@ const get = async (
     whereCondition.title = search.title;
   }
 
-  if (search.author_id) {
-    whereCondition.author_id = search.author_id;
+  if (search.author) {
+    whereCondition.author = search.author;
   }
 
     // Get total count
@@ -46,25 +46,25 @@ const get = async (
 
 };
 
-// const getById = async (id: number): Promise<Iblog | null> => {
-//   return prisma.blog.findUnique({ where: { id } });
-// };
+const getById = async (id: number): Promise<Iblog | null> => {
+  return prisma.blog.findUnique({ where: { id } });
+};
 
-// const updateById = async (
-//   id: number,
-//   payload: Iblog
-// ): Promise<Iblog | null> => {
-//   return await prisma.blog.update({ where: { id }, data: payload });
-// };
+const updateById = async (
+  id: number,
+  payload: Iblog
+): Promise<Iblog | null> => {
+  return await prisma.blog.update({ where: { id }, data: payload });
+};
 
-// const deleteById = async (id: number): Promise<DeleteResult | null> => {
-//   return await prisma.blog.delete({ where: { id } });
-// };
+const deleteById = async (id: number): Promise<DeleteResult | null> => {
+  return await prisma.blog.delete({ where: { id } });
+};
 
 export {
-  // create,
+  create,
    get,
-  // getById,
-  // updateById,
-  // deleteById,
+   getById,
+  updateById,
+  deleteById,
 };
