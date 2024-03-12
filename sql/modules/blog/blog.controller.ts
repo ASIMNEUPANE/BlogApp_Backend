@@ -16,28 +16,25 @@ const get = async (
   const pageNum = page || 1;
   const size = limit || 4;
 
-  try {
+ 
     // Get total count
     const total = await prisma.blog.count({
       where: {
-        status: "Published", // Assuming status is a field in the Blog model
+        status: "Published",
       },
     });
 
     // Fetch paginated data
     const data = await prisma.blog.findMany({
       where: {
-        status: "Published", // Assuming status is a field in the Blog model
+        status: "Published", 
       },
       skip: (pageNum - 1) * size,
       take: size,
     });
 
     return { data, total, limit: size, page: pageNum };
-  } catch (error) {
-    console.error("Error:", error);
-    return null;
-  }
+
 };
 
 const getById = async (id: number): Promise<Iblog | null> => {

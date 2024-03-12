@@ -19,46 +19,41 @@ export const create = async (payload: payloadTypes): Promise<any | null> => {
   return result;
 };
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 export const get = async (
   limit: number,
   page: number
-): Promise<{ data: any[]; total: number; limit: number; page: number } | null> => {
+): Promise<{
+  data: any[];
+  total: number;
+  limit: number;
+  page: number;
+} | null> => {
   const pageNum = page || 1;
   const size = limit || 4;
 
-  try {
-    const total =await prisma.user.count({
-      where: {
-        isArchive: false,
-      },
-    });
+  const total = await prisma.user.count({
+    where: {
+      isArchive: false,
+    },
+  });
 
-    const data =await prisma.user.findMany({
-      where: {
-        isArchive: false,
-      },
-      skip: (pageNum - 1) * size,
-      take: size,
-      select: {
-        // Exclude password field from the returned data
-        password:false
-      },
-    });
+  const data = await prisma.user.findMany({
+    where: {
+      isArchive: false,
+    },
+    skip: (pageNum - 1) * size,
+    take: size,
+    select: {
+      password: false,
+    },
+  });
 
-    // Execute both promises concurrently
-    
-    return { data, total, limit: size, page: pageNum };
-  } catch (error) {
-    console.error('Error:', error);
-    return null;
-  }
+  return { data, total, limit: size, page: pageNum };
 };
-
-
 
 export const getById = async (id: number): Promise<BaseData | null> => {
   console.log(id, "controller");
