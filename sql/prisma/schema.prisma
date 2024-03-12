@@ -22,15 +22,15 @@ model User {
   isActive        Boolean @default(false)
   isArchive       Boolean @default(false)
   images          String?
-  roles           Role    @default(users)
+  roles           Role    @default(USERS)
   created_by      Int     @default(0)
   updated_by      Int     @default(0)
   Blogs           Blog[]
 }
 
 enum Role {
-  users
-  admin
+  USERS
+  ADMIN
 }
 
 model Auth {
@@ -44,23 +44,22 @@ model Blog {
   title       String
   content     String
   description String
-  category    Category @default(Technology)
-  author      String
-  status      Status   @default(draft)
+  category    Category @default(TECHNOLOGY)
+  status      Status   @default(DRAFT)
   totalWord   Int
   images      String?
-  userId      Int      
-  created_By  User     @relation(fields: [userId], references: [id])
+  created_By  User     @relation(fields: [author_id], references: [id])
+  author_id   Int      @default(1)
 }
 
 enum Category {
-  Technology
-  Travel
-  Food
-  Lifestyle
+  TECHNOLOGY
+  TRAVEL
+  FOOD
+  LIFESTYLE
 }
 
 enum Status {
-  Published
-  draft
+  PUBLISHED
+  DRAFT
 }

@@ -15,7 +15,6 @@ export const create = async (payload: payloadTypes): Promise<any | null> => {
   rest.isActive = true;
   rest.email = payload.email;
   rest.name = payload.name;
-  console.log("=======", rest, "===========");
   const result = await prisma.user.create({ data: rest });
   return result;
 };

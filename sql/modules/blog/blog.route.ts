@@ -41,13 +41,13 @@ router.use(upload.single("images"));
 router.post(
   "/",
   validateBlogDataMiddleware,
-  secureAPI(["admin"]),
+  secureAPI(["ADMIN"]),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       req.body.images = req.file ? `blog/${req.file.filename}` : "";
       const totalWord = parseInt(req.body.totalWord);
       req.body.totalWord = totalWord;
-    req.body.created_By = (req as any).currentUser;
+      req.body.userId = (req as any).currentUser;
 
       const result = await create(req.body);
       res.status(200).json({ data: result, msg: "success" });
@@ -83,7 +83,7 @@ router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
 router.put(
   "/:id",
   updateValidateBlogDataMiddleware,
-  secureAPI(["admin"]),
+  secureAPI(["ADMIN"]),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       req.body.images = req.file ? `blog/${req.file.filename}` : "";
@@ -98,7 +98,7 @@ router.put(
 
 router.delete(
   "/:id",
-  secureAPI(["admin"]),
+  secureAPI(["ADMIN"]),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = await deleteById(+req.params.id);

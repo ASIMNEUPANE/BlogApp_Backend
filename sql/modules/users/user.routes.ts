@@ -27,7 +27,7 @@ router.post(
   "/",
   upload.single("images"),
   authValidatorMiddleware,
-  secureAPI(["admin"]),
+  secureAPI(["ADMIN"]),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       req.body.images = req.file ? `blog/${req.file.filename}` : "";
@@ -63,7 +63,7 @@ router.post(
 
 router.get(
   "/profile",
-  secureAPI(["admin", "users"]),
+  secureAPI(["ADMIN", "USERS"]),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = await controller.getById((req as any).currentUser);
@@ -75,7 +75,7 @@ router.get(
 );
 router.put(
   "/update/profile",
-  secureAPI(["admin", "users"]),
+  secureAPI(["ADMIN", "USERS"]),
   upload.single("images"),
   updateMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
@@ -99,7 +99,7 @@ router.put(
 
 router.put(
   "/change-password",
-  secureAPI(["admin", "users"]),
+  secureAPI(["ADMIN", "USERS"]),
   newPassValidatorMiddleware,
 
   async (req: Request, res: Response, next: NextFunction) => {
@@ -121,7 +121,7 @@ router.put(
   }
 );
 
-router.put("/reset-password", secureAPI(["admin"]), async (req, res, next) => {
+router.put("/reset-password", secureAPI(["ADMIN"]), async (req, res, next) => {
   try {
     const { id, password } = req.body;
     const result = await controller.resetPassword(id, password);
@@ -131,7 +131,7 @@ router.put("/reset-password", secureAPI(["admin"]), async (req, res, next) => {
   }
 });
 
-router.patch("/status/:id", secureAPI(["admin"]), async (req, res, next) => {
+router.patch("/status/:id", secureAPI(["ADMIN"]), async (req, res, next) => {
   try {
     req.body.created_by = (req as any).currentUser;
     req.body.updated_by = (req as any).currentUser;
@@ -143,7 +143,7 @@ router.patch("/status/:id", secureAPI(["admin"]), async (req, res, next) => {
   }
 });
 
-router.get("/:id", secureAPI(["admin"]), async (req, res, next) => {
+router.get("/:id", secureAPI(["ADMIN"]), async (req, res, next) => {
   try {
     const result = await controller.getById(+req.params.id);
     res.status(200).json({ data: result, msg: "success" });
@@ -151,7 +151,7 @@ router.get("/:id", secureAPI(["admin"]), async (req, res, next) => {
     next(e);
   }
 });
-router.delete("/:id", secureAPI(["admin"]), async (req, res, next) => {
+router.delete("/:id", secureAPI(["ADMIN"]), async (req, res, next) => {
   try {
     req.body.created_by = (req as any).currentUser;
     req.body.updated_by = (req as any).currentUser;

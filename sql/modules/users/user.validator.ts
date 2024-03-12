@@ -31,7 +31,7 @@ export const registerValidator = z.object({
 });
 
 export const createValidator = registerValidator.extend({
-  roles: z.enum(["users", "admin"]).optional(),
+  roles: z.enum(["USERS", "ADMIN"]).optional(),
 });
 export const newPassValidator = z.object({
   id: z.number(),
