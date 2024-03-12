@@ -58,7 +58,6 @@ router.post(
   "/generateToken",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log(req.body)
       const { email } = req.body;
       if (!email) throw new Error("Email  is missing");
       const result = await regenerateToken(email);
@@ -86,7 +85,6 @@ router.put(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email } = req.body;
-      console.log(email,'route')
       if (!email) throw new Error("Email is missing");
       const result = await generateFPToken(email);
       res.status(200).json({ data: result, msg: "success" });
@@ -100,7 +98,6 @@ router.put(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email, token,password } = req.body;
-      console.log(typeof(token))
       if (!email || !password || !token)
         throw new Error("Email or Password or token is missing");
       const result = await forgetPassowrd(email, token, password);

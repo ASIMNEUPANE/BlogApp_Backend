@@ -122,7 +122,6 @@ describe("Users Controller testing", () => {
 
       // Call the get function for the second page
       const pageTworesult = await controller.get(limit, page2);
-      console.log({ pageTworesult });
 
       // Check if the result matches the expected result
       expect(result?.data).toHaveLength(2);

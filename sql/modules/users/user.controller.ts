@@ -2,7 +2,6 @@ import bcrypt from "bcrypt";
 // import { Paginate } from "../blog/blog.type";
 import { payloadTypes, BaseData } from "../users/user.types";
 import prisma from "../../DB/db.config";
-
 export const create = async (payload: payloadTypes): Promise<any | null> => {
   let { password, ...rest } = payload as {
     password: string;
@@ -55,8 +54,7 @@ export const get = async (
   return { data, total, limit: size, page: pageNum };
 };
 
-export const getById = async (id: number): Promise<BaseData | null> => {
-  console.log(id, "controller");
+export const getById = async (id: number): Promise<payloadTypes > => {
   return await prisma.user.findUnique({ where: { id } });
 };
 
@@ -136,7 +134,7 @@ export default {
   changePassword,
   create,
   getById,
-  // get,
+  get,
   resetPassword,
   updateById,
 };

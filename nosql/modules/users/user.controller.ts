@@ -73,7 +73,6 @@ export const get = async (
   const newResult = result[0];
   let { data, total } = newResult;
   total = total || 0;
-  console.log(total);
   return { data, total, limit, page };
 };
 // export const get = async(limit:number,page:number,search:string,  )=>{
@@ -99,7 +98,6 @@ export const get = async (
 // }
 
 export const getById = async (id: string): Promise<BaseData | null> => {
-  console.log(id, "controller");
   return await model.findOne({ _id: id });
 };
 

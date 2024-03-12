@@ -44,7 +44,6 @@ router.get(
   secureAPI(["admin"]),
   async (req, res, next) => {
     try {
-      console.log(req.query);
       const { limit, page } = req.query;
       const result = await controller.get(
         Number(limit),

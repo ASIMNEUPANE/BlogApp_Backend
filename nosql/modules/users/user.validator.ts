@@ -82,8 +82,6 @@ const updateMiddleware = (
   next: NextFunction
 ) => {
   try {
-    console.log('========',req,'===============================')
-    // console.log(req.file,'update======================')
     const { name } = req.body;
     const images = req.file ? req.file.path : undefined;
     const dataToValidate = {name,images};
