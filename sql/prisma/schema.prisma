@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator docs {
+  provider = "node node_modules/prisma-docs-generator"
+}
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+model User {
+  id              Int     @id @default(autoincrement())
+  name            String @unique
+  email           String  @unique
+  password        String
+  isEmailVerified Boolean @default(false)
+  isActive        Boolean @default(false)
+  isArchive       Boolean @default(false)
+  images          String?
+  roles           Role    @default(USERS)
+  created_by      Int     @default(0)
+  updated_by      Int     @default(0)
+  Blogs           Blog[]
+
+  @@index([isArchive])
+}
+
+enum Role {
+  USERS
+  ADMIN
+}
+
+model Auth {
+  id    Int    @id @default(autoincrement())
+  email String @unique
+  token String
+}
+
+model Blog {
+  id          Int      @id @default(autoincrement())
+  title       String
+  content     String
+  description String
+  category    Category @default(TECHNOLOGY)
+  status      Status   @default(DRAFT)
+  totalWord   Int
+  images     String?
+  created_By User    @relation(fields: [author], references: [name])
+  author  String     
+
+  @@index([status, title])
+}
+
+enum Category {
+  Travel
+  Food
+  Lifestyle
+  TECHNOLOGY
+}
+
+enum Status {
+  Published
+  DRAFT
+}
